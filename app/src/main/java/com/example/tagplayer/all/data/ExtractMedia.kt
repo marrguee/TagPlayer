@@ -2,24 +2,17 @@ package com.example.tagplayer.all.data
 
 import android.content.ContentResolver
 import android.content.ContentUris
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
-import com.example.tagplayer.all.domain.DispatcherList
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onStart
+import com.example.tagplayer.core.data.SongData
 
 interface ExtractMedia {
-    suspend fun media() : List<TrackData>
+    suspend fun media() : List<SongData>
     class Base(
         private val contentResolver: ContentResolver
     ) : ExtractMedia {
 
-        override suspend fun media(): List<TrackData> {
-            val result = mutableListOf<TrackData>()
+        override suspend fun media(): List<SongData> {
+            val result = mutableListOf<SongData>()
             val projection = arrayOf(
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.TITLE,
@@ -47,11 +40,11 @@ interface ExtractMedia {
                         id
                     )
                     result.add(
-                        TrackData(
+                        SongData(
                             id,
                             name,
                             duration,
-                            uri
+                            uri.toString()
                         )
                     )
                 }

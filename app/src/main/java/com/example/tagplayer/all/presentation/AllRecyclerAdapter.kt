@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
 
 class AllRecyclerAdapter : RecyclerView.Adapter<AllRecyclerAdapter.TrackHolder>() {
-    private var list: MutableList<TrackUi> = mutableListOf()
+    private var list: MutableList<SongUi> = mutableListOf()
     class TrackHolder(root: View) : RecyclerView.ViewHolder(root) {
         private val titleView: TextView = root.findViewById(R.id.titleTextView)
         private val durationView: TextView = root.findViewById(R.id.durationTextView)
 
-        fun bind(item: TrackUi) = item.bind(titleView, durationView)
+        fun bind(item: SongUi) = item.bind(titleView, durationView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
@@ -29,7 +29,7 @@ class AllRecyclerAdapter : RecyclerView.Adapter<AllRecyclerAdapter.TrackHolder>(
         holder.bind(list[pos])
     }
 
-    fun update(data: List<TrackUi>){
+    fun update(data: List<SongUi>){
         list.clear()
         list.addAll(data)
         notifyDataSetChanged()

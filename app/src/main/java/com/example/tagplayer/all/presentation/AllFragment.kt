@@ -23,5 +23,6 @@ class AllFragment : Fragment(R.layout.all_fragment) {
         }
 
         viewModel.loadTracks()
+        viewModel.scan()
     }
 }

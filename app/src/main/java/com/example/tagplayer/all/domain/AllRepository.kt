@@ -1,5 +1,8 @@
 package com.example.tagplayer.all.domain
 
+import kotlinx.coroutines.flow.Flow
+
 interface AllRepository<T> {
-    suspend fun tracks() : List<T>
+    fun songsFlow() : Flow<List<T>>
+    fun searchSongsForeground()
 }

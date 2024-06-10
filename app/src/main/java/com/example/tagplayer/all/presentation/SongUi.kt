@@ -2,7 +2,7 @@ package com.example.tagplayer.all.presentation
 
 import android.widget.TextView
 
-data class TrackUi(
+data class SongUi(
     private val title: String,
     private val duration: String
 ) : Bind {

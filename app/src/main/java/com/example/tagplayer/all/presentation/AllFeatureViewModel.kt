@@ -17,12 +17,11 @@ class AllFeatureViewModel(
 ) : ViewModel() {
 
     fun loadTracks(){
-        runAsync.run(
-            viewModelScope,
-            { interactor.tracks() }
-        ) {
-            it.map(mapper)
-        }
+        interactor.tracksFlow().map(mapper, viewModelScope)
+    }
+
+    fun scan() {
+        interactor.searchSongsForeground()
     }
 
     fun observe(owner: LifecycleOwner, observer: Observer<in AllState>) {
