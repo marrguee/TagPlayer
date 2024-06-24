@@ -27,4 +27,8 @@ class AllFeatureViewModel(
     fun observe(owner: LifecycleOwner, observer: Observer<in AllState>) {
         communication.observe(owner, observer)
     }
+
+    fun playSong(id: Long){
+        interactor.playSongForeground(id)
+    }
 }

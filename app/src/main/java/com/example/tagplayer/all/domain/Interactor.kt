@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.map
 interface Interactor {
     fun tracksFlow() : Response
     fun searchSongsForeground()
+    fun playSongForeground(id: Long)
 
     class Base(
         private val repository: AllRepository<SongDomain>,
@@ -15,7 +16,7 @@ interface Interactor {
         override fun tracksFlow() = try {
             Response.TracksResponseSuccess(
                 repository.songsFlow().map {
-                        list -> list.map { it.map(modelMapper) }
+                    list -> list.map { it.map(modelMapper) }
                 }
             )
         } catch (e: DomainError) {
@@ -24,6 +25,10 @@ interface Interactor {
 
         override fun searchSongsForeground() {
             repository.searchSongsForeground()
+        }
+
+        override fun playSongForeground(id: Long) {
+            repository.playSongForeground(id)
         }
 
 

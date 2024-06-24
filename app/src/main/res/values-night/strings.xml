@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">TagPlayer</string>
     <string name="first_tab_name">All</string>
     <string name="second_tab_name">History</string>
+    <string name="notification_channel_name">Tag_playback</string>
 </resources>

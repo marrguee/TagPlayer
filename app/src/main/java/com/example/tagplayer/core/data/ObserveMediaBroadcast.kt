@@ -10,8 +10,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class ObserveMediaBroadcast(
-    private val songsDao: SongsDao,
     dispatcherList: DispatcherList,
+    private val songsDao: SongsDao,
 ) : BroadcastReceiver() {
     private val coroutineScope = CoroutineScope(dispatcherList.io())
     override fun onReceive(context: Context?, intent: Intent?) {

@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity(), ProvideViewModel {
         TabLayoutMediator(tabLayout, viewPager) { tab, pos ->
             tab.text = ManageTabText(this).invoke(pos)
         }.attach()
+
     }
 
     override fun <T : ViewModel> provide(clazz: Class<out T>) =

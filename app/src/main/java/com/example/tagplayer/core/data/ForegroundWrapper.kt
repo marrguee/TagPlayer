@@ -1,4 +1,4 @@
-package com.example.tagplayer.core.domain
+package com.example.tagplayer.core.data
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -7,16 +7,19 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.tagplayer.core.data.ProvideMediaStoreHandler
+import androidx.work.workDataOf
+import com.example.tagplayer.core.ProvidePlayerService
 
 interface ForegroundWrapper {
     fun scanMedia()
+    fun playMedia(id: Long)
     fun fetchNewSong()
     fun deleteSong()
 
     class Base(
         private val workManager: WorkManager
     ) : ForegroundWrapper {
+        private val playMediaIdKey = "playMediaIdKey"
 
         private val startWorker: (OneTimeWorkRequest.Builder, String) -> Unit = {
             request: OneTimeWorkRequest.Builder, name: String ->
@@ -28,6 +31,14 @@ interface ForegroundWrapper {
         }
         override fun scanMedia() {
             startWorker.invoke(OneTimeWorkRequestBuilder<MediaWorker>(), "MediaWorker")
+        }
+
+        override fun playMedia(id: Long) {
+            startWorker.invoke(
+                OneTimeWorkRequestBuilder<PlaySongWorker>()
+                    .setInputData(workDataOf(playMediaIdKey to id)),
+                "PlaySongWorker"
+            )
         }
 
         override fun fetchNewSong() {
@@ -50,6 +61,21 @@ class MediaWorker(
         Result.success()
     } catch (e: Exception) {
         Result.failure()
+    }
+}
+
+class PlaySongWorker(
+    context: Context,
+    workerParameters: WorkerParameters
+) : CoroutineWorker(context, workerParameters) {
+    override suspend fun doWork(): Result {
+        val defaultId: Long = -1
+        val id = inputData.getLong("playMediaIdKey", defaultId)
+        if (id == defaultId) return Result.failure()
+        val uri = (applicationContext as ProvideMediaStoreHandler)
+            .mediaStoreHandler().uri(id)
+        (applicationContext as ProvidePlayerService).start(uri)
+        return Result.success()
     }
 }
 

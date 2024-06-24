@@ -18,8 +18,8 @@ interface ExtractMedia {
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.DURATION,
             )
-            val selection = "${MediaStore.Audio.Media.IS_MUSIC} = ?"
-            val selectionArgs = arrayOf("1")
+            val selection = "${MediaStore.Audio.Media.IS_MUSIC} = ? AND ${MediaStore.Audio.Media.DURATION} > ?"
+            val selectionArgs = arrayOf("1", "1000")
             val sortOrder = "${MediaStore.Audio.Media.TITLE} DESC"
             contentResolver.query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,

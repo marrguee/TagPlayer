@@ -7,13 +7,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
 
-class AllRecyclerAdapter : RecyclerView.Adapter<AllRecyclerAdapter.TrackHolder>() {
+class AllRecyclerAdapter(
+    private val listener: (Long) -> Unit
+) : RecyclerView.Adapter<AllRecyclerAdapter.TrackHolder>() {
     private var list: MutableList<SongUi> = mutableListOf()
     class TrackHolder(root: View) : RecyclerView.ViewHolder(root) {
         private val titleView: TextView = root.findViewById(R.id.titleTextView)
         private val durationView: TextView = root.findViewById(R.id.durationTextView)
 
-        fun bind(item: SongUi) = item.bind(titleView, durationView)
+        fun bind(item: SongUi, listener: (Long) -> Unit) {
+            item.bind(titleView, durationView)
+            itemView.setOnClickListener { item.tap(listener) }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
@@ -26,7 +31,7 @@ class AllRecyclerAdapter : RecyclerView.Adapter<AllRecyclerAdapter.TrackHolder>(
     override fun getItemCount() = list.count()
 
     override fun onBindViewHolder(holder: TrackHolder, pos: Int) {
-        holder.bind(list[pos])
+        holder.bind(list[pos], listener)
     }
 
     fun update(data: List<SongUi>){

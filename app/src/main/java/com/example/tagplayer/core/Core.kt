@@ -19,15 +19,15 @@ import com.example.tagplayer.core.data.MediaStoreHandler
 import com.example.tagplayer.core.data.ObserveMediaBroadcast
 import com.example.tagplayer.core.data.ProvideMediaStoreHandler
 import com.example.tagplayer.core.data.SongsDao
-import com.example.tagplayer.core.domain.ForegroundWrapper
+import com.example.tagplayer.core.data.ForegroundWrapper
+import com.example.tagplayer.main.domain.ManageResources
 
-interface Core : ProvideMediaStoreHandler {
+interface Core : ProvideMediaStoreHandler, ManageResources.Provide {
     fun allInteractor() : Interactor
     fun runAsync() : RunAsync
     fun responseMapper() : Mapper
     fun communication() : Communication<AllState>
     fun songsDao() : SongsDao
-
     fun observeMediaBroadcast() : ObserveMediaBroadcast
 
     class Base(
@@ -64,12 +64,15 @@ interface Core : ProvideMediaStoreHandler {
             mediaDatabase.songsDao
         )
 
-        private val observeMediaBroadcast = ObserveMediaBroadcast(songsDao(), dispatcherList)
+        private val observeMediaBroadcast = ObserveMediaBroadcast(dispatcherList, songsDao())
+        private val manageResources = ManageResources.Base(context)
         override fun allInteractor() = allInteractor
         override fun runAsync() = runAsync
         override fun responseMapper() = responseMapper
         override fun communication() = communication
         override fun songsDao() = mediaDatabase.songsDao
+        override fun manageRecourses() = manageResources
+
         override fun observeMediaBroadcast() = observeMediaBroadcast
 
         override fun mediaStoreHandler() = mediaStoreHandler

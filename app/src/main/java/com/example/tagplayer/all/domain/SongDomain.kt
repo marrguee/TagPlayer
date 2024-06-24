@@ -19,7 +19,7 @@ data class SongDomain(
                 val minutes = TimeUnit.MILLISECONDS.toMinutes(duration)
                 val seconds = TimeUnit.MILLISECONDS.toSeconds(duration) % 60
                 val formattedDuration = String.format("%02d:%02d", minutes, seconds)
-                return SongUi(title, formattedDuration)
+                return SongUi(id, title, formattedDuration)
             }
         }
     }

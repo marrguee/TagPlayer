@@ -43,7 +43,7 @@ interface SongsAndTagsDao{
     )
     suspend fun songsByTagsId(tags: List<SongTag>) : List<SongData>
 }
-@Database(entities = [SongData::class, SongTag::class, SongTagCrossRef::class], version = 1)
+@Database(entities = [SongData::class, SongTag::class, SongTagCrossRef::class], version = 1, exportSchema = false)
 abstract class MediaDatabase : RoomDatabase() {
     abstract val songsDao: SongsDao
     abstract val tagsDao: TagDao
