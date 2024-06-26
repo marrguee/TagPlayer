@@ -1,4 +1,4 @@
-package com.example.tagplayer.all.presentation
+package com.example.tagplayer.core.domain
 
 import android.widget.TextView
 

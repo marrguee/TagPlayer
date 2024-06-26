@@ -1,8 +1,6 @@
-package com.example.tagplayer.core
+package com.example.tagplayer.core.domain
 
-import com.example.tagplayer.all.domain.DispatcherList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 

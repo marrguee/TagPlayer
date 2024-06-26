@@ -28,3 +28,4 @@ data class SongData(
         mapper.map(id, title, duration, uri)
 
 }
+

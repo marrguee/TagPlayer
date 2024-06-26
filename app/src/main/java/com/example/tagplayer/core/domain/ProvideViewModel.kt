@@ -1,9 +1,10 @@
-package com.example.tagplayer.core
+package com.example.tagplayer.core.domain
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tagplayer.all.domain.Response
 import com.example.tagplayer.all.presentation.AllFeatureViewModel
+import com.example.tagplayer.core.Core
+import com.example.tagplayer.history.presentation.HistoryViewModel
 
 interface ProvideViewModel {
     fun <T : ViewModel> provide(clazz: Class<out T>) : T
@@ -22,8 +23,13 @@ interface ProvideViewModel {
                     AllFeatureViewModel::class.java -> AllFeatureViewModel(
                         core.runAsync(),
                         core.allInteractor(),
-                        core.communication(),
-                        core.responseMapper()
+                        core.allCommunication(),
+                        core.responseAllMapper()
+                    )
+                    HistoryViewModel::class.java -> HistoryViewModel(
+                        core.historyCommunication(),
+                        core.historyInteractor(),
+                        core.responseHistoryMapper()
                     )
                     else -> throw IllegalStateException("ViewModel class have not been founded")
                 }

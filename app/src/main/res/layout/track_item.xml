@@ -20,21 +20,22 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="20sp"
+            android:layout_weight="3"
+            android:textSize="16sp"
             android:textColor="@color/black"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:maxWidth="160dp"
             tools:text="Track title"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.15"/>
 
         <TextView
             android:id="@+id/durationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:maxLines="1"
             tools:text="3:42" />
 
     </LinearLayout>

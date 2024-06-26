@@ -1,4 +1,4 @@
-package com.example.tagplayer.main.domain
+package com.example.tagplayer.core.domain
 
 import android.content.Context
 import com.example.tagplayer.R

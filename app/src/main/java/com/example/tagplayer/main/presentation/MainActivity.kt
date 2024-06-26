@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.viewpager2.widget.ViewPager2
 import com.example.tagplayer.R
-import com.example.tagplayer.core.ProvideViewModel
+import com.example.tagplayer.core.domain.ProvideViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 

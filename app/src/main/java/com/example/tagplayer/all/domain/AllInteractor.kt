@@ -1,26 +1,28 @@
 package com.example.tagplayer.all.domain
 
+import com.example.tagplayer.core.data.LastPlayed
+import com.example.tagplayer.core.domain.PlaySongForeground
 import com.example.tagplayer.all.presentation.SongUi
+import com.example.tagplayer.core.domain.UpdateHistory
 import kotlinx.coroutines.flow.map
 
-interface Interactor {
-    fun tracksFlow() : Response
+interface AllInteractor : PlaySongForeground, UpdateHistory {
+    fun tracksFlow() : AllResponse
     fun searchSongsForeground()
-    fun playSongForeground(id: Long)
 
     class Base(
         private val repository: AllRepository<SongDomain>,
         private val handleError: HandleError<DomainError, String>,
         private val modelMapper: SongDomain.Mapper<SongUi>
-    ) : Interactor {
+    ) : AllInteractor {
         override fun tracksFlow() = try {
-            Response.TracksResponseSuccess(
+            AllResponse.TracksAllResponseSuccess(
                 repository.songsFlow().map {
                     list -> list.map { it.map(modelMapper) }
                 }
             )
         } catch (e: DomainError) {
-            Response.TracksResponseError(handleError.handle(e))
+            AllResponse.TracksAllResponseError(handleError.handle(e))
         }
 
         override fun searchSongsForeground() {
@@ -31,6 +33,8 @@ interface Interactor {
             repository.playSongForeground(id)
         }
 
-
+        override suspend fun updateHistory(lastPlayed: LastPlayed) {
+            repository.updateHistory(lastPlayed)
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.tagplayer.all.domain
+package com.example.tagplayer.core.domain
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

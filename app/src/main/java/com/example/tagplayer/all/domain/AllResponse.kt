@@ -2,25 +2,23 @@ package com.example.tagplayer.all.domain
 
 import com.example.tagplayer.all.presentation.AllState
 import com.example.tagplayer.all.presentation.SongUi
-import com.example.tagplayer.core.Communication
+import com.example.tagplayer.core.domain.Communication
+import com.example.tagplayer.core.domain.DispatcherList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-interface Response {
-    fun map(mapper: Mapper, coroutineScope: CoroutineScope)
-    interface Mapper {
+interface AllResponse {
+    fun map(mapper: AllMapper, coroutineScope: CoroutineScope)
+    interface AllMapper {
         fun mapSuccess(flow: Flow<List<SongUi>>, coroutineScope: CoroutineScope)
         fun mapError(msg: String, coroutineScope: CoroutineScope)
 
-        class AllMapper(
+        class Base(
             private val communication: Communication<AllState>,
             private val dispatcherList: DispatcherList
-        ) : Mapper {
+        ) : AllMapper {
             override fun mapSuccess(flow: Flow<List<SongUi>>, coroutineScope: CoroutineScope) {
                 coroutineScope.launch {
                     flow.flowOn(dispatcherList.io()).collect { songs ->
@@ -36,18 +34,18 @@ interface Response {
         }
     }
 
-    class TracksResponseSuccess(
+    class TracksAllResponseSuccess(
         private val flow: Flow<List<SongUi>>
-    ) : Response {
-        override fun map(mapper: Mapper, coroutineScope: CoroutineScope) {
+    ) : AllResponse {
+        override fun map(mapper: AllMapper, coroutineScope: CoroutineScope) {
             mapper.mapSuccess(flow, coroutineScope)
         }
     }
 
-    class TracksResponseError(
+    class TracksAllResponseError(
         private val msg: String
-    ) : Response {
-        override fun map(mapper: Mapper, coroutineScope: CoroutineScope) {
+    ) : AllResponse {
+        override fun map(mapper: AllMapper, coroutineScope: CoroutineScope) {
             mapper.mapError(msg, coroutineScope)
         }
     }

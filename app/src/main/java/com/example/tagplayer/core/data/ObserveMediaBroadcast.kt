@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
-import com.example.tagplayer.all.domain.DispatcherList
+import com.example.tagplayer.core.domain.DispatcherList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
