@@ -19,7 +19,7 @@ class AllFeatureViewModel(
     private val runAsync: RunAsync,
     private val interactor: AllInteractor,
     private val communication: Communication<AllState>,
-    private val mapper: AllResponse.AllMapper
+    private val mapper: AllResponse.AllResponseMapper
 ) : ViewModel(), StartPlayback {
 
     fun loadTracks(){
@@ -34,12 +34,13 @@ class AllFeatureViewModel(
         communication.observe(owner, observer)
     }
 
-    @SuppressLint("SimpleDateFormat")
+
     override fun play(id: Long){
-        val now: Date = Calendar.getInstance().time
 
         viewModelScope.launch {
-            interactor.updateHistory(LastPlayed(id, now))
+            interactor.songToHistory(
+                LastPlayed(id, Calendar.getInstance().time)
+            )
         }
         interactor.playSongForeground(id)
     }

@@ -10,15 +10,15 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 interface HistoryResponse {
-    fun map(mapper: HistoryMapper, coroutineScope: CoroutineScope)
-    interface HistoryMapper {
+    fun map(mapper: HistoryResponseMapper, coroutineScope: CoroutineScope)
+    interface HistoryResponseMapper {
         fun mapSuccess(flow: Flow<List<HistoryUi>>, coroutineScope: CoroutineScope)
         fun mapError(msg: String, coroutineScope: CoroutineScope)
 
         class Base(
             private val communication: Communication<HistoryState>,
             private val dispatcherList: DispatcherList
-        ) : HistoryMapper {
+        ) : HistoryResponseMapper {
             override fun mapSuccess(flow: Flow<List<HistoryUi>>, coroutineScope: CoroutineScope) {
                 coroutineScope.launch {
                     flow.flowOn(dispatcherList.io()).collect { songs ->
@@ -37,7 +37,7 @@ interface HistoryResponse {
     class HistoryResponseSuccess(
         private val flow: Flow<List<HistoryUi>>
     ) : HistoryResponse {
-        override fun map(mapper: HistoryMapper, coroutineScope: CoroutineScope) {
+        override fun map(mapper: HistoryResponseMapper, coroutineScope: CoroutineScope) {
             mapper.mapSuccess(flow, coroutineScope)
         }
     }
@@ -45,7 +45,7 @@ interface HistoryResponse {
     class HistoryResponseError(
         private val msg: String
     ) : HistoryResponse {
-        override fun map(mapper: HistoryMapper, coroutineScope: CoroutineScope) {
+        override fun map(mapper: HistoryResponseMapper, coroutineScope: CoroutineScope) {
             mapper.mapError(msg, coroutineScope)
         }
     }

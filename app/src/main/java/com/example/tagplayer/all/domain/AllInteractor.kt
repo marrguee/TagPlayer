@@ -3,10 +3,10 @@ package com.example.tagplayer.all.domain
 import com.example.tagplayer.core.data.LastPlayed
 import com.example.tagplayer.core.domain.PlaySongForeground
 import com.example.tagplayer.all.presentation.SongUi
-import com.example.tagplayer.core.domain.UpdateHistory
+import com.example.tagplayer.core.domain.UpdateSongHistory
 import kotlinx.coroutines.flow.map
 
-interface AllInteractor : PlaySongForeground, UpdateHistory {
+interface AllInteractor : PlaySongForeground, UpdateSongHistory {
     fun tracksFlow() : AllResponse
     fun searchSongsForeground()
 
@@ -33,8 +33,8 @@ interface AllInteractor : PlaySongForeground, UpdateHistory {
             repository.playSongForeground(id)
         }
 
-        override suspend fun updateHistory(lastPlayed: LastPlayed) {
-            repository.updateHistory(lastPlayed)
+        override suspend fun songToHistory(lastPlayed: LastPlayed) {
+            repository.songToHistory(lastPlayed)
         }
     }
 }

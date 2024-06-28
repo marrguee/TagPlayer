@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.data.LastPlayed
-import com.example.tagplayer.history.domain.HistoryInteractor
+import com.example.tagplayer.history.domain.SongHistoryInteractor
 import com.example.tagplayer.history.domain.HistoryResponse
 import com.example.tagplayer.core.domain.StartPlayback
 import kotlinx.coroutines.launch
@@ -15,8 +15,8 @@ import java.util.Date
 
 class HistoryViewModel(
     private val communication: Communication<HistoryState>,
-    private val interactor: HistoryInteractor,
-    private val mapper: HistoryResponse.HistoryMapper
+    private val interactor: SongHistoryInteractor,
+    private val mapper: HistoryResponse.HistoryResponseMapper
 ) : ViewModel(), StartPlayback {
     fun history() {
         interactor.playedHistory().map(mapper, viewModelScope)
@@ -26,7 +26,7 @@ class HistoryViewModel(
         val now: Date = Calendar.getInstance().time
 
         viewModelScope.launch {
-            interactor.updateHistory(LastPlayed(id, now))
+            interactor.songToHistory(LastPlayed(id, now))
         }
 
         interactor.playSongForeground(id)

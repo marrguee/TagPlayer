@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.tagplayer.all.presentation.AllFeatureViewModel
 import com.example.tagplayer.core.Core
 import com.example.tagplayer.history.presentation.HistoryViewModel
+import com.example.tagplayer.search.presentation.SearchViewModel
 
 interface ProvideViewModel {
     fun <T : ViewModel> provide(clazz: Class<out T>) : T
@@ -30,6 +31,11 @@ interface ProvideViewModel {
                         core.historyCommunication(),
                         core.historyInteractor(),
                         core.responseHistoryMapper()
+                    )
+                    SearchViewModel::class.java -> SearchViewModel(
+                        core.searchInteractor(),
+                        core.searchCommunication(),
+                        core.responseSearchMapper()
                     )
                     else -> throw IllegalStateException("ViewModel class have not been founded")
                 }

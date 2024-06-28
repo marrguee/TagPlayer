@@ -4,16 +4,16 @@ import com.example.tagplayer.all.domain.DomainError
 import com.example.tagplayer.all.domain.HandleError
 import com.example.tagplayer.core.data.LastPlayed
 import com.example.tagplayer.core.domain.PlaySongForeground
-import com.example.tagplayer.core.domain.UpdateHistory
+import com.example.tagplayer.core.domain.UpdateSongHistory
 import kotlinx.coroutines.flow.map
 
-interface HistoryInteractor : PlaySongForeground, UpdateHistory {
+interface SongHistoryInteractor : PlaySongForeground, UpdateSongHistory {
     fun playedHistory() : HistoryResponse
 
     class Base(
-        private val repository: HistoryRepository<HistoryDomain>,
+        private val repository: SongHistoryRepository<HistoryDomain>,
         private val handleError: HandleError<DomainError, String>,
-    ) : HistoryInteractor {
+    ) : SongHistoryInteractor {
         override fun playedHistory(): HistoryResponse {
             return try {
                 val d = repository.playedHistory().map {
@@ -31,8 +31,8 @@ interface HistoryInteractor : PlaySongForeground, UpdateHistory {
             repository.playSongForeground(id)
         }
 
-        override suspend fun updateHistory(lastPlayed: LastPlayed) {
-            repository.updateHistory(lastPlayed)
+        override suspend fun songToHistory(lastPlayed: LastPlayed) {
+            repository.songToHistory(lastPlayed)
         }
     }
 }
