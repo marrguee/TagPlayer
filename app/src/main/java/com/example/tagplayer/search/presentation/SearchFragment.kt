@@ -1,16 +1,13 @@
 package com.example.tagplayer.search.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
-import com.example.tagplayer.all.presentation.SongUi
+import com.example.tagplayer.main.presentation.SongUi
 import com.example.tagplayer.core.domain.ProvideViewModel
 
 class SearchFragment : Fragment(R.layout.search_fragment) {
@@ -76,7 +73,7 @@ class SearchFragment : Fragment(R.layout.search_fragment) {
         })
 
         viewModel.observe(this) {
-            it.dispatch(adapter, recyclerAdapter)
+            it.dispatch(recyclerAdapter)
         }
 
         //viewModel.searchHistory()

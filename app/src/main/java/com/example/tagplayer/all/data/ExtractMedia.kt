@@ -3,16 +3,16 @@ package com.example.tagplayer.all.data
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.provider.MediaStore
-import com.example.tagplayer.core.data.SongData
+import com.example.tagplayer.core.data.database.models.Song
 
 interface ExtractMedia {
-    suspend fun media() : List<SongData>
+    suspend fun media() : List<Song>
     class Base(
         private val contentResolver: ContentResolver
     ) : ExtractMedia {
 
-        override suspend fun media(): List<SongData> {
-            val result = mutableListOf<SongData>()
+        override suspend fun media(): List<Song> {
+            val result = mutableListOf<Song>()
             val projection = arrayOf(
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.TITLE,
@@ -40,7 +40,7 @@ interface ExtractMedia {
                         id
                     )
                     result.add(
-                        SongData(
+                        Song(
                             id,
                             name,
                             duration,

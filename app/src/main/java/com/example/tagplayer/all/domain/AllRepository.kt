@@ -1,10 +1,10 @@
 package com.example.tagplayer.all.domain
 
-import com.example.tagplayer.core.domain.UpdateSongHistory
-import kotlinx.coroutines.flow.Flow
+import com.example.tagplayer.core.data.HandleRepositoryRequest
+import com.example.tagplayer.core.domain.PlaySongForeground
 
-interface AllRepository<T> : UpdateSongHistory {
-    fun songsFlow() : Flow<List<T>>
-    fun searchSongsForeground()
-    fun playSongForeground(id: Long)
-}
+interface AllRepository<T> :
+    HandleRepositoryRequest<T, Any>,
+    PlaySongForeground,
+    ScanSongsForeground
+

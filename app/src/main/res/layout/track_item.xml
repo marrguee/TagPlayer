@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:layout_margin="16dp">
 
-        <TextView
+        <com.example.tagplayer.main.presentation.CustomTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:maxWidth="160dp"
             tools:text="Track title"/>
 
-        <TextView
+        <com.example.tagplayer.main.presentation.CustomTextView
             android:id="@+id/durationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

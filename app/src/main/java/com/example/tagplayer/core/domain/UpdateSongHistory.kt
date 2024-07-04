@@ -1,7 +1,7 @@
 package com.example.tagplayer.core.domain
 
-import com.example.tagplayer.core.data.LastPlayed
+import com.example.tagplayer.core.data.database.models.LastPlayed
 
-interface UpdateSongHistory {
-    suspend fun songToHistory(lastPlayed: LastPlayed)
+interface UpdateSongHistory<T> {
+    suspend fun songToHistory(lastPlayed: T)
 }

@@ -1,5 +1,7 @@
 package com.example.tagplayer.all.presentation
 
+import com.example.tagplayer.main.presentation.SongUi
+
 interface AllState {
 
     fun dispatch(recyclerAdapter: AllRecyclerAdapter)

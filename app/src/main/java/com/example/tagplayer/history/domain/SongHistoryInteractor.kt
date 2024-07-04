@@ -2,12 +2,12 @@ package com.example.tagplayer.history.domain
 
 import com.example.tagplayer.all.domain.DomainError
 import com.example.tagplayer.all.domain.HandleError
-import com.example.tagplayer.core.data.LastPlayed
+import com.example.tagplayer.core.data.database.models.LastPlayed
 import com.example.tagplayer.core.domain.PlaySongForeground
 import com.example.tagplayer.core.domain.UpdateSongHistory
 import kotlinx.coroutines.flow.map
 
-interface SongHistoryInteractor : PlaySongForeground, UpdateSongHistory {
+interface SongHistoryInteractor : PlaySongForeground {
     fun playedHistory() : HistoryResponse
 
     class Base(
@@ -16,11 +16,10 @@ interface SongHistoryInteractor : PlaySongForeground, UpdateSongHistory {
     ) : SongHistoryInteractor {
         override fun playedHistory(): HistoryResponse {
             return try {
-                val d = repository.playedHistory().map {
-                        list -> list.map { it.map() }
-                }
                 HistoryResponse.HistoryResponseSuccess(
-                    d
+                    repository.handleRequest().map {
+                        list -> list.map { it.map() }
+                    }
                 )
             } catch (e: DomainError) {
                 HistoryResponse.HistoryResponseError(handleError.handle(e))
@@ -29,10 +28,6 @@ interface SongHistoryInteractor : PlaySongForeground, UpdateSongHistory {
 
         override fun playSongForeground(id: Long) {
             repository.playSongForeground(id)
-        }
-
-        override suspend fun songToHistory(lastPlayed: LastPlayed) {
-            repository.songToHistory(lastPlayed)
         }
     }
 }

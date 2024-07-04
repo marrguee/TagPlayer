@@ -1,7 +1,7 @@
 package com.example.tagplayer.all.domain
 
 import android.net.Uri
-import com.example.tagplayer.all.presentation.SongUi
+import com.example.tagplayer.main.presentation.SongUi
 import java.util.concurrent.TimeUnit
 
 data class SongDomain(

@@ -1,8 +1,10 @@
 package com.example.tagplayer.history.presentation
 
+import com.example.tagplayer.main.presentation.ItemUi
+
 interface HistoryState {
     fun dispatch(adapter: HistoryRecyclerAdapter)
-    class HistoryUpdated(private val list: List<HistoryUi>) : HistoryState {
+    class HistoryUpdated(private val list: List<ItemUi>) : HistoryState {
         override fun dispatch(adapter: HistoryRecyclerAdapter) {
             adapter.submitList(list)
         }

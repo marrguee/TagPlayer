@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import com.example.tagplayer.all.presentation.AllState
 import com.example.tagplayer.history.presentation.HistoryState
 import com.example.tagplayer.search.domain.SearchState
+import com.example.tagplayer.tagsettings.presentation.TagSettingsState
 
 interface Communication<T> {
     fun update(data: T)
@@ -40,6 +41,17 @@ interface Communication<T> {
         }
 
         override fun observe(owner: LifecycleOwner, observer: Observer<in SearchState>) {
+            liveData.observe(owner, observer)
+        }
+    }
+
+    class TagSettingsCommunication : Communication<TagSettingsState> {
+        private val liveData = MutableLiveData<TagSettingsState>()
+        override fun update(data: TagSettingsState) {
+            liveData.value = data
+        }
+
+        override fun observe(owner: LifecycleOwner, observer: Observer<in TagSettingsState>) {
             liveData.observe(owner, observer)
         }
     }

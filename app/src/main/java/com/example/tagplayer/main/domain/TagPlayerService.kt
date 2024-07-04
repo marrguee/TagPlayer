@@ -13,7 +13,16 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSession.ControllerInfo
 import androidx.media3.session.MediaSessionService
+import com.example.tagplayer.core.data.database.models.LastPlayed
 import com.example.tagplayer.core.domain.ManageResources
+import com.example.tagplayer.core.domain.ProvideLastPlayedDao
+import com.example.tagplayer.core.domain.ProvideSongsDao
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Date
 
 @UnstableApi
 class TagPlayerService : MediaSessionService() {
@@ -21,10 +30,11 @@ class TagPlayerService : MediaSessionService() {
     private lateinit var manageNotification: ManageNotification
     private lateinit var showNotification: ShowNotification
     private lateinit var notificationManager: NotificationManager
+    private lateinit var coroutineScope: CoroutineScope
 
     override fun onCreate() {
         super.onCreate()
-
+        coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         val player = ExoPlayer.Builder(this)
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
@@ -72,15 +82,33 @@ class TagPlayerService : MediaSessionService() {
         intent?.let {
             when(it.action) {
 
-                START_SERVICE -> with(player) {
-                    if(mediaItemCount > 0) {
-                        stop()
-                        clearMediaItems()
+                START_SERVICE ->
+                    coroutineScope.launch {
+                        val songId = it.getLongExtra(ID_KEY, -1)
+
+                        val songsDao =
+                            (application as ProvideSongsDao).songsDao()
+                        val lastPlayedDao =
+                            (application as ProvideLastPlayedDao).lastPlayedDao()
+
+                        val uri = songsDao.uriById(songId)
+                        val requestedSong = MediaItem.fromUri(uri)
+
+                        withContext(Dispatchers.Main.immediate) {
+                            with(player) {
+                                if(currentMediaItem == requestedSong)
+                                    return@withContext
+                                if(mediaItemCount > 0) {
+                                    stop()
+                                    clearMediaItems()
+                                }
+                                addMediaItem(requestedSong)
+                                lastPlayedDao.wasPlayed(LastPlayed(songId, Date()))
+                                prepare()
+                                play()
+                            }
+                        }
                     }
-                    addMediaItem(MediaItem.fromUri(it.getStringExtra(URI_KEY) ?: ""))
-                    prepare()
-                    play()
-                }
 
                 STOP_SERVICE -> stopSelf()
 
@@ -89,6 +117,8 @@ class TagPlayerService : MediaSessionService() {
                 PAUSE_ACTION -> player.pause()
 
                 RESTART_ACTION -> player.seekToPrevious()
+
+                else -> throw IllegalStateException()
             }
         }
 
@@ -132,7 +162,7 @@ class TagPlayerService : MediaSessionService() {
     }
 
     companion object {
-        const val URI_KEY = "URI_KEY"
+        const val ID_KEY = "ID_KEY"
         const val PLAY_ACTION = "PLAY_ACTION"
         const val PAUSE_ACTION = "PAUSE_ACTION"
         const val START_SERVICE = "START_SERVICE"

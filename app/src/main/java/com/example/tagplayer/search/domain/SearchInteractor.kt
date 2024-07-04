@@ -3,19 +3,18 @@ package com.example.tagplayer.search.domain
 import com.example.tagplayer.all.domain.DomainError
 import com.example.tagplayer.all.domain.HandleError
 import com.example.tagplayer.all.domain.SongDomain
-import com.example.tagplayer.all.presentation.SongUi
-import com.example.tagplayer.core.data.LastPlayed
+import com.example.tagplayer.main.presentation.SongUi
 import com.example.tagplayer.core.domain.PlaySongForeground
-import com.example.tagplayer.core.domain.UpdateSongHistory
-import com.example.tagplayer.search.data.SearchHistory
+import com.example.tagplayer.core.data.database.models.SearchHistoryTable
 import com.example.tagplayer.search.presentation.SearchUi
+import kotlinx.coroutines.flow.map
 
-interface SearchInteractor : UpdateHistory<SearchHistory>, PlaySongForeground, UpdateSongHistory {
+interface SearchInteractor : UpdateSearchHistory<SearchHistoryTable>, PlaySongForeground {
     suspend fun searchHistory() : SearchResponse
-    suspend fun findSongs(query: String) : SearchResponse
+    fun findSongs(query: String) : SearchResponse
 
     class Base(
-        private val repository: SearchRepository<SearchDomain, SearchHistory>,
+        private val repository: SearchRepository<SearchDomain, SongDomain>,
         private val handleError: HandleError.Presentation,
         private val searchModelMapper: SearchDomain.Mapper<SearchUi>,
         private val songsModelMapper: SongDomain.Mapper<SongUi>
@@ -26,24 +25,20 @@ interface SearchInteractor : UpdateHistory<SearchHistory>, PlaySongForeground, U
             SearchResponse.Error(handleError.handle(e))
         }
 
-        override suspend fun findSongs(query: String) = try {
-            SearchResponse.SongsSuccess(repository.findSongs(query).map {
-                it.map(songsModelMapper)
+        override fun findSongs(query: String) = try {
+            SearchResponse.SongsSuccess(repository.handleRequest(query).map { list ->
+                list.map { it.map(songsModelMapper) }
             })
         } catch (e: DomainError) {
             SearchResponse.Error(handleError.handle(e))
         }
 
-        override suspend fun updateSearch(searchHistory: SearchHistory) {
-            repository.updateSearch(searchHistory)
+        override suspend fun updateSearch(searchHistoryTable: SearchHistoryTable) {
+            repository.updateSearch(searchHistoryTable)
         }
 
         override fun playSongForeground(id: Long) {
             repository.playSongForeground(id)
-        }
-
-        override suspend fun songToHistory(lastPlayed: LastPlayed) {
-            repository.songToHistory(lastPlayed)
         }
     }
 }

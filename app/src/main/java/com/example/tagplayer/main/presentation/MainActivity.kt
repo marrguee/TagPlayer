@@ -39,10 +39,10 @@ class MainActivity : AppCompatActivity(), ProvideViewModel {
 
     override fun onResume() {
         super.onResume()
-        supportFragmentManager.beginTransaction()
-            .add(R.id.searchContainer, SearchFragment())
-            .addToBackStack("SearchFragment")
-            .commit()
+//        supportFragmentManager.beginTransaction()
+//            .add(R.id.searchContainer, SearchFragment())
+//            .addToBackStack("SearchFragment")
+//            .commit()
     }
 
     override fun <T : ViewModel> provide(clazz: Class<out T>) =

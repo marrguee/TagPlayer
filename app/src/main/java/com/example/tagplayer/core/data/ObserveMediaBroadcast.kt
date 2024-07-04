@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
+import com.example.tagplayer.core.data.database.models.Song
+import com.example.tagplayer.core.data.database.dao.SongsDao
 import com.example.tagplayer.core.domain.DispatcherList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -45,7 +47,7 @@ class ObserveMediaBroadcast(
                             val title = cursor.getString(titleColumn)
                             val duration = cursor.getLong(durationColumn)
 
-                            val song = SongData(id, title, duration, uri.toString())
+                            val song = Song(id, title, duration, uri.toString())
                             coroutineScope.launch {
                                 songsDao.addSong(song)
                             }

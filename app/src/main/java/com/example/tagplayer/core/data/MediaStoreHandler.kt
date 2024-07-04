@@ -1,10 +1,10 @@
 package com.example.tagplayer.core.data
 
 import com.example.tagplayer.all.data.ExtractMedia
+import com.example.tagplayer.core.data.database.dao.SongsDao
 
 interface MediaStoreHandler {
     suspend fun scan()
-    suspend fun uri(id: Long) : String
 
     class Base(
         private val extractMedia: ExtractMedia,
@@ -13,7 +13,5 @@ interface MediaStoreHandler {
         override suspend fun scan() {
             songsDao.addSongs(extractMedia.media())
         }
-
-        override suspend fun uri(id: Long) = songsDao.uriById(id)
     }
 }

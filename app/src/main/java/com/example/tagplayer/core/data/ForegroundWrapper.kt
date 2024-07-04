@@ -8,6 +8,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.example.tagplayer.core.domain.ProvideMediaStoreHandler
 import com.example.tagplayer.core.domain.ProvidePlayerService
 
 interface ForegroundWrapper {
@@ -72,9 +73,7 @@ class PlaySongWorker(
         val defaultId: Long = -1
         val id = inputData.getLong("playMediaIdKey", defaultId)
         if (id == defaultId) return Result.failure()
-        val uri = (applicationContext as ProvideMediaStoreHandler)
-            .mediaStoreHandler().uri(id)
-        (applicationContext as ProvidePlayerService).start(uri)
+        (applicationContext as ProvidePlayerService).start(id)
         return Result.success()
     }
 }

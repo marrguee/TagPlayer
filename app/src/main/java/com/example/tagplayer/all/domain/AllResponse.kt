@@ -1,7 +1,7 @@
 package com.example.tagplayer.all.domain
 
 import com.example.tagplayer.all.presentation.AllState
-import com.example.tagplayer.all.presentation.SongUi
+import com.example.tagplayer.main.presentation.SongUi
 import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.domain.DispatcherList
 import kotlinx.coroutines.CoroutineScope
