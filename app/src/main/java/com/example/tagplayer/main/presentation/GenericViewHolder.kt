@@ -8,6 +8,8 @@ import com.example.tagplayer.history.presentation.DateUi
 abstract class GenericViewHolder<T : ItemUi>(root: View) : RecyclerView.ViewHolder(root) {
     abstract fun bind(item: T, listener: (Long) -> Unit)
 
+    abstract class GenericListenerViewHolder<T : ItemUi>(root: View) : GenericViewHolder<T>(root)
+
     class SongHolder(root: View) : GenericViewHolder<SongUi>(root) {
         private val titleTextView: CustomTextView = itemView.findViewById(R.id.titleTextView)
         private val durationTextView: CustomTextView = itemView.findViewById(R.id.durationTextView)

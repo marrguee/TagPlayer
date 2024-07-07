@@ -28,3 +28,25 @@ abstract class GenericAdapter<T : ItemUi>(
         typeList
     )
 }
+
+//abstract class GenericListenerAdapter<T : ItemUi>(
+//    diffUtil: GenericDiffUtil<T>,
+//    private val listener: (Long) -> Unit,
+//    private val typeList: List<ItemUiType>
+//) : ListAdapter<T, GenericListenerViewHolder<T>>(diffUtil) {
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+//        typeList[viewType].viewHolder(parent) as GenericListenerViewHolder<T>
+//
+//    override fun getItemViewType(position: Int) =
+//        typeList.indexOf(currentList[position].type())
+//
+//    override fun onBindViewHolder(holder: GenericViewHolder<T>, position: Int) {
+//        holder.bind(currentList[position], listener)
+//    }
+//
+//}
+//
+//interface GenericListenerViewHolder<T : ItemUi> {
+//    fun bind(item: T)
+//    fun bind(item: T, listener: (Long) -> Unit)
+//}

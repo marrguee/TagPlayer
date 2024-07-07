@@ -1,7 +1,9 @@
 package com.example.tagplayer.core
 
 import android.app.Application
+import android.app.DownloadManager
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.util.UnstableApi
@@ -33,10 +35,12 @@ class App : Application(),
         core = Core.Base(this, contentResolver)
         factory = ProvideViewModel.Factory(core)
         broadcast = core.observeMediaBroadcast()
-//        registerReceiver(
-//            broadcast,
-//            IntentFilter(Intent.ACTION_MEDIA_CHECKING)
-//        )
+        ContextCompat.registerReceiver(
+            this,
+            broadcast,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            ContextCompat.RECEIVER_EXPORTED
+        )
 
     }
 
