@@ -27,21 +27,5 @@ class AllFragment : Fragment(R.layout.all_fragment) {
         viewModel.loadTracks()
         viewModel.scan()
 
-//        val activity = requireActivity()
-//        val sessionToken = SessionToken(
-//            activity,
-//            ComponentName(activity, TagPlayerService::class.java)
-//        )
-//        val controllerFuture = MediaController.Builder(
-//            activity,
-//            sessionToken
-//        ).buildAsync()
-//
-//        controllerFuture.addListener(
-//            {
-//            },
-//            MoreExecutors.directExecutor()
-//        )
-
     }
 }

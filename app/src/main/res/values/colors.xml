@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="track_item_bg">#E3DFFD</color>
+    <color name="light_gray">#F9F8F4</color>
+    <color name="dark_gray">#C1C1C1</color>
 </resources>

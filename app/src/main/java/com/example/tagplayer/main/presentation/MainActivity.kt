@@ -2,20 +2,24 @@ package com.example.tagplayer.main.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.widget.EditText
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModel
 import androidx.viewpager2.widget.ViewPager2
 import com.example.tagplayer.R
+import com.example.tagplayer.core.ObservableUi
+import com.example.tagplayer.core.ObserverUi
 import com.example.tagplayer.core.domain.ProvideViewModel
+import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
 import com.example.tagplayer.search.presentation.SearchFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity(), ProvideViewModel {
+    private val viewModel by lazy {
+        (application as ProvideViewModel).provide(MainViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,16 +39,26 @@ class MainActivity : AppCompatActivity(), ProvideViewModel {
             .commit()
         }
 
+        viewModel.startGettingUpdates(object : MainActivityCallback {
+            override fun update(data: Screen) {
+                data.dispatch(supportFragmentManager, R.id.searchContainer)
+                data.consumed(viewModel)
+            }
+        })
+
     }
 
-    override fun onResume() {
-        super.onResume()
-//        supportFragmentManager.beginTransaction()
-//            .add(R.id.searchContainer, SearchFragment())
-//            .addToBackStack("SearchFragment")
-//            .commit()
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopGettingUpdates()
     }
 
     override fun <T : ViewModel> provide(clazz: Class<out T>) =
         (application as ProvideViewModel).provide(clazz)
+}
+
+interface MainActivityCallback : ObserverUi<Screen> {
+    object Empty : MainActivityCallback {
+        override fun update(data: Screen) = Unit
+    }
 }

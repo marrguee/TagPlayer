@@ -9,6 +9,9 @@ import com.example.tagplayer.history.presentation.HistoryModule
 import com.example.tagplayer.search.presentation.SearchModule
 import com.example.tagplayer.tagsettings.presentation.TagSettingsModule
 import com.example.tagplayer.history.presentation.HistoryViewModel
+import com.example.tagplayer.main.Navigation
+import com.example.tagplayer.main.presentation.MainViewModel
+import com.example.tagplayer.playback_control.presentation.PlaybackControlViewModel
 import com.example.tagplayer.search.presentation.SearchViewModel
 import com.example.tagplayer.tagsettings.presentation.TagSettingsViewModel
 
@@ -40,6 +43,10 @@ interface ProvideViewModel {
                         SearchModule.Base(core, clearSearchModule).create()
                     TagSettingsViewModel::class.java ->
                         TagSettingsModule.Base(core, clearTagSettingsModule).create()
+                    PlaybackControlViewModel::class.java ->
+                        PlaybackControlViewModel(Communication.PlaybackControlCommunication())
+                    MainViewModel::class.java ->
+                        MainViewModel(Navigation.Base)
                     else -> throw IllegalStateException("ViewModel class have not been founded")
                 }
                 viewModels[modelClass] = viewModel

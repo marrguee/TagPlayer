@@ -1,0 +1,38 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="45dp"
+    android:height="45dp"
+    android:viewportWidth="45"
+    android:viewportHeight="45">
+  <path
+      android:pathData="M22.5,22.5m-22.5,0a22.5,22.5 0,1 1,45 0a22.5,22.5 0,1 1,-45 0"
+      android:fillAlpha="0.75">
+    <aapt:attr name="android:fillColor">
+      <gradient 
+          android:startX="4.065"
+          android:startY="-0"
+          android:endX="36.097"
+          android:endY="50.23"
+          android:type="linear">
+        <item android:offset="0" android:color="#FFF8F4E9"/>
+        <item android:offset="0.321" android:color="#FFF8F4E9"/>
+        <item android:offset="0.642" android:color="#FFF8F4E9"/>
+        <item android:offset="1" android:color="#FFF5F5F5"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
+      android:pathData="M26,14.333V31.667C26,32.286 26,32.596 26.051,32.854C26.262,33.911 27.088,34.739 28.146,34.949C28.403,35 28.713,35 29.333,35C29.952,35 30.263,35 30.521,34.949C31.579,34.739 32.405,33.911 32.616,32.854C32.667,32.598 32.667,32.292 32.667,31.683V14.317C32.667,13.708 32.667,13.401 32.616,13.146C32.405,12.088 31.578,11.262 30.52,11.051C30.263,11 29.953,11 29.333,11C28.714,11 28.403,11 28.146,11.051C27.088,11.262 26.262,12.088 26.051,13.146C26,13.403 26,13.714 26,14.333Z"
+      android:strokeLineJoin="round"
+      android:strokeWidth="0.75"
+      android:fillColor="#00000000"
+      android:strokeColor="#191813"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M11.333,14.333V31.667C11.333,32.286 11.333,32.596 11.384,32.854C11.595,33.911 12.421,34.739 13.479,34.949C13.737,35 14.047,35 14.666,35C15.285,35 15.597,35 15.854,34.949C16.912,34.739 17.739,33.911 17.949,32.854C18,32.598 18,32.292 18,31.683V14.317C18,13.708 18,13.401 17.949,13.146C17.739,12.088 16.911,11.262 15.854,11.051C15.596,11 15.286,11 14.667,11C14.047,11 13.737,11 13.479,11.051C12.421,11.262 11.595,12.088 11.384,13.146C11.333,13.403 11.333,13.714 11.333,14.333Z"
+      android:strokeLineJoin="round"
+      android:strokeWidth="0.75"
+      android:fillColor="#00000000"
+      android:strokeColor="#191813"
+      android:strokeLineCap="round"/>
+</vector>

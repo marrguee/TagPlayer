@@ -79,11 +79,6 @@ interface ManageNotification {
                         .setStyle(
                             MediaStyle(mediaSession)
                                 .setShowActionsInCompactView(0,1)
-                                .setShowCancelButton(true)
-                                .setCancelButtonIntent(pendingIntentCustomCompat.foregroundService(
-                                    context,
-                                    TagPlayerService.STOP_SERVICE
-                                ))
                         )
                 }
             }

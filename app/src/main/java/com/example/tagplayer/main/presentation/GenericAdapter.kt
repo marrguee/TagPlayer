@@ -9,6 +9,7 @@ abstract class GenericAdapter<T : ItemUi>(
     private val listener: (Long) -> Unit,
     private val typeList: List<ItemUiType>
 ) : ListAdapter<T, GenericViewHolder<T>>(diffUtil) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         typeList[viewType].viewHolder(parent) as GenericViewHolder<T>
 

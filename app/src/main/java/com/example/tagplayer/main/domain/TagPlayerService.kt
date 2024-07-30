@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.COMMAND_SEEK_TO_NEXT
 import androidx.media3.common.Player.COMMAND_SEEK_TO_NEXT_MEDIA_ITEM
@@ -17,6 +18,9 @@ import com.example.tagplayer.core.data.database.models.LastPlayed
 import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.domain.ProvideLastPlayedDao
 import com.example.tagplayer.core.domain.ProvideSongsDao
+import com.example.tagplayer.main.Navigation
+import com.example.tagplayer.main.presentation.Screen
+import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,6 +35,7 @@ class TagPlayerService : MediaSessionService() {
     private lateinit var showNotification: ShowNotification
     private lateinit var notificationManager: NotificationManager
     private lateinit var coroutineScope: CoroutineScope
+    private var firstStart = true
 
     override fun onCreate() {
         super.onCreate()
@@ -64,6 +69,7 @@ class TagPlayerService : MediaSessionService() {
         mediaSession.player.repeatMode = Player.REPEAT_MODE_ONE
 
         mediaSession.player.addListener(object : Player.Listener {
+
             override fun onEvents(player: Player, events: Player.Events) {
                 super.onEvents(player, events)
                 if (events.containsAny(
@@ -107,6 +113,12 @@ class TagPlayerService : MediaSessionService() {
                                 prepare()
                                 play()
                             }
+                            if (firstStart)
+                                Navigation.Base.update(
+                                    Screen.Add(
+                                        PlaybackControlFragment::class.java
+                                    )
+                                )
                         }
                     }
 
@@ -117,8 +129,7 @@ class TagPlayerService : MediaSessionService() {
                 PAUSE_ACTION -> player.pause()
 
                 RESTART_ACTION -> player.seekToPrevious()
-
-                else -> throw IllegalStateException()
+                else -> {}
             }
         }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.tagplayer.all.presentation.AllState
 import com.example.tagplayer.history.presentation.HistoryState
+import com.example.tagplayer.playback_control.presentation.PlaybackControlState
 import com.example.tagplayer.search.domain.SearchState
 import com.example.tagplayer.tagsettings.presentation.TagSettingsState
 
@@ -52,6 +53,17 @@ interface Communication<T> {
         }
 
         override fun observe(owner: LifecycleOwner, observer: Observer<in TagSettingsState>) {
+            liveData.observe(owner, observer)
+        }
+    }
+
+    class PlaybackControlCommunication : Communication<PlaybackControlState> {
+        private val liveData = MutableLiveData<PlaybackControlState>()
+        override fun update(data: PlaybackControlState) {
+            liveData.value = data
+        }
+
+        override fun observe(owner: LifecycleOwner, observer: Observer<in PlaybackControlState>) {
             liveData.observe(owner, observer)
         }
     }
