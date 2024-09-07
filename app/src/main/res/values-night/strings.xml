@@ -4,4 +4,9 @@
     <string name="first_tab_name">All</string>
     <string name="second_tab_name">History</string>
     <string name="notification_channel_name">Tag_playback</string>
+    <string name="recently_played">Recently played</string>
+    <string name="library_text_view">library</string>
+    <string name="all_tags">All tags</string>
+    <string name="apply">Apply</string>
+    <string name="select_tags">Select tags</string>
 </resources>

@@ -14,10 +14,10 @@ import com.example.tagplayer.tagsettings.domain.TagDomain
     ]
 )
 data class SongTag(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo("id") val id: Long,
     @ColumnInfo("title") val title: String,
-    @ColumnInfo("color") val color: String
+    @ColumnInfo("color") val color: String,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo("id") val id: Long = 0,
 ) {
     interface Mapper<T> {
         fun map(id: Long, title: String, color: String) : T

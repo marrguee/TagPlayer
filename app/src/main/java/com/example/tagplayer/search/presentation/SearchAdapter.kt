@@ -7,7 +7,7 @@ class SearchAdapter(
     listener: (Long) -> Unit
 ) : GenericAdapter.ItemUiAdapter(
     listener,
-    listOf(ItemUiType.SongType)
+    listOf(ItemUiType.LibraryType)
 )
 //class SearchAdapter(
 //    private val listener: (Long) -> Unit

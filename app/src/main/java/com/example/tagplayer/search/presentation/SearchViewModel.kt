@@ -4,7 +4,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tagplayer.core.data.database.models.LastPlayed
 import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.domain.PlaySongForeground
 import com.example.tagplayer.core.data.database.models.SearchHistoryTable
@@ -12,10 +11,8 @@ import com.example.tagplayer.core.domain.DispatcherList
 import com.example.tagplayer.search.domain.SearchInteractor
 import com.example.tagplayer.search.domain.SearchResponse
 import com.example.tagplayer.search.domain.SearchState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Calendar
 import java.util.Date
 
 class SearchViewModel(
@@ -34,7 +31,7 @@ class SearchViewModel(
         viewModelScope.launch(dispatcherList.io()) {
             val result = interactor.searchHistory()
             withContext(dispatcherList.ui()){
-                result.map(searchResponseMapper, viewModelScope)
+                result.map(searchResponseMapper)
             }
         }
     }
@@ -45,8 +42,15 @@ class SearchViewModel(
         }
     }
 
-    fun findSongs(query: String) =
-        interactor.findSongs(query).map(searchResponseMapper, viewModelScope)
+    fun findSongs(query: String) {
+        viewModelScope.launch(dispatcherList.io()) {
+            val result = interactor.findSongsByTitle(query)
+            withContext(dispatcherList.ui()){
+                result.map(searchResponseMapper)
+            }
+        }
+    }
+
 
     fun observe(owner: LifecycleOwner, observer: Observer<in SearchState>) =
         communication.observe(owner, observer)

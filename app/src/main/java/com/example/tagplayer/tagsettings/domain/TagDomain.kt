@@ -1,8 +1,7 @@
 package com.example.tagplayer.tagsettings.domain
 
 import com.example.tagplayer.core.data.database.models.SongTag
-import com.example.tagplayer.tagsettings.data.TagData
-import com.example.tagplayer.tagsettings.presentation.TagUi
+import com.example.tagplayer.tagsettings.presentation.TagSettingsUi
 
 class TagDomain(
     private val id: Long,
@@ -12,14 +11,14 @@ class TagDomain(
     interface Mapper<T> {
         fun map(id: Long, title: String, color: String) : T
 
-        object ToUi : Mapper<TagUi> {
+        object ToUi : Mapper<TagSettingsUi> {
             override fun map(id: Long, title: String, color: String) =
-                TagUi(title, color)
+                TagSettingsUi(id, title, color)
         }
 
         object ToData : Mapper<SongTag> {
             override fun map(id: Long, title: String, color: String) =
-                SongTag(id, title, color)
+                SongTag(title, color)
         }
     }
 

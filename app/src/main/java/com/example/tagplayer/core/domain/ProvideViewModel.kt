@@ -2,51 +2,72 @@ package com.example.tagplayer.core.domain
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tagplayer.all.presentation.AllFeatureViewModel
-import com.example.tagplayer.all.presentation.AllModule
+import com.example.tagplayer.all.presentation.HomeModule
+import com.example.tagplayer.all.presentation.HomeViewModel
 import com.example.tagplayer.core.Core
-import com.example.tagplayer.history.presentation.HistoryModule
-import com.example.tagplayer.search.presentation.SearchModule
-import com.example.tagplayer.tagsettings.presentation.TagSettingsModule
-import com.example.tagplayer.history.presentation.HistoryViewModel
-import com.example.tagplayer.main.Navigation
 import com.example.tagplayer.main.presentation.MainViewModel
+import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.playback_control.presentation.PlaybackControlViewModel
+import com.example.tagplayer.recently.presentation.RecentlyModule
+import com.example.tagplayer.recently.presentation.RecentlyViewModel
+import com.example.tagplayer.search.presentation.SearchModule
 import com.example.tagplayer.search.presentation.SearchViewModel
+import com.example.tagplayer.tagsettings.TagSettingsFeatureModule
+import com.example.tagplayer.tagsettings.add_tag.AddTagViewModel
 import com.example.tagplayer.tagsettings.presentation.TagSettingsViewModel
 
 interface ProvideViewModel {
-    fun <T : ViewModel> provide(clazz: Class<out T>) : T
+    fun <T : ViewModel> provide(clazz: Class<out T>): T
 
     @Suppress("UNCHECKED_CAST")
     class Factory(
         private val core: Core,
     ) : ViewModelProvider.Factory, ClearViewModel {
         private val viewModels: MutableMap<Class<out ViewModel>, ViewModel> = mutableMapOf()
+        //todo memory leak. View models does not cleared
         private val clearSearchModule: () -> Unit = {
             clear(SearchViewModel::class.java)
         }
+        private var tagSettingsFeatureModule: TagSettingsFeatureModule? = null
+
         private val clearTagSettingsModule: () -> Unit = {
             clear(TagSettingsViewModel::class.java)
+            clear(AddTagViewModel::class.java)
+            tagSettingsFeatureModule = null
         }
+
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (viewModels.containsKey(modelClass)) {
                 viewModels[modelClass]
-            }
-            else {
+            } else {
                 val viewModel = when (modelClass) {
-                    AllFeatureViewModel::class.java ->
-                        AllModule.Base(core).create()
-                    HistoryViewModel::class.java ->
-                        HistoryModule.Base(core).create()
+                    HomeViewModel::class.java ->
+                        HomeModule.Base(core).create()
+
+                    RecentlyViewModel::class.java ->
+                        RecentlyModule.Base(core).create()
+
                     SearchViewModel::class.java ->
                         SearchModule.Base(core, clearSearchModule).create()
-                    TagSettingsViewModel::class.java ->
-                        TagSettingsModule.Base(core, clearTagSettingsModule).create()
+
+                    TagSettingsViewModel::class.java -> {
+                        if (tagSettingsFeatureModule == null) tagSettingsFeatureModule =
+                            TagSettingsFeatureModule.Base(core, viewModels, clearTagSettingsModule)
+                        tagSettingsFeatureModule!!.provide(modelClass)
+                    }
+
                     PlaybackControlViewModel::class.java ->
                         PlaybackControlViewModel(Communication.PlaybackControlCommunication())
+
                     MainViewModel::class.java ->
                         MainViewModel(Navigation.Base)
+
+                    AddTagViewModel::class.java -> {
+                        if (tagSettingsFeatureModule == null) tagSettingsFeatureModule =
+                            TagSettingsFeatureModule.Base(core, viewModels, clearTagSettingsModule)
+                        tagSettingsFeatureModule!!.provide(modelClass)
+                    }
+
                     else -> throw IllegalStateException("ViewModel class have not been founded")
                 }
                 viewModels[modelClass] = viewModel

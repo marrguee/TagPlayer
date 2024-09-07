@@ -3,34 +3,35 @@ package com.example.tagplayer.core.domain
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.tagplayer.all.presentation.AllState
-import com.example.tagplayer.history.presentation.HistoryState
+import com.example.tagplayer.all.presentation.HomeState
+import com.example.tagplayer.recently.presentation.RecentlyState
 import com.example.tagplayer.playback_control.presentation.PlaybackControlState
 import com.example.tagplayer.search.domain.SearchState
+import com.example.tagplayer.tagsettings.add_tag.TagDialogState
 import com.example.tagplayer.tagsettings.presentation.TagSettingsState
 
 interface Communication<T> {
     fun update(data: T)
     fun observe(owner: LifecycleOwner, observer: Observer<in T>)
 
-    class AllCommunication : Communication<AllState> {
-        private val liveData = MutableLiveData<AllState>()
-        override fun update(data: AllState) {
+    class AllCommunication : Communication<HomeState> {
+        private val liveData = MutableLiveData<HomeState>()
+        override fun update(data: HomeState) {
             liveData.value = data
         }
 
-        override fun observe(owner: LifecycleOwner, observer: Observer<in AllState>) {
+        override fun observe(owner: LifecycleOwner, observer: Observer<in HomeState>) {
             liveData.observe(owner, observer)
         }
     }
 
-    class HistoryCommunication : Communication<HistoryState> {
-        private val liveData = MutableLiveData<HistoryState>()
-        override fun update(data: HistoryState) {
+    class HistoryCommunication : Communication<RecentlyState> {
+        private val liveData = MutableLiveData<RecentlyState>()
+        override fun update(data: RecentlyState) {
             liveData.value = data
         }
 
-        override fun observe(owner: LifecycleOwner, observer: Observer<in HistoryState>) {
+        override fun observe(owner: LifecycleOwner, observer: Observer<in RecentlyState>) {
             liveData.observe(owner, observer)
         }
     }
@@ -64,6 +65,17 @@ interface Communication<T> {
         }
 
         override fun observe(owner: LifecycleOwner, observer: Observer<in PlaybackControlState>) {
+            liveData.observe(owner, observer)
+        }
+    }
+
+    class TagDialogCommunication : Communication<TagDialogState> {
+        private val liveData = MutableLiveData<TagDialogState>()
+        override fun update(data: TagDialogState) {
+            liveData.value = data
+        }
+
+        override fun observe(owner: LifecycleOwner, observer: Observer<in TagDialogState>) {
             liveData.observe(owner, observer)
         }
     }

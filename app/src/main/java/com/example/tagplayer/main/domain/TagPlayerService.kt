@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.COMMAND_SEEK_TO_NEXT
 import androidx.media3.common.Player.COMMAND_SEEK_TO_NEXT_MEDIA_ITEM
@@ -18,7 +17,7 @@ import com.example.tagplayer.core.data.database.models.LastPlayed
 import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.domain.ProvideLastPlayedDao
 import com.example.tagplayer.core.domain.ProvideSongsDao
-import com.example.tagplayer.main.Navigation
+import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.main.presentation.Screen
 import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
 import kotlinx.coroutines.CoroutineScope
@@ -113,12 +112,6 @@ class TagPlayerService : MediaSessionService() {
                                 prepare()
                                 play()
                             }
-                            if (firstStart)
-                                Navigation.Base.update(
-                                    Screen.Add(
-                                        PlaybackControlFragment::class.java
-                                    )
-                                )
                         }
                     }
 
@@ -179,6 +172,8 @@ class TagPlayerService : MediaSessionService() {
         const val START_SERVICE = "START_SERVICE"
         const val STOP_SERVICE = "STOP_SERVICE"
         const val RESTART_ACTION = "RESTART_ACTION"
+        const val ACTION_SERVICE_STARTED = "ACTION_SERVICE_STARTED"
+        const val ACTION_SERVICE_STOPPED = "ACTION_SERVICE_STOPPED"
     }
 }
 

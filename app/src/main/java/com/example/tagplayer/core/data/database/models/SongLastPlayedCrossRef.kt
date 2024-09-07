@@ -3,7 +3,7 @@ package com.example.tagplayer.core.data.database.models
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.room.Embedded
-import com.example.tagplayer.history.domain.HistoryDomain
+import com.example.tagplayer.recently.domain.RecentlyDomain
 import java.util.Calendar
 import java.util.Date
 
@@ -23,9 +23,9 @@ class SongLastPlayedCrossRef(
     interface Mapper<T> {
         fun map(list: List<SongLastPlayedCrossRef>) : List<T>
 
-        object ToDomain : Mapper<HistoryDomain> {
-            override fun map(list: List<SongLastPlayedCrossRef>): List<HistoryDomain> {
-                val result = mutableListOf<HistoryDomain>()
+        object ToDomain : Mapper<RecentlyDomain> {
+            override fun map(list: List<SongLastPlayedCrossRef>): List<RecentlyDomain> {
+                val result = mutableListOf<RecentlyDomain>()
                 var lastDate = Date()
                 val calendar: Calendar = Calendar.getInstance()
                 list.forEach {
@@ -37,9 +37,9 @@ class SongLastPlayedCrossRef(
 
                     if (lastDate != calendar.time){
                         lastDate = calendar.time
-                        result.add(HistoryDomain.SongDate(lastDate))
+                        result.add(RecentlyDomain.SongDate(lastDate))
                     }
-                    result.add(HistoryDomain.Song(it.song.id, it.song.title, it.song.duration))
+                    result.add(RecentlyDomain.Song(it.song.id, it.song.title, it.song.duration))
                 }
                 return result
             }

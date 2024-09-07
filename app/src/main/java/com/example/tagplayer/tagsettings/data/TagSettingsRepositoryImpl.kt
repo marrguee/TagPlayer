@@ -8,6 +8,7 @@ import com.example.tagplayer.core.data.database.models.SongTag
 import com.example.tagplayer.tagsettings.domain.TagDomain
 import com.example.tagplayer.tagsettings.domain.TagSettingsRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TagSettingsRepositoryImpl(
     handleError: HandleError<Exception, DomainError>,
@@ -18,16 +19,11 @@ class TagSettingsRepositoryImpl(
 ) : AbstractSongBasedRepository<SongTag, TagDomain, Any>(foregroundWrapper, handleError),
     TagSettingsRepository<TagDomain>
 {
-    override fun cacheDatasourceData(vararg params: Any): Flow<List<SongTag>> =
-        cacheDatasource.handleRequest()
-
-    override fun mapList(list: List<SongTag>): List<TagDomain> =
-        list.map { it.map(tagModelMapper) }
+    override fun tags(): Flow<List<TagDomain>> {
+        return cacheDatasource.tags().map { list -> list.map { it.map(tagModelMapper) } }
+    }
 
     override suspend fun removeTag(id: Long) =
         cacheDatasource.removeTag(id)
-
-    override suspend fun addTag(tag: TagDomain) =
-        cacheDatasource.addTag(tag.map(tagModelMapperToData))
 
 }

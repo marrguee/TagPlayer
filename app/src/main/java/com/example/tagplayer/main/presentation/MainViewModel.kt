@@ -7,7 +7,7 @@ import com.example.tagplayer.core.ObservableUi
 import com.example.tagplayer.core.ObserverUi
 
 class MainViewModel(
-    private val observable: ObservableUi<Screen>
+    private val observable: ObservableUi.All<Screen>
 ) : ViewModel(), ConsumeState, MutableGettingUpdates<Screen> {
 
 

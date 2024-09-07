@@ -20,7 +20,7 @@ class SearchFragment : Fragment(R.layout.search_fragment) {
         val list = listOf(
             SongUi(10000, "dsdad", "sadasda")
         )
-        val adapter = ArrayAdapter<SearchUi>(requireContext(), R.layout.search_item)
+        val adapter = ArrayAdapter<SearchUi>(requireContext(), R.layout.item_search)
         //adapter.setDropDownViewResource(R.layout.search_item)
 //        val spinner =
 //            view.findViewById<Spinner>(R.id.spinner)

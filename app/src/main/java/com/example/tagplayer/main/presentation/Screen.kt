@@ -8,14 +8,48 @@ interface Screen {
     fun dispatch(fragmentManager: FragmentManager, containerId: Int)
     fun consumed(viewModel: ConsumeState) = viewModel.consumeState()
 
-    class Add(
+    open class Add(
         private val fragmentClass: Class<out Fragment>
     ) : Screen {
         override fun dispatch(
             fragmentManager: FragmentManager,
             containerId: Int
         ) {
-            fragmentManager.beginTransaction().add(
+            fragmentManager.beginTransaction()
+                .add(
+                    containerId,
+                    fragmentClass.getDeclaredConstructor().newInstance(),
+                    fragmentClass.name.toString()
+                ).commit()
+        }
+    }
+
+    open class AddWithBackstack(
+        private val fragmentClass: Class<out Fragment>
+    ) : Screen {
+        override fun dispatch(
+            fragmentManager: FragmentManager,
+            containerId: Int
+        ) {
+            fragmentManager.beginTransaction()
+                .add(
+                    containerId,
+                    fragmentClass.getDeclaredConstructor().newInstance(),
+                    fragmentClass.name.toString()
+                )
+                .addToBackStack(fragmentClass.name.toString())
+                .commit()
+        }
+    }
+
+    class Replace(
+        private val fragmentClass: Class<out Fragment>
+    ) : Screen {
+        override fun dispatch(
+            fragmentManager: FragmentManager,
+            containerId: Int
+        ) {
+            fragmentManager.beginTransaction().replace(
                 containerId,
                 fragmentClass.getDeclaredConstructor().newInstance(),
                 fragmentClass.name.toString()

@@ -5,33 +5,28 @@ import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.domain.DispatcherList
 import com.example.tagplayer.search.presentation.SearchUi
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 interface SearchResponse {
-    fun map(mapper: SearchResponseMapper, coroutineScope: CoroutineScope)
+    fun map(mapper: SearchResponseMapper)
 
     interface SearchResponseMapper {
-        fun mapHistorySuccess(list: List<SearchUi>, coroutineScope: CoroutineScope)
+        fun mapSearchHistorySuccess(list: List<SearchUi>)
 
-        fun mapSongsSuccess(flow: Flow<List<SongUi>>, coroutineScope: CoroutineScope)
+        fun mapSongsSuccess(list: List<SongUi>)
         fun mapError(cause: String)
 
         class Base(
             private val communication: Communication<SearchState>,
             private val dispatcherList: DispatcherList
         ) : SearchResponseMapper {
-            override fun mapHistorySuccess(list: List<SearchUi>, coroutineScope: CoroutineScope) {
-                communication.update(SearchState.HistorySuccess(list))
+            override fun mapSearchHistorySuccess(list: List<SearchUi>) {
+                communication.update(SearchState.SearchHistorySuccess(list))
             }
 
-            override fun mapSongsSuccess(flow: Flow<List<SongUi>>, coroutineScope: CoroutineScope) {
-                coroutineScope.launch {
-                    flow.flowOn(dispatcherList.io()).collect {
-                        communication.update(SearchState.SongsSuccess(it))
-                    }
-                }
+            override fun mapSongsSuccess(list: List<SongUi>) {
+                communication.update(SearchState.SongsSuccess(list))
             }
 
             override fun mapError(cause: String) {
@@ -41,19 +36,19 @@ interface SearchResponse {
     }
 
     class SearchSuccess(private val list: List<SearchUi>) : SearchResponse {
-        override fun map(mapper: SearchResponseMapper, coroutineScope: CoroutineScope){
-            mapper.mapHistorySuccess(list, coroutineScope)
+        override fun map(mapper: SearchResponseMapper){
+            mapper.mapSearchHistorySuccess(list)
         }
     }
 
-    class SongsSuccess(private val flow: Flow<List<SongUi>>) : SearchResponse {
-        override fun map(mapper: SearchResponseMapper, coroutineScope: CoroutineScope){
-            mapper.mapSongsSuccess(flow, coroutineScope)
+    class SongsSuccess(private val list: List<SongUi>) : SearchResponse {
+        override fun map(mapper: SearchResponseMapper){
+            mapper.mapSongsSuccess(list)
         }
     }
 
     class Error(private val cause: String) : SearchResponse {
-        override fun map(mapper: SearchResponseMapper, coroutineScope: CoroutineScope) {
+        override fun map(mapper: SearchResponseMapper) {
             mapper.mapError(cause)
         }
     }

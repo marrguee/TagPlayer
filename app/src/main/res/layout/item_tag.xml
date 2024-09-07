@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.tagplayer.main.presentation.CustomTextView android:id="@+id/tagTextView"
+    style="@style/TagTextView"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:text="tag tag tag"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

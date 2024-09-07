@@ -38,7 +38,7 @@ import com.example.tagplayer.core.data.database.models.SearchHistoryTable
 @TypeConverters(TimestampConverter::class)
 abstract class MediaDatabase : RoomDatabase() {
     abstract val songsDao: SongsDao
-    abstract val tagsDao: TagDao
+    abstract val tagDao: TagDao
     abstract val lastPlayed: LastPlayedDao
     abstract val searchHistoryDao: SearchHistoryDao
 }

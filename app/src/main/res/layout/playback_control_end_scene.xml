@@ -75,7 +75,7 @@
         android:layout_marginTop="8dp"
         app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
         app:spanCount="2"
-        tools:listitem="@layout/tag_item"
+        tools:listitem="@layout/item_tag"
         tools:itemCount="10"
         android:orientation="horizontal"/>
 

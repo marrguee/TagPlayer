@@ -1,5 +1,6 @@
 package com.example.tagplayer.search.data
 
+import com.example.tagplayer.all.domain.SongDomain
 import com.example.tagplayer.core.data.AbstractCacheDatasource
 import com.example.tagplayer.core.data.database.MediaDatabase
 import com.example.tagplayer.core.data.database.models.SearchHistoryTable
@@ -12,16 +13,19 @@ interface SearchCacheDatasource :
     UpdateSearchHistory<SearchHistoryTable>,
     SearchHistory<SearchHistoryTable>
 {
+    suspend fun findSongsByTitle(songTitle: String) : List<Song>
     class Base(
         private val database: MediaDatabase
-    ) : AbstractCacheDatasource<String, Song>(), SearchCacheDatasource {
+    ) :
+        //AbstractCacheDatasource<String, Song>(),
+        SearchCacheDatasource {
+        override suspend fun findSongsByTitle(songTitle: String): List<Song> =
+            database.songsDao.searchSongs(songTitle)
+
         override suspend fun updateSearch(searchHistory: SearchHistoryTable) =
             database.searchHistoryDao.updateSearch(searchHistory)
         override suspend fun searchHistory(): List<SearchHistoryTable> =
             database.searchHistoryDao.searchHistory()
-
-        override fun request(vararg params: String): Flow<List<Song>> =
-            database.songsDao.searchSongs(params[0])
 
     }
 

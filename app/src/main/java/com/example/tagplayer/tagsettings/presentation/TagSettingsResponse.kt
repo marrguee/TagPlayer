@@ -2,7 +2,6 @@ package com.example.tagplayer.tagsettings.presentation
 
 import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.domain.DispatcherList
-import com.example.tagplayer.search.domain.SearchState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -12,14 +11,14 @@ interface TagSettingsResponse {
     fun map(mapper: TagSettingsResponseMapper, coroutineScope: CoroutineScope)
 
     interface TagSettingsResponseMapper {
-        fun mapSuccess(flow: Flow<List<TagUi>>, coroutineScope: CoroutineScope)
+        fun mapSuccess(flow: Flow<List<TagSettingsUi>>, coroutineScope: CoroutineScope)
         fun mapError(message: String)
 
         class Base(
             private val communication: Communication<TagSettingsState>,
             private val dispatcherList: DispatcherList
         ) : TagSettingsResponseMapper {
-            override fun mapSuccess(flow: Flow<List<TagUi>>, coroutineScope: CoroutineScope) {
+            override fun mapSuccess(flow: Flow<List<TagSettingsUi>>, coroutineScope: CoroutineScope) {
                 coroutineScope.launch {
                     flow.flowOn(dispatcherList.io()).collect {
                         communication.update(TagSettingsState.UpdateTagList(it))
@@ -34,7 +33,7 @@ interface TagSettingsResponse {
         }
     }
 
-    class Success(private val flow: Flow<List<TagUi>>) : TagSettingsResponse {
+    class Success(private val flow: Flow<List<TagSettingsUi>>) : TagSettingsResponse {
         override fun map(mapper: TagSettingsResponseMapper, coroutineScope: CoroutineScope) {
             mapper.mapSuccess(flow, coroutineScope)
         }

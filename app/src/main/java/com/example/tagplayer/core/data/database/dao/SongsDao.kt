@@ -8,11 +8,11 @@ import com.example.tagplayer.core.data.database.models.Song
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface SongsDao{
+interface SongsDao {
     @Query("SELECT * FROM songs")
-    fun songs() : Flow<List<Song>>
+    fun library() : Flow<List<Song>>
     @Query("SELECT * FROM songs WHERE songs.title LIKE '%' || :query || '%'")
-    fun searchSongs(query: String) : Flow<List<Song>>
+    suspend fun searchSongs(query: String) : List<Song>
     @Insert(entity = Song::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun addSong(track: Song) //todo what could be if track was deleted from system
     @Insert(entity = Song::class, onConflict = OnConflictStrategy.IGNORE)

@@ -1,8 +1,9 @@
 package com.example.tagplayer.tagsettings.domain
 
-import com.example.tagplayer.core.data.HandleRepositoryRequest
+import kotlinx.coroutines.flow.Flow
 
 interface TagSettingsRepository<T> :
-    HandleRepositoryRequest<T, Any>,
-    RemoveTag<Long>,
-    AddTag<T>
+    //HandleRepositoryRequest<T, Any>,
+    RemoveTag<Long> {
+        fun tags() : Flow<List<TagDomain>>
+    }

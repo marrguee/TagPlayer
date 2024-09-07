@@ -14,8 +14,9 @@ import com.example.tagplayer.core.data.database.dao.SongsDao
 import com.example.tagplayer.core.data.ForegroundWrapper
 import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.domain.ProvideLastPlayedDao
+import com.example.tagplayer.core.domain.ProvideTagDao
 
-interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastPlayedDao {
+interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastPlayedDao, ProvideTagDao {
 
     fun songsDao() : SongsDao
     fun observeMediaBroadcast() : ObserveMediaBroadcast
@@ -47,6 +48,7 @@ interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastP
 
         override fun songsDao() = mediaDatabase.songsDao
         override fun lastPlayedDao() = mediaDatabase.lastPlayed
+        override fun tagDao() = mediaDatabase.tagDao
 
         override fun manageRecourses() = manageResources
         override fun observeMediaBroadcast() = observeMediaBroadcast

@@ -7,7 +7,7 @@ import com.example.tagplayer.search.presentation.SearchUi
 interface SearchState {
     fun dispatch(searchResultAdapter: SearchAdapter)
 
-    class HistorySuccess(private val list: List<SearchUi>) : SearchState {
+    class SearchHistorySuccess(private val list: List<SearchUi>) : SearchState {
         override fun dispatch(searchResultAdapter: SearchAdapter) = Unit
     }
 

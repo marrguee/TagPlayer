@@ -1,13 +1,15 @@
 package com.example.tagplayer.tagsettings.presentation
 
 interface TagSettingsState {
-    fun dispatch()
+    fun dispatch(adapter: TagsAdapter)
 
-    class UpdateTagList(private val list: List<TagUi>) : TagSettingsState {
-        override fun dispatch() = Unit
+    class UpdateTagList(private val list: List<TagSettingsUi>) : TagSettingsState {
+        override fun dispatch(adapter: TagsAdapter) {
+            adapter.submitList(list)
+        }
     }
 
     class Error(private val message: String) : TagSettingsState {
-        override fun dispatch() = Unit
+        override fun dispatch(adapter: TagsAdapter) = Unit
     }
 }

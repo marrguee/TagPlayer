@@ -1,8 +1,8 @@
 package com.example.tagplayer.main.presentation
 
 import androidx.fragment.app.Fragment
-import com.example.tagplayer.all.presentation.AllFragment
-import com.example.tagplayer.history.presentation.HistoryFragment
+import com.example.tagplayer.all.presentation.HomeFragment
+import com.example.tagplayer.recently.presentation.RecentlyFragment
 
 interface ManageTab {
     fun manage(pos: Int) : Fragment
@@ -11,9 +11,9 @@ interface ManageTab {
     object Base : ManageTab {
 
         override fun manage(pos: Int) = if(pos == 0)
-            AllFragment()
+            HomeFragment()
         else
-            HistoryFragment()
+            RecentlyFragment()
 
         override fun count() = 2
     }
