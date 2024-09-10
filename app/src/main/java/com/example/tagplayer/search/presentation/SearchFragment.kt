@@ -27,7 +27,7 @@ class SearchFragment : Fragment(R.layout.search_fragment) {
 
         val searchView = view.findViewById<SearchView>(R.id.searchView)
         val searchResultRecycler = view.findViewById<RecyclerView>(R.id.searchResultRecycler)
-        val recyclerAdapter = SearchAdapter {
+        val recyclerAdapter = SearchListenerAdapter {
             viewModel.playSongForeground(it)
         }
 

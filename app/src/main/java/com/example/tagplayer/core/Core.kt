@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import androidx.room.Room
 import androidx.work.WorkManager
-import com.example.tagplayer.all.data.ExtractMedia
+import com.example.tagplayer.home.data.ExtractMedia
 import com.example.tagplayer.core.domain.DispatcherList
 import com.example.tagplayer.core.data.database.MediaDatabase
 import com.example.tagplayer.core.data.MediaStoreHandler
@@ -48,7 +48,7 @@ interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastP
 
         override fun songsDao() = mediaDatabase.songsDao
         override fun lastPlayedDao() = mediaDatabase.lastPlayed
-        override fun tagDao() = mediaDatabase.tagDao
+        override fun tagDao() = mediaDatabase.tagsDao
 
         override fun manageRecourses() = manageResources
         override fun observeMediaBroadcast() = observeMediaBroadcast

@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.tagplayer.all.domain.SongDomain
+import com.example.tagplayer.home.domain.SongDomain
 
 @Entity("songs")
 data class Song(

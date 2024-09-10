@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.example.tagplayer.R
-import com.example.tagplayer.all.presentation.HomeFragment
+import com.example.tagplayer.home.presentation.HomeFragment
 import com.example.tagplayer.core.ObserverUi
 import com.example.tagplayer.core.domain.ProvideViewModel
 

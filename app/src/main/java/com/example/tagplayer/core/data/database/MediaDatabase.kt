@@ -7,7 +7,7 @@ import androidx.room.TypeConverters
 import com.example.tagplayer.core.data.database.dao.LastPlayedDao
 import com.example.tagplayer.core.data.database.dao.SearchHistoryDao
 import com.example.tagplayer.core.data.database.dao.SongsDao
-import com.example.tagplayer.core.data.database.dao.TagDao
+import com.example.tagplayer.core.data.database.dao.TagsDao
 import com.example.tagplayer.core.data.database.models.LastPlayed
 import com.example.tagplayer.core.data.database.models.Song
 import com.example.tagplayer.core.data.database.models.SongLastPlayedCrossRef
@@ -38,7 +38,7 @@ import com.example.tagplayer.core.data.database.models.SearchHistoryTable
 @TypeConverters(TimestampConverter::class)
 abstract class MediaDatabase : RoomDatabase() {
     abstract val songsDao: SongsDao
-    abstract val tagDao: TagDao
+    abstract val tagsDao: TagsDao
     abstract val lastPlayed: LastPlayedDao
     abstract val searchHistoryDao: SearchHistoryDao
 }

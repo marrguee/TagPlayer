@@ -1,16 +1,14 @@
 package com.example.tagplayer.search.data
 
-import com.example.tagplayer.all.domain.DomainError
-import com.example.tagplayer.all.domain.HandleError
-import com.example.tagplayer.all.domain.SongDomain
+import com.example.tagplayer.home.domain.DomainError
+import com.example.tagplayer.home.domain.HandleError
+import com.example.tagplayer.home.domain.SongDomain
 import com.example.tagplayer.core.data.AbstractSongBasedRepository
 import com.example.tagplayer.core.data.ForegroundWrapper
 import com.example.tagplayer.core.data.database.models.SearchHistoryTable
 import com.example.tagplayer.core.data.database.models.Song
-import com.example.tagplayer.main.presentation.SongUi
 import com.example.tagplayer.search.domain.SearchDomain
 import com.example.tagplayer.search.domain.SearchRepository
-import kotlinx.coroutines.flow.Flow
 
 class SearchRepositoryImpl(
     handleError: HandleError<Exception, DomainError>,

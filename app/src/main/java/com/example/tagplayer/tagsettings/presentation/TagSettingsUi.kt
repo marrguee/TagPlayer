@@ -1,10 +1,9 @@
 package com.example.tagplayer.tagsettings.presentation
 
-import androidx.lifecycle.MutableLiveData
 import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.CompareContent
-import com.example.tagplayer.main.presentation.ItemUiMenu
-import com.example.tagplayer.main.presentation.ItemUiTypeWithInit
+import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiMenuType
+import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiMenuWithoutListener
 import com.example.tagplayer.main.presentation.MyView
 import com.google.android.material.textfield.TextInputEditText
 
@@ -12,7 +11,7 @@ data class TagSettingsUi(
     private val id: Long,
     private val title: String,
     private val color: String
-) : ItemUiMenu {
+) : ItemUiMenuWithoutListener {
 
     suspend fun provideId(
         title: String,
@@ -31,7 +30,7 @@ data class TagSettingsUi(
         else if (menuId == R.id.removeTagMenu) action.action(id)
     }
 
-    override fun type(): ItemUiTypeWithInit = ItemUiTypeWithInit.TagSettingsType
+    override fun type(): ItemUiMenuType = ItemUiMenuType.TagSettingsMenuType
 
     override fun bind(vararg views: MyView) {
         views[0].title(title)

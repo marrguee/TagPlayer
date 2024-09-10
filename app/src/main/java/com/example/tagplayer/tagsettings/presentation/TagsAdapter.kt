@@ -1,11 +1,13 @@
 package com.example.tagplayer.tagsettings.presentation
 
-import com.example.tagplayer.main.presentation.GenericAdapterWithInit
-import com.example.tagplayer.main.presentation.ItemUiTypeWithInit
+import com.example.tagplayer.main.presentation.generic_adapter.adapter.GenericAdapterMenu
+import com.example.tagplayer.main.presentation.generic_adapter.diffutils.GenericDiffUtil
+import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiMenuType
 
 class TagsAdapter(
     menuOptions: List<Pair<Int, MenuAction>>
-) : GenericAdapterWithInit.ItemUiWithInitAdapter(
+) : GenericAdapterMenu<TagSettingsUi>(
+    GenericDiffUtil(),
     menuOptions,
-    listOf(ItemUiTypeWithInit.TagSettingsType)
+    listOf(ItemUiMenuType.TagSettingsMenuType)
 )

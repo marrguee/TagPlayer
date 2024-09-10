@@ -1,8 +1,8 @@
 package com.example.tagplayer.search.domain
 
-import com.example.tagplayer.all.domain.DomainError
-import com.example.tagplayer.all.domain.HandleError
-import com.example.tagplayer.all.domain.SongDomain
+import com.example.tagplayer.home.domain.DomainError
+import com.example.tagplayer.home.domain.HandleError
+import com.example.tagplayer.home.domain.SongDomain
 import com.example.tagplayer.main.presentation.SongUi
 import com.example.tagplayer.core.domain.PlaySongForeground
 import com.example.tagplayer.core.data.database.models.SearchHistoryTable

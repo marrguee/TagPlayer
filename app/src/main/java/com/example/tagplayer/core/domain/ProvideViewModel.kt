@@ -2,9 +2,11 @@ package com.example.tagplayer.core.domain
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tagplayer.all.presentation.HomeModule
-import com.example.tagplayer.all.presentation.HomeViewModel
+import com.example.tagplayer.home.presentation.HomeModule
+import com.example.tagplayer.home.presentation.HomeViewModel
 import com.example.tagplayer.core.Core
+import com.example.tagplayer.edit_song_tag.EditSongTagModule
+import com.example.tagplayer.edit_song_tag.EditSongTagsViewModel
 import com.example.tagplayer.main.presentation.MainViewModel
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.playback_control.presentation.PlaybackControlViewModel
@@ -67,6 +69,8 @@ interface ProvideViewModel {
                             TagSettingsFeatureModule.Base(core, viewModels, clearTagSettingsModule)
                         tagSettingsFeatureModule!!.provide(modelClass)
                     }
+
+                    EditSongTagsViewModel::class.java -> EditSongTagModule(core).create()
 
                     else -> throw IllegalStateException("ViewModel class have not been founded")
                 }

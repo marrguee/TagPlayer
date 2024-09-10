@@ -3,7 +3,8 @@ package com.example.tagplayer.core.domain
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.tagplayer.all.presentation.HomeState
+import com.example.tagplayer.home.presentation.HomeState
+import com.example.tagplayer.edit_song_tag.EditSongTagState
 import com.example.tagplayer.recently.presentation.RecentlyState
 import com.example.tagplayer.playback_control.presentation.PlaybackControlState
 import com.example.tagplayer.search.domain.SearchState
@@ -76,6 +77,17 @@ interface Communication<T> {
         }
 
         override fun observe(owner: LifecycleOwner, observer: Observer<in TagDialogState>) {
+            liveData.observe(owner, observer)
+        }
+    }
+
+    class EditSongTagsCommunication : Communication<EditSongTagState> {
+        private val liveData = MutableLiveData<EditSongTagState>()
+        override fun update(data: EditSongTagState) {
+            liveData.value = data
+        }
+
+        override fun observe(owner: LifecycleOwner, observer: Observer<in EditSongTagState>) {
             liveData.observe(owner, observer)
         }
     }

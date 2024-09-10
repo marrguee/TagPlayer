@@ -2,11 +2,11 @@ package com.example.tagplayer.recently.presentation
 
 import com.example.tagplayer.core.domain.CompareContent
 import com.example.tagplayer.core.domain.HandlePlayTap
-import com.example.tagplayer.main.presentation.ItemUiSimple
-import com.example.tagplayer.main.presentation.ItemUiType
+import com.example.tagplayer.main.presentation.ItemUiListener
+import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiListenerType
 import com.example.tagplayer.main.presentation.MyView
 
-interface RecentlyUi : ItemUiSimple {
+interface RecentlyUi : ItemUiListener {
 
     data class RecentlySongUi(
         private val id: Long,
@@ -14,7 +14,7 @@ interface RecentlyUi : ItemUiSimple {
         private val duration: String
     ) : RecentlyUi, HandlePlayTap {
 
-        override fun type() = ItemUiType.RecentlyType
+        override fun type() = ItemUiListenerType.RecentlyListenerType
 
         override fun bind(vararg views: MyView) {
             views[0].title(title)
@@ -46,7 +46,7 @@ interface RecentlyUi : ItemUiSimple {
 
         override fun compare(otherDate: String) = otherDate == date
 
-        override fun type(): ItemUiType = ItemUiType.RecentlyDateType
+        override fun type(): ItemUiListenerType = ItemUiListenerType.RecentlyDateListenerType
     }
 }
 

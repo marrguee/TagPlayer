@@ -1,7 +1,7 @@
 package com.example.tagplayer.recently.data
 
-import com.example.tagplayer.all.domain.DomainError
-import com.example.tagplayer.all.domain.HandleError
+import com.example.tagplayer.home.domain.DomainError
+import com.example.tagplayer.home.domain.HandleError
 import com.example.tagplayer.core.data.AbstractSongBasedRepository
 import com.example.tagplayer.core.data.ForegroundWrapper
 import com.example.tagplayer.core.data.database.models.SongLastPlayedCrossRef

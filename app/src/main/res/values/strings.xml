@@ -12,4 +12,8 @@
     <string name="add_tag_button">Add</string>
     <string name="edit_tag_title">Edit tag data</string>
     <string name="edit_tag_button">Edit</string>
+    <string name="drag_and_drop_tags_visa_versa">Drag and drop tags visa versa</string>
+    <string name="no_tags_attached">No tags attached</string>
+    <string name="tags_do_not_exist">Tags do not exist</string>
+    <string name="empty_string"> </string>
 </resources>

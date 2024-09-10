@@ -11,7 +11,7 @@ class AddTagModule(
     private val selectedTagLiveData: MutableLiveData<TagSettingsUi?>
 ) : Module<AddTagViewModel> {
     private val repository: AddTagRepository =
-        AddTagRepositoryImpl(AddTagDatasource.Base(core.mediaDatabase().tagDao))
+        AddTagRepositoryImpl(AddTagDatasource.Base(core.mediaDatabase().tagsDao))
     private val interactor: AddTagInteractor = AddTagInteractor.Base(repository)
     private val communication = Communication.TagDialogCommunication()
     override fun create(): AddTagViewModel = AddTagViewModel(interactor, selectedTagLiveData, communication)

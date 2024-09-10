@@ -18,14 +18,14 @@ interface TagSettingsCacheDatasource :
         //AbstractCacheDatasource<Any, SongTag>(),
         TagSettingsCacheDatasource {
         override fun tags(): Flow<List<SongTag>> {
-            return database.tagDao.tags()
+            return database.tagsDao.tags()
         }
 
         override suspend fun removeTag(id: Long) =
-            database.tagDao.removeTag(id)
+            database.tagsDao.removeTag(id)
 
         override suspend fun addTag(tag: SongTag) =
-            database.tagDao.addTag(tag)
+            database.tagsDao.addTag(tag)
 
     }
 }

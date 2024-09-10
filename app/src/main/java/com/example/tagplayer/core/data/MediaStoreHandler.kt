@@ -1,6 +1,6 @@
 package com.example.tagplayer.core.data
 
-import com.example.tagplayer.all.data.ExtractMedia
+import com.example.tagplayer.home.data.ExtractMedia
 import com.example.tagplayer.core.data.database.dao.SongsDao
 
 interface MediaStoreHandler {

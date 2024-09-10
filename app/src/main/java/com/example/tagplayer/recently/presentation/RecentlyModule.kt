@@ -1,6 +1,6 @@
 package com.example.tagplayer.recently.presentation
 
-import com.example.tagplayer.all.domain.HandleError
+import com.example.tagplayer.home.domain.HandleError
 import com.example.tagplayer.core.Core
 import com.example.tagplayer.core.Module
 import com.example.tagplayer.recently.data.RecentlyCacheDatasource

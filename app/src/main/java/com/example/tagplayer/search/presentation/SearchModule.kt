@@ -1,7 +1,7 @@
 package com.example.tagplayer.search.presentation
 
-import com.example.tagplayer.all.domain.HandleError
-import com.example.tagplayer.all.domain.SongDomain
+import com.example.tagplayer.home.domain.HandleError
+import com.example.tagplayer.home.domain.SongDomain
 import com.example.tagplayer.core.Core
 import com.example.tagplayer.core.Module
 import com.example.tagplayer.search.data.SearchCacheDatasource

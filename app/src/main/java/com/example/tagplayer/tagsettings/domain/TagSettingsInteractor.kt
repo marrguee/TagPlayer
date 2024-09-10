@@ -1,7 +1,7 @@
 package com.example.tagplayer.tagsettings.domain
 
-import com.example.tagplayer.all.domain.DomainError
-import com.example.tagplayer.all.domain.HandleError
+import com.example.tagplayer.home.domain.DomainError
+import com.example.tagplayer.home.domain.HandleError
 import com.example.tagplayer.core.data.database.models.SongTag
 import com.example.tagplayer.tagsettings.presentation.TagSettingsResponse
 import com.example.tagplayer.tagsettings.presentation.TagSettingsUi

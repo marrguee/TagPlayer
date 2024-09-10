@@ -9,4 +9,7 @@
     <string name="all_tags">All tags</string>
     <string name="apply">Apply</string>
     <string name="select_tags">Select tags</string>
+    <string name="no_tags_attached">No tags attached</string>
+    <string name="tags_do_not_exist">Tags do not exist</string>
+    <string name="empty_string"> </string>
 </resources>

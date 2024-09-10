@@ -1,13 +1,10 @@
 package com.example.tagplayer.search.data
 
-import com.example.tagplayer.all.domain.SongDomain
-import com.example.tagplayer.core.data.AbstractCacheDatasource
 import com.example.tagplayer.core.data.database.MediaDatabase
 import com.example.tagplayer.core.data.database.models.SearchHistoryTable
 import com.example.tagplayer.core.data.database.models.Song
 import com.example.tagplayer.search.domain.SearchHistory
 import com.example.tagplayer.search.domain.UpdateSearchHistory
-import kotlinx.coroutines.flow.Flow
 
 interface SearchCacheDatasource :
     UpdateSearchHistory<SearchHistoryTable>,

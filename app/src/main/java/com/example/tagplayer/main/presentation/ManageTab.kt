@@ -1,7 +1,7 @@
 package com.example.tagplayer.main.presentation
 
 import androidx.fragment.app.Fragment
-import com.example.tagplayer.all.presentation.HomeFragment
+import com.example.tagplayer.home.presentation.HomeFragment
 import com.example.tagplayer.recently.presentation.RecentlyFragment
 
 interface ManageTab {

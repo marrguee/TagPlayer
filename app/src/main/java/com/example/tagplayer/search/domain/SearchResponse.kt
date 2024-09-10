@@ -26,7 +26,7 @@ interface SearchResponse {
             }
 
             override fun mapSongsSuccess(list: List<SongUi>) {
-                communication.update(SearchState.SongsSuccess(list))
+                //communication.update(SearchState.SongsSuccess(list))
             }
 
             override fun mapError(cause: String) {

@@ -1,7 +1,7 @@
 package com.example.tagplayer.recently.domain
 
-import com.example.tagplayer.all.domain.DomainError
-import com.example.tagplayer.all.domain.HandleError
+import com.example.tagplayer.home.domain.DomainError
+import com.example.tagplayer.home.domain.HandleError
 import com.example.tagplayer.core.domain.PlaySongForeground
 
 interface RecentlyInteractor : PlaySongForeground {
