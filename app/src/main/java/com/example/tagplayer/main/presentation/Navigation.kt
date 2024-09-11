@@ -1,11 +1,11 @@
 package com.example.tagplayer.main.presentation
 
-import com.example.tagplayer.core.ObservableUi
+import com.example.tagplayer.core.CustomObservable
 
 interface Navigation {
-    interface Navigate : ObservableUi.UpdateUi<Screen>
-    interface NavHost : ObservableUi.UpdateUiObserver<Screen>, ObservableUi.Clear
+    interface Navigate : CustomObservable.UpdateUi<Screen>
+    interface NavHost : CustomObservable.UpdateUiObserver<Screen>, CustomObservable.Clear
     interface Mutable : Navigate, NavHost
 
-    object Base : ObservableUi.ManualClear<Screen>(Screen.Empty), Mutable
+    object Base : CustomObservable.ManualClear<Screen>(Screen.Empty), Mutable
 }

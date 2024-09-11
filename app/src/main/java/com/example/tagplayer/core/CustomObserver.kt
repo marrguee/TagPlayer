@@ -1,9 +1,9 @@
 package com.example.tagplayer.core
 
-interface ObserverUi<T> {
+interface CustomObserver<T> {
     fun update(data: T)
 
-    class Empty<T> : ObserverUi<T> {
+    class Empty<T> : CustomObserver<T> {
         override fun update(data: T) = Unit
     }
 }

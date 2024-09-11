@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.tagplayer.filter_by_tags.TagFilterDomain
 import com.example.tagplayer.tagsettings.data.TagData
 import com.example.tagplayer.tagsettings.domain.TagDomain
 
@@ -30,6 +31,11 @@ data class SongTag(
         object ToDomain : Mapper<TagDomain> {
             override fun map(id: Long, title: String, color: String) =
                 TagDomain(id, title, color)
+        }
+
+        object ToFilterDomain : Mapper<TagFilterDomain> {
+            override fun map(id: Long, title: String, color: String) =
+                TagFilterDomain(id, title, color)
         }
     }
 

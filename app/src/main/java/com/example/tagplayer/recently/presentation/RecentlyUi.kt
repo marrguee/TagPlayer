@@ -1,7 +1,7 @@
 package com.example.tagplayer.recently.presentation
 
 import com.example.tagplayer.core.domain.CompareContent
-import com.example.tagplayer.core.domain.HandlePlayTap
+import com.example.tagplayer.core.domain.HandleTap
 import com.example.tagplayer.main.presentation.ItemUiListener
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiListenerType
 import com.example.tagplayer.main.presentation.MyView
@@ -12,7 +12,7 @@ interface RecentlyUi : ItemUiListener {
         private val id: Long,
         private val title: String,
         private val duration: String
-    ) : RecentlyUi, HandlePlayTap {
+    ) : RecentlyUi, HandleTap {
 
         override fun type() = ItemUiListenerType.RecentlyListenerType
 
@@ -26,6 +26,7 @@ interface RecentlyUi : ItemUiListener {
         override fun compare(otherId: Long) = id == otherId
 
         override fun compare(otherDate: String) = false
+        override fun compare(otherBoolean: Boolean): Boolean = false
 
         override fun tap(listener: (Long) -> Unit) {
             listener.invoke(id)
@@ -45,6 +46,7 @@ interface RecentlyUi : ItemUiListener {
         override fun compare(otherId: Long) = false
 
         override fun compare(otherDate: String) = otherDate == date
+        override fun compare(otherBoolean: Boolean): Boolean = false
 
         override fun type(): ItemUiListenerType = ItemUiListenerType.RecentlyDateListenerType
     }

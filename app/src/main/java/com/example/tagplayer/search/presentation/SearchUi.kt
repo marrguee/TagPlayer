@@ -13,6 +13,7 @@ data class SearchUi(private val searchRequest: String): ItemUi {
     override fun compare(otherId: Long) = false
 
     override fun compare(otherDate: String) = otherDate == searchRequest
+    override fun compare(otherBoolean: Boolean): Boolean = false
 
     override fun bind(vararg views: MyView) {
 

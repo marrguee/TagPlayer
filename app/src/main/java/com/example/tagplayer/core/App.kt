@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.DownloadManager
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.util.UnstableApi
@@ -16,6 +17,7 @@ import com.example.tagplayer.core.domain.ProvideLastPlayedDao
 import com.example.tagplayer.core.domain.ProvidePlayerService
 import com.example.tagplayer.core.domain.ProvideSongsDao
 import com.example.tagplayer.core.domain.ProvideViewModel
+import com.example.tagplayer.filter_by_tags.SharedPrefs
 import com.example.tagplayer.main.domain.TagPlayerService
 
 @UnstableApi
@@ -33,7 +35,13 @@ class App : Application(),
     override fun onCreate() {
         super.onCreate()
         core = Core.Base(this, contentResolver)
-        factory = ProvideViewModel.Factory(core)
+        val sharedPrefs = SharedPrefs.TagFilterSharedPref(
+            getSharedPreferences(
+                "TagPlayerSharedPreferences",
+                MODE_PRIVATE
+            )
+        )
+        factory = ProvideViewModel.Factory(core, sharedPrefs)
         broadcast = core.observeMediaBroadcast()
         ContextCompat.registerReceiver(
             this,

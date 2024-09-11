@@ -3,11 +3,11 @@ package com.example.tagplayer.main.presentation
 import androidx.lifecycle.ViewModel
 import com.example.tagplayer.core.ConsumeState
 import com.example.tagplayer.core.MutableGettingUpdates
-import com.example.tagplayer.core.ObservableUi
-import com.example.tagplayer.core.ObserverUi
+import com.example.tagplayer.core.CustomObservable
+import com.example.tagplayer.core.CustomObserver
 
 class MainViewModel(
-    private val observable: ObservableUi.All<Screen>
+    private val observable: CustomObservable.All<Screen>
 ) : ViewModel(), ConsumeState, MutableGettingUpdates<Screen> {
 
 
@@ -15,7 +15,7 @@ class MainViewModel(
         observable.clear()
     }
 
-    override fun startGettingUpdates(observer: ObserverUi<Screen>) {
+    override fun startGettingUpdates(observer: CustomObserver<Screen>) {
         observable.updateObserver(observer)
     }
 

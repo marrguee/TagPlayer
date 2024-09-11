@@ -2,6 +2,7 @@ package com.example.tagplayer.main.presentation
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.replace
 import com.example.tagplayer.core.ConsumeState
 
 interface Screen {
@@ -54,6 +55,24 @@ interface Screen {
                 fragmentClass.getDeclaredConstructor().newInstance(),
                 fragmentClass.name.toString()
             ).commit()
+        }
+    }
+
+    open class ReplaceWithBackstack(
+        private val fragmentClass: Class<out Fragment>
+    ) : Screen {
+        override fun dispatch(
+            fragmentManager: FragmentManager,
+            containerId: Int
+        ) {
+            fragmentManager.beginTransaction()
+                .replace(
+                    containerId,
+                    fragmentClass.getDeclaredConstructor().newInstance(),
+                    fragmentClass.name.toString()
+                )
+                .addToBackStack(fragmentClass.name.toString())
+                .commit()
         }
     }
 

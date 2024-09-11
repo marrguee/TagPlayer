@@ -8,13 +8,14 @@ import com.example.tagplayer.core.data.AbstractSongBasedRepository
 import com.example.tagplayer.core.data.HomeCacheDatasource
 import com.example.tagplayer.core.data.ForegroundWrapper
 import com.example.tagplayer.core.data.database.models.Song
+import com.example.tagplayer.core.data.database.models.SongTag
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
     handleError: HandleError<Exception, DomainError>,
     private val foregroundWrapper: ForegroundWrapper,
-    private val cacheDatasource: HomeCacheDatasource.Base,
+    private val cacheDatasource: HomeCacheDatasource,
     private val songModelMapper: Song.Mapper<SongDomain>,
 ) : AbstractSongBasedRepository<Song, SongDomain, Any>(foregroundWrapper, handleError),
     HomeRepository<SongDomain>
@@ -24,6 +25,14 @@ class HomeRepositoryImpl(
 
     override suspend fun recently(): List<SongDomain> =
         cacheDatasource.recently().map { it.map(songModelMapper) }
+
+    override suspend fun filters(): List<Long> {
+        return cacheDatasource.filters()
+    }
+
+    override suspend fun filtered(tags: List<Long>): List<SongDomain> {
+        return cacheDatasource.filtered(tags).map { it.map(songModelMapper) }
+    }
 
     override fun scan() {
         foregroundWrapper.scanMedia()

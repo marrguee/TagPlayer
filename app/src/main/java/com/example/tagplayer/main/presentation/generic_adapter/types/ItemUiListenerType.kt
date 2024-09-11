@@ -21,21 +21,13 @@ interface ItemUiType {
 interface ItemUiListenerType {
     fun viewHolder(parent: ViewGroup): GenericListenerViewHolder<*, *>
 
-//    object TagSimpleListenerType : ItemUiListenerType {
-//        override fun viewHolder(parent: ViewGroup) =
-//            GenericListenerViewHolder.TagSimpleHolderListener(
-//                LayoutInflater.from(parent.context)
-//                    .inflate(R.layout.item_tag, parent, false)
-//            )
-//    }
-//
-//    object TagSimpleSelectedListenerType : ItemUiListenerType {
-//        override fun viewHolder(parent: ViewGroup) =
-//            GenericListenerViewHolder.TagSimpleHolderListener(
-//                LayoutInflater.from(parent.context)
-//                    .inflate(R.layout.item_tag_selected, parent, false)
-//            )
-//    }
+    object TagFilterListenerType : ItemUiListenerType {
+        override fun viewHolder(parent: ViewGroup) =
+            GenericListenerViewHolder.TagFilterHolderListener(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_tag, parent, false)
+            )
+    }
 
     object RecentlyListenerType : ItemUiListenerType {
         override fun viewHolder(parent: ViewGroup) =

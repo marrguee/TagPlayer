@@ -36,5 +36,6 @@ data class TagUi(
     override fun compare(otherId: Long): Boolean = otherId == id
 
     override fun compare(otherDate: String): Boolean = false
+    override fun compare(otherBoolean: Boolean): Boolean = false
 
 }

@@ -1,5 +1,5 @@
 package com.example.tagplayer.core.domain
 
-interface HandlePlayTap {
+interface HandleTap {
     fun tap(listener: (Long) -> Unit)
 }

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.example.tagplayer.R
 import com.example.tagplayer.home.presentation.HomeFragment
-import com.example.tagplayer.core.ObserverUi
+import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.ProvideViewModel
 
 class MainActivity : AppCompatActivity(), ProvideViewModel {
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), ProvideViewModel {
         (application as ProvideViewModel).provide(clazz)
 }
 
-interface MainActivityCallback : ObserverUi<Screen> {
+interface MainActivityCallback : CustomObserver<Screen> {
     object Empty : MainActivityCallback {
         override fun update(data: Screen) = Unit
     }

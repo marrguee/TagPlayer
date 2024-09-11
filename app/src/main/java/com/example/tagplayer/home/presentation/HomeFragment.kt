@@ -53,8 +53,6 @@ class HomeFragment : Fragment(R.layout.home_fragment_screen) {
             it.dispatch(libraryAdapter, recentlyAdapter)
         }
 
-
-        viewModel.loadLibrary()
         viewModel.scan()
 
         if (savedInstanceState == null) {
@@ -67,15 +65,32 @@ class HomeFragment : Fragment(R.layout.home_fragment_screen) {
             viewModel.recentlyPlayedScreen()
         }
 
-        binding.tagFilterButton.setOnLongClickListener {
-            viewModel.tagSettingsScreen()
-            true
+        binding.tagFilterButton.apply {
+            setOnLongClickListener {
+                viewModel.tagSettingsScreen()
+                true
+            }
+            setOnClickListener {
+                viewModel.filterTagsScreen()
+            }
         }
+
+
 
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.loadRecently()
+        viewModel.init()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stop()
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 }

@@ -27,4 +27,10 @@ interface SongsDao {
     suspend fun updateSongTags(tags: List<SongTagCrossRef>)
     @Query("SELECT * FROM tags INNER JOIN songs_and_tags ON songs_and_tags.tag_id = tags.id WHERE songs_and_tags.track_id=:songId")
     suspend fun songTags(songId: Long) : List<SongTag>
+    @Query(
+        "SELECT * FROM songs INNER JOIN songs_and_tags " +
+                "ON songs_and_tags.track_id = songs.id " +
+                "WHERE songs_and_tags.tag_id IN (:tags)"
+    )
+    suspend fun songsByTagsId(tags: List<Long>) : List<Song>
 }

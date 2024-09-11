@@ -2,7 +2,7 @@ package com.example.tagplayer.main.presentation
 
 import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.CompareContent
-import com.example.tagplayer.core.domain.HandlePlayTap
+import com.example.tagplayer.core.domain.HandleTap
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUIMenuListenerType
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiMenuListener
 import com.example.tagplayer.tagsettings.presentation.MenuAction
@@ -11,7 +11,7 @@ data class SongUi(
     private val id: Long,
     private val title: String,
     private val duration: String
-) : ItemUiMenuListener, HandlePlayTap {
+) : ItemUiMenuListener, HandleTap {
 
     override fun tap(listener: (Long) -> Unit) {
         listener.invoke(id)
@@ -33,6 +33,7 @@ data class SongUi(
 
     override fun compare(otherId: Long) = otherId == id
     override fun compare(otherDate: String) = false
+    override fun compare(otherBoolean: Boolean): Boolean = false
 
 
 }
