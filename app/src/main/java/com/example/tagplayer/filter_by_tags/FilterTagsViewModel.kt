@@ -1,12 +1,11 @@
 package com.example.tagplayer.filter_by_tags
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.CustomObserver
-import com.example.tagplayer.core.domain.Communication
+import com.example.tagplayer.core.domain.ClearViewModel
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
+import com.example.tagplayer.main.presentation.ComebackViewModel
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.main.presentation.Screen
 import kotlinx.coroutines.Dispatchers
@@ -14,11 +13,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FilterTagsViewModel(
-    private val communication: Communication<TagsFilterState>,
+    private val observable: CustomObservable.All<TagsFilterState>,
     private val selectedTagsLiveData: CustomObservable.Mutable<List<Long>>,
     private val interactor: FilterTagsInteractor,
     private val navigation: Navigation.Navigate,
-) : ViewModel() {
+    clear: ClearViewModel
+) : ComebackViewModel(clear), HandleUiStateUpdates.All<TagsFilterState> {
     private var tagsIds: List<Long> = emptyList()
     private var allTags: MutableList<TagFilterUi> = mutableListOf()
 
@@ -27,7 +27,6 @@ class FilterTagsViewModel(
             override fun update(data: List<Long>) {
                 tagsIds = data
             }
-
         })
         viewModelScope.launch {
             allTags = interactor.tags() as MutableList
@@ -41,7 +40,7 @@ class FilterTagsViewModel(
                 }
             }
             withContext(Dispatchers.Main.immediate){
-                communication.update(TagsFilterState.SelectedTagsChanged(allTags.toList()))
+                observable.update(TagsFilterState.SelectedTagsChanged(allTags.toList()))
             }
         }
     }
@@ -54,7 +53,7 @@ class FilterTagsViewModel(
             allTags.removeAt(index)
             allTags.add(index, newTag)
             //it.changeSelected()
-            communication.update(TagsFilterState.SelectedTagsChanged(allTags.toList()))
+            observable.update(TagsFilterState.SelectedTagsChanged(allTags.toList()))
         }
     }
 
@@ -64,16 +63,25 @@ class FilterTagsViewModel(
             interactor.applyFilter(selectedTagsIds)
             withContext(Dispatchers.Main.immediate) {
                 selectedTagsLiveData.update(selectedTagsIds.toList())
-                pop()
+                comeback()
             }
         }
     }
 
-    fun pop() {
-        navigation.update(Screen.Pop)
+    override fun startGettingUpdates(observer: CustomObserver<TagsFilterState>) {
+        observable.updateObserver(observer)
     }
 
-    fun observe(owner: LifecycleOwner, observer: Observer<in TagsFilterState>) {
-        communication.observe(owner, observer)
+    override fun stopGettingUpdates() {
+        observable.updateObserver(FilterTagObserver.Empty)
+    }
+
+    override fun clearObserver() {
+        observable.clear()
+    }
+
+    override fun comeback() {
+        super.comeback()
+        navigation.update(Screen.Pop)
     }
 }

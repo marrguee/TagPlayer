@@ -1,8 +1,7 @@
-package com.example.tagplayer.core.data
+package com.example.tagplayer.home.data
 
 import com.example.tagplayer.core.data.database.MediaDatabase
 import com.example.tagplayer.core.data.database.models.Song
-import com.example.tagplayer.core.data.database.models.SongTag
 import com.example.tagplayer.filter_by_tags.SharedPrefs
 import kotlinx.coroutines.flow.Flow
 
@@ -29,7 +28,8 @@ interface HomeCacheDatasource {
 
         override suspend fun filtered(tags: List<Long>): List<Song> {
             val list = database.songsDao.songsByTagsId(tags)
-            return list
+            val set = list.toSet()
+            return set.toList()
         }
 
     }

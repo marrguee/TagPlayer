@@ -1,5 +1,7 @@
 package com.example.tagplayer.core
 
+import androidx.annotation.MainThread
+
 
 interface MutableGettingUpdates<T> {
     fun startGettingUpdates(observer: CustomObserver<T>)
@@ -9,10 +11,12 @@ interface MutableGettingUpdates<T> {
 interface CustomObservable {
 
     interface UpdateUiObserver<T> {
+        @MainThread
         fun updateObserver(newObserver: CustomObserver<T>)
     }
 
     interface UpdateUi<T> {
+        @MainThread
         fun update(data: T)
     }
 
@@ -62,8 +66,10 @@ interface CustomObservable {
         }
 
         override fun update(data: T) = synchronized(AutomaticClear::class) {
-            cache = data
-            observer.update(cache)
+            if (cache != data) {
+                cache = data
+                observer.update(cache)
+            }
         }
     }
 }

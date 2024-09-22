@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.EditTagsForSongFragmentBinding
 
@@ -15,6 +16,8 @@ class EditSongTagFragment : Fragment() {
     private val viewModel by lazy {
         (activity as ProvideViewModel).provide(EditSongTagsViewModel::class.java)
     }
+    private lateinit var allTagsAdapter: EditSongTagListenerAdapter
+    private lateinit var ownedTagsAdapter: EditSongTagListenerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,17 +32,9 @@ class EditSongTagFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val songId: Long? = arguments?.getLong(SONG_ID_KEY)
 
-        val allTagsAdapter = EditSongTagListenerAdapter()
-        val ownedTagsAdapter = EditSongTagListenerAdapter()
+        allTagsAdapter = EditSongTagListenerAdapter()
+        ownedTagsAdapter = EditSongTagListenerAdapter()
 
-        viewModel.observe(this) {
-            it.dispatch(
-                allTagsAdapter,
-                ownedTagsAdapter,
-                binding.noAllTagsTextView,
-                binding.noOwnedTagsTextView
-            )
-        }
 
         binding.allTagsRecyclerView.adapter = allTagsAdapter
         binding.ownedTagsRecyclerView.adapter = ownedTagsAdapter
@@ -69,6 +64,26 @@ class EditSongTagFragment : Fragment() {
         viewModel.init(songId)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.startGettingUpdates(object : EditSongTagObserver {
+            override fun update(data: EditSongTagState) {
+                data.dispatch(
+                    allTagsAdapter,
+                    ownedTagsAdapter,
+                    binding.noAllTagsTextView,
+                    binding.noOwnedTagsTextView
+                )
+                data.consumed(viewModel)
+            }
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopGettingUpdates()
+    }
+
     companion object {
         fun newInstance(songId: Long): EditSongTagFragment =
             EditSongTagFragment().apply {
@@ -78,5 +93,11 @@ class EditSongTagFragment : Fragment() {
             }
 
         private const val SONG_ID_KEY = "SONG_ID_KEY"
+    }
+}
+
+interface EditSongTagObserver : CustomObserver<EditSongTagState> {
+    object Empty : EditSongTagObserver {
+        override fun update(data: EditSongTagState) = Unit
     }
 }

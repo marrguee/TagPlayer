@@ -61,7 +61,6 @@ class PlaybackControlFragment : Fragment(R.layout.playback_tracking_fragment) {
     @UnstableApi
     override fun onStart() {
         super.onStart()
-
         viewModel.connectToService(requireContext())
     }
 }

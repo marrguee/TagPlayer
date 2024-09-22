@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.tagplayer.R
+import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.HomeFragmentScreenBinding
 import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
@@ -16,6 +17,8 @@ class HomeFragment : Fragment(R.layout.home_fragment_screen) {
         (activity as ProvideViewModel).provide(HomeViewModel::class.java)
     }
     private lateinit var binding: HomeFragmentScreenBinding
+    private lateinit var libraryAdapter: LibraryRecyclerAdapter
+    private lateinit var recentlyAdapter: RecentlyRecyclerListenerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,20 +43,14 @@ class HomeFragment : Fragment(R.layout.home_fragment_screen) {
             )
         )
 
-        val libraryAdapter = LibraryRecyclerAdapter(menuOptions) { id ->
+        libraryAdapter = LibraryRecyclerAdapter(menuOptions) { id ->
             viewModel.play(id)
         }
-        val recentlyAdapter = RecentlyRecyclerListenerAdapter(menuOptions) { id ->
+        recentlyAdapter = RecentlyRecyclerListenerAdapter(menuOptions) { id ->
             viewModel.play(id)
         }
         binding.libraryRecycler.adapter = libraryAdapter
         binding.recentlyRecycler.adapter = recentlyAdapter
-
-        viewModel.observe(this) {
-            it.dispatch(libraryAdapter, recentlyAdapter)
-        }
-
-        viewModel.scan()
 
         if (savedInstanceState == null) {
             requireActivity().supportFragmentManager.beginTransaction()
@@ -75,22 +72,30 @@ class HomeFragment : Fragment(R.layout.home_fragment_screen) {
             }
         }
 
-
-
+        viewModel.scan()
+        viewModel.loadRecently()
+        viewModel.startGettingFilterUpdates()
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.loadRecently()
-        viewModel.init()
+    override fun onResume() {
+        super.onResume()
+        viewModel.startGettingUpdates(object : HomeObserver {
+            override fun update(data: HomeState) {
+                data.dispatch(libraryAdapter, recentlyAdapter)
+                data.consumed(viewModel)
+            }
+        })
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.stop()
+        viewModel.stopGettingUpdates(HomeObserver.Empty)
     }
+}
 
-    override fun onStop() {
-        super.onStop()
+interface HomeObserver : CustomObserver<HomeState> {
+
+    object Empty : HomeObserver {
+        override fun update(data: HomeState) = Unit
     }
 }

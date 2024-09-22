@@ -1,36 +1,20 @@
 package com.example.tagplayer.filter_by_tags
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.TagsFilterFragmentScreenBinding
+import com.example.tagplayer.main.presentation.ComebackFragment
 
-class FilterTagsFragment : Fragment() {
-    private lateinit var binding: TagsFilterFragmentScreenBinding
-    private val viewModel by lazy {
-        (activity as ProvideViewModel).provide(FilterTagsViewModel::class.java)
-    }
+class FilterTagsFragment : ComebackFragment<TagsFilterFragmentScreenBinding, FilterTagsViewModel>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = TagsFilterFragmentScreenBinding.inflate(inflater)
-        return binding.root
-    }
+    private lateinit var adapter: FilterTagsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = FilterTagsAdapter {
+        adapter = FilterTagsAdapter {
             viewModel.changeTagSelectedState(it)
         }
-        viewModel.observe(this) {
-            it.dispatch(adapter)
-        }
+
         binding.tagsRecyclerView.adapter = adapter
 
         binding.applyFiltersButton.setOnClickListener {
@@ -38,9 +22,24 @@ class FilterTagsFragment : Fragment() {
         }
 
         binding.tagFilterButton.setOnClickListener {
-            viewModel.pop()
+            viewModel.comeback()
         }
 
         viewModel.init()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.startGettingUpdates(object : FilterTagObserver {
+            override fun update(data: TagsFilterState) {
+                data.dispatch(adapter)
+                data.consumed(viewModel)
+            }
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopGettingUpdates()
     }
 }

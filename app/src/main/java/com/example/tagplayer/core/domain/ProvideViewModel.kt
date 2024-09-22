@@ -30,13 +30,13 @@ interface ProvideViewModel {
         private val sharedPrefs: SharedPrefs.Mutable<List<Long>>,
     ) : ViewModelProvider.Factory, ClearViewModel {
         private val viewModels: MutableMap<Class<out ViewModel>, ViewModel> = mutableMapOf()
-        //todo memory leak. View models does not cleared
+
         private val clearSearchModule: () -> Unit = {
             clear(SearchViewModel::class.java)
         }
         private var tagSettingsFeatureModule: TagSettingsFeatureModule? = null
         private val homeAndFiltersModule: HomeAndTagsFilterProvideViewModule =
-            HomeAndTagsFilterProvideViewModule(core, sharedPrefs)
+            HomeAndTagsFilterProvideViewModule(core, sharedPrefs, this)
 
         private val clearTagSettingsModule: () -> Unit = {
             clear(TagSettingsViewModel::class.java)
@@ -53,7 +53,7 @@ interface ProvideViewModel {
                         homeAndFiltersModule.provide(modelClass)
 
                     RecentlyViewModel::class.java ->
-                        RecentlyModule.Base(core).create()
+                        RecentlyModule.Base(core, this).create()
 
                     SearchViewModel::class.java ->
                         SearchModule.Base(core, clearSearchModule).create()
@@ -76,7 +76,7 @@ interface ProvideViewModel {
                         tagSettingsFeatureModule!!.provide(modelClass)
                     }
 
-                    EditSongTagsViewModel::class.java -> EditSongTagModule(core).create()
+                    EditSongTagsViewModel::class.java -> EditSongTagModule(core, this).create()
 
                     FilterTagsViewModel::class.java -> homeAndFiltersModule.provide(modelClass)
 

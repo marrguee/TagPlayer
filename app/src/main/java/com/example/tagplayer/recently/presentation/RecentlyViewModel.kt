@@ -1,20 +1,25 @@
 package com.example.tagplayer.recently.presentation
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tagplayer.core.domain.Communication
+import com.example.tagplayer.core.CustomObservable
+import com.example.tagplayer.core.CustomObserver
+import com.example.tagplayer.core.domain.ClearViewModel
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
+import com.example.tagplayer.core.domain.StartPlayback
+import com.example.tagplayer.main.presentation.ComebackViewModel
+import com.example.tagplayer.main.presentation.Navigation
+import com.example.tagplayer.main.presentation.Screen
 import com.example.tagplayer.recently.domain.RecentlyInteractor
 import com.example.tagplayer.recently.domain.RecentlyResponse
-import com.example.tagplayer.core.domain.StartPlayback
 import kotlinx.coroutines.launch
 
 class RecentlyViewModel(
     private val interactor: RecentlyInteractor,
-    private val communication: Communication<RecentlyState>,
-    private val mapper: RecentlyResponse.HistoryResponseMapper
-) : ViewModel(), StartPlayback {
+    private val observable: CustomObservable.All<RecentlyState>,
+    private val mapper: RecentlyResponse.HistoryResponseMapper,
+    private val navigation: Navigation.Navigate,
+    clear: ClearViewModel
+) : ComebackViewModel(clear), HandleUiStateUpdates.All<RecentlyState>, StartPlayback {
     fun recently() {
         viewModelScope.launch {
             interactor.recently().map(mapper)
@@ -26,8 +31,21 @@ class RecentlyViewModel(
         interactor.playSongForeground(id)
     }
 
-    fun observe(owner: LifecycleOwner, observer: Observer<in RecentlyState>) {
-        communication.observe(owner, observer)
+    override fun startGettingUpdates(observer: CustomObserver<RecentlyState>) {
+        observable.updateObserver(observer)
+    }
+
+    override fun stopGettingUpdates() {
+        observable.updateObserver(RecentlyObserver.Empty)
+    }
+
+    override fun clearObserver() {
+        observable.clear()
+    }
+
+    override fun comeback() {
+        super.comeback()
+        navigation.update(Screen.Pop)
     }
 }
 

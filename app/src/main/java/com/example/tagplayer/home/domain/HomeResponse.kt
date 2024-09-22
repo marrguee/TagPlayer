@@ -1,8 +1,8 @@
 package com.example.tagplayer.home.domain
 
+import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.home.presentation.HomeState
 import com.example.tagplayer.main.presentation.SongUi
-import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.domain.DispatcherList
 import kotlinx.coroutines.flow.Flow
 
@@ -15,12 +15,12 @@ interface HomeResponse {
         fun mapError(msg: String)
 
         class Base(
-            private val communication: Communication<HomeState>,
+            private val observable: CustomObservable.UpdateUi<HomeState>,
             private val dispatcherList: DispatcherList
         ) : HomeResponseMapper {
 
             override fun mapRecentlySuccess(list: List<SongUi>) {
-                communication.update(HomeState.RecentlyUpdated(list))
+                observable.update(HomeState.RecentlyUpdated(list))
             }
 
             override fun mapLibrarySuccess(flow: Flow<List<SongUi>>) {
@@ -32,7 +32,7 @@ interface HomeResponse {
             }
 
             override fun mapError(msg: String) {
-                communication.update(HomeState.Error(msg))
+                observable.update(HomeState.Error(msg))
             }
 
         }

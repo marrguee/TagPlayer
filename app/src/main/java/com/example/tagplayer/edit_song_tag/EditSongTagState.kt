@@ -1,6 +1,7 @@
 package com.example.tagplayer.edit_song_tag
 
 import com.example.tagplayer.R
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.main.presentation.CustomTextView
 
 interface EditSongTagState {
@@ -10,6 +11,7 @@ interface EditSongTagState {
         noAllTagsTextView: CustomTextView,
         noOwnedTagsTextView: CustomTextView
     )
+    fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = viewModel.clearObserver()
 
     class DragAndDrop(
         private val allTags: List<TagUi>,
@@ -63,6 +65,15 @@ interface EditSongTagState {
     }
 
     class Error(private val msg: String) : EditSongTagState {
+        override fun dispatch(
+            allAdapter: EditSongTagListenerAdapter,
+            ownedAdapter: EditSongTagListenerAdapter,
+            noAllTagsTextView: CustomTextView,
+            noOwnedTagsTextView: CustomTextView
+        ) = Unit
+    }
+
+    object Empty : EditSongTagState {
         override fun dispatch(
             allAdapter: EditSongTagListenerAdapter,
             ownedAdapter: EditSongTagListenerAdapter,

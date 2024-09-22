@@ -2,18 +2,15 @@ package com.example.tagplayer.recently.presentation
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
-import com.example.tagplayer.core.domain.ProvideViewModel
+import com.example.tagplayer.databinding.RecentlyFragmentScreenBinding
+import com.example.tagplayer.main.presentation.ComebackFragment
 import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
 
-class RecentlyFragment : Fragment(R.layout.recently_fragment_screen) {
-
-    private val viewModel by lazy {
-        (activity as ProvideViewModel).provide(RecentlyViewModel::class.java)
-    }
+class RecentlyFragment : ComebackFragment<RecentlyFragmentScreenBinding, RecentlyViewModel>() {
+    private lateinit var recyclerView: RecyclerView
 
     @UnstableApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -21,12 +18,8 @@ class RecentlyFragment : Fragment(R.layout.recently_fragment_screen) {
         val adapter = RecentlyListenerAdapter {
             viewModel.play(it)
         }
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recentlyRecycler)
-        recyclerView.adapter = adapter
+        binding.recentlyRecycler.adapter = adapter
 
-        viewModel.observe(this) {
-            it.dispatch(recyclerView)
-        }
         viewModel.recently()
 
         if (savedInstanceState == null) {
@@ -35,5 +28,20 @@ class RecentlyFragment : Fragment(R.layout.recently_fragment_screen) {
                 .commit()
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.startGettingUpdates(object : RecentlyObserver {
+            override fun update(data: RecentlyState) {
+                data.dispatch(recyclerView)
+                data.consumed(viewModel)
+            }
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopGettingUpdates()
     }
 }

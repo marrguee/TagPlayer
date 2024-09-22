@@ -1,23 +1,24 @@
 package com.example.tagplayer.edit_song_tag
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tagplayer.core.domain.Communication
+import com.example.tagplayer.core.CustomObservable
+import com.example.tagplayer.core.CustomObserver
+import com.example.tagplayer.core.domain.ClearViewModel
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
+import com.example.tagplayer.main.presentation.ComebackViewModel
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.main.presentation.Screen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 class EditSongTagsViewModel(
     private val interactor: EditSongTagInteractor,
     private val navigation: Navigation.Navigate,
-    private val communication: Communication<EditSongTagState>
-) : ViewModel() {
+    private val observable: CustomObservable.All<EditSongTagState>,
+    clear: ClearViewModel
+) : ComebackViewModel(clear), HandleUiStateUpdates.All<EditSongTagState> {
     private var allTagList: MutableList<TagUi> = mutableListOf()
     private var ownedTagList: MutableList<TagUi> = mutableListOf()
     private var savedSongId: AtomicLong = AtomicLong(DEFAULT_SONG_ID)
@@ -33,10 +34,10 @@ class EditSongTagsViewModel(
 
             withContext(Dispatchers.Main.immediate) {
                 if (allTagList.isEmpty())
-                    communication.update(EditSongTagState.ChangeAllTagsSplashState(true))
+                    observable.update(EditSongTagState.ChangeAllTagsSplashState(true))
                 if (ownedTagList.isEmpty())
-                    communication.update(EditSongTagState.ChangeOwnedTagsSplashState(true))
-                communication.update(
+                    observable.update(EditSongTagState.ChangeOwnedTagsSplashState(true))
+                observable.update(
                     EditSongTagState.DragAndDrop(
                         allTagList.toList(),
                         ownedTagList.toList()
@@ -56,9 +57,9 @@ class EditSongTagsViewModel(
             sourceList.removeAt(index)
             destinationList.add(item)
 
-            communication.update(EditSongTagState.ChangeAllTagsSplashState(allTagList.isEmpty()))
-            communication.update(EditSongTagState.ChangeOwnedTagsSplashState(ownedTagList.isEmpty()))
-            communication.update(
+            observable.update(EditSongTagState.ChangeAllTagsSplashState(allTagList.isEmpty()))
+            observable.update(EditSongTagState.ChangeOwnedTagsSplashState(ownedTagList.isEmpty()))
+            observable.update(
                 EditSongTagState.DragAndDrop(
                     allTagList.toList(),
                     ownedTagList.toList()
@@ -77,8 +78,21 @@ class EditSongTagsViewModel(
         }
     }
 
-    fun observe(owner: LifecycleOwner, observer: Observer<in EditSongTagState>) {
-        communication.observe(owner, observer)
+    override fun startGettingUpdates(observer: CustomObserver<EditSongTagState>) {
+        observable.updateObserver(observer)
+    }
+
+    override fun stopGettingUpdates() {
+        observable.updateObserver(EditSongTagObserver.Empty)
+    }
+
+    override fun clearObserver() {
+        observable.clear()
+    }
+
+    override fun comeback() {
+        super.comeback()
+        navigation.update(Screen.Pop)
     }
 
     companion object {

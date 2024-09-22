@@ -1,29 +1,24 @@
 package com.example.tagplayer.tagsettings.add_tag
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tagplayer.core.domain.Communication
-import com.example.tagplayer.tagsettings.domain.TagDomain
-import com.example.tagplayer.tagsettings.presentation.TagSettingsState
+import com.example.tagplayer.core.CustomObservable
+import com.example.tagplayer.core.CustomObserver
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.tagsettings.presentation.TagSettingsUi
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AddTagViewModel(
     private val interactor: AddTagInteractor,
     private val selectedTag: MutableLiveData<TagSettingsUi?>,
-    private val communication: Communication<TagDialogState>
-) : ViewModel() {
+    private val observable: CustomObservable.All<TagDialogState>
+) : ViewModel(), HandleUiStateUpdates.All<TagDialogState> {
 
     fun init() {
-        communication.update(
+        observable.update(
             if (selectedTag.value != null) TagDialogState.EditMode(selectedTag.value!!)
             else TagDialogState.AddMode
         )
@@ -44,10 +39,19 @@ class AddTagViewModel(
         }
     }
 
-    fun observe(owner: LifecycleOwner, observer: Observer<in TagDialogState>) =
-        communication.observe(owner, observer)
-
     fun clearSelected() {
         selectedTag.value = null
+    }
+
+    override fun startGettingUpdates(observer: CustomObserver<TagDialogState>) {
+        observable.updateObserver(observer)
+    }
+
+    override fun stopGettingUpdates() {
+        observable.updateObserver(AddTagObserver.Empty)
+    }
+
+    override fun clearObserver() {
+        observable.clear()
     }
 }

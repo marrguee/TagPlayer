@@ -1,29 +1,14 @@
 package com.example.tagplayer.tagsettings.presentation
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import com.example.tagplayer.R
-import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.TagsSettingsFragmentScreenBinding
+import com.example.tagplayer.main.presentation.ComebackFragment
 
-class TagSettingsFragment : Fragment(R.layout.tags_settings_fragment_screen) {
-    private lateinit var binding: TagsSettingsFragmentScreenBinding
-    private val viewModel: TagSettingsViewModel by lazy {
-        (requireActivity().application as ProvideViewModel).provide(TagSettingsViewModel::class.java)
-    }
+class TagSettingsFragment : ComebackFragment<TagsSettingsFragmentScreenBinding, TagSettingsViewModel>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = TagsSettingsFragmentScreenBinding.inflate(inflater)
-        return binding.root
-    }
+    private lateinit var adapter: TagsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +17,7 @@ class TagSettingsFragment : Fragment(R.layout.tags_settings_fragment_screen) {
             viewModel.showTagDialog(requireActivity().supportFragmentManager)
         }
 
-        val adapter = TagsAdapter(
+        adapter = TagsAdapter(
             listOf(
                 R.id.editTagMenu to object : MenuAction {
                     override fun action(vararg args: Any) {
@@ -50,10 +35,23 @@ class TagSettingsFragment : Fragment(R.layout.tags_settings_fragment_screen) {
         binding.tagsRecyclerView.adapter = adapter
         registerForContextMenu(binding.tagsRecyclerView)
 
-        viewModel.observe(this) {
-            it.dispatch(adapter)
-        }
+
 
         viewModel.loadTags()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.startGettingUpdates(object : TagSettingsObserver {
+            override fun update(data: TagSettingsState) {
+                data.dispatch(adapter)
+                data.consumed(viewModel)
+            }
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopGettingUpdates()
     }
 }

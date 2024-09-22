@@ -25,15 +25,29 @@ class AddTagDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.observe(this) {
-            it.dispatch(binding.dialogTitle, binding.tagNameEditText, binding.addTagButton)
-        }
+
         viewModel.init()
+
         binding.addTagButton.setOnClickListener {
             viewModel.addTag(binding.tagNameEditText.text.toString()) {
                 dismiss()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.startGettingUpdates(object : AddTagObserver {
+            override fun update(data: TagDialogState) {
+                data.dispatch(binding.dialogTitle, binding.tagNameEditText, binding.addTagButton)
+                data.consumed(viewModel)
+            }
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopGettingUpdates()
     }
 
     override fun onDestroy() {

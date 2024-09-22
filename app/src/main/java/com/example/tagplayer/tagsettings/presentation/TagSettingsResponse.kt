@@ -1,5 +1,6 @@
 package com.example.tagplayer.tagsettings.presentation
 
+import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.domain.DispatcherList
 import kotlinx.coroutines.CoroutineScope
@@ -15,20 +16,20 @@ interface TagSettingsResponse {
         fun mapError(message: String)
 
         class Base(
-            private val communication: Communication<TagSettingsState>,
+            private val observable: CustomObservable.UpdateUi<TagSettingsState>,
             private val dispatcherList: DispatcherList
         ) : TagSettingsResponseMapper {
             override fun mapSuccess(flow: Flow<List<TagSettingsUi>>, coroutineScope: CoroutineScope) {
                 coroutineScope.launch {
                     flow.flowOn(dispatcherList.io()).collect {
-                        communication.update(TagSettingsState.UpdateTagList(it))
+                        observable.update(TagSettingsState.UpdateTagList(it))
                     }
                 }
 
             }
 
             override fun mapError(message: String) {
-                communication.update(TagSettingsState.Error(message))
+                observable.update(TagSettingsState.Error(message))
             }
         }
     }
