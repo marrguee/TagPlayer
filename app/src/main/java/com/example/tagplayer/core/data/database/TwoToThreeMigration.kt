@@ -5,3 +5,4 @@ import androidx.room.migration.AutoMigrationSpec
 
 @DeleteColumn(tableName = "last_played", columnName = "time")
 class TwoToThreeMigration : AutoMigrationSpec
+

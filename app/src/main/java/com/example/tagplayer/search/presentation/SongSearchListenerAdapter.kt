@@ -1,14 +1,13 @@
 package com.example.tagplayer.search.presentation
 
-import com.example.tagplayer.main.presentation.generic_adapter.adapter.GenericAdapter
 import com.example.tagplayer.main.presentation.generic_adapter.adapter.GenericListenerAdapter
 import com.example.tagplayer.main.presentation.generic_adapter.diffutils.GenericDiffUtil
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiListenerType
-import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiType
 
-class SearchListenerAdapter(
+class SongSearchListenerAdapter(
     listener: (Long) -> Unit
-) : GenericAdapter<SearchUi>(
+) : GenericListenerAdapter<SongSearchUi, Long>(
     GenericDiffUtil(),
-    listOf(ItemUiType.TagType)
+    listener,
+    listOf(ItemUiListenerType.SongListenerType)
 )

@@ -72,6 +72,10 @@ class HomeFragment : Fragment(R.layout.home_fragment_screen) {
             }
         }
 
+        binding.searchView.setOnClickListener {
+            viewModel.searchScreen()
+        }
+
         viewModel.scan()
         viewModel.loadRecently()
         viewModel.startGettingFilterUpdates()

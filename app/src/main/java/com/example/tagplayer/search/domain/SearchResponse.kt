@@ -1,47 +1,33 @@
 package com.example.tagplayer.search.domain
 
-import com.example.tagplayer.main.presentation.SongUi
+import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.domain.DispatcherList
-import com.example.tagplayer.search.presentation.SearchUi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
+import com.example.tagplayer.search.presentation.SongSearchUi
 
 interface SearchResponse {
     fun map(mapper: SearchResponseMapper)
 
     interface SearchResponseMapper {
-        fun mapSearchHistorySuccess(list: List<SearchUi>)
-
-        fun mapSongsSuccess(list: List<SongUi>)
+        fun mapSongsSuccess(list: List<SongSearchUi>)
         fun mapError(cause: String)
 
         class Base(
-            private val communication: Communication<SearchState>,
+            private val observable: CustomObservable.UpdateUi<SearchState>,
             private val dispatcherList: DispatcherList
         ) : SearchResponseMapper {
-            override fun mapSearchHistorySuccess(list: List<SearchUi>) {
-                communication.update(SearchState.SearchHistorySuccess(list))
-            }
 
-            override fun mapSongsSuccess(list: List<SongUi>) {
-                //communication.update(SearchState.SongsSuccess(list))
+            override fun mapSongsSuccess(list: List<SongSearchUi>) {
+                observable.update(SearchState.SongsSuccess(list))
             }
 
             override fun mapError(cause: String) {
-                communication.update(SearchState.Error(cause))
+                observable.update(SearchState.Error(cause))
             }
         }
     }
 
-    class SearchSuccess(private val list: List<SearchUi>) : SearchResponse {
-        override fun map(mapper: SearchResponseMapper){
-            mapper.mapSearchHistorySuccess(list)
-        }
-    }
-
-    class SongsSuccess(private val list: List<SongUi>) : SearchResponse {
+    class SongsSuccess(private val list: List<SongSearchUi>) : SearchResponse {
         override fun map(mapper: SearchResponseMapper){
             mapper.mapSongsSuccess(list)
         }

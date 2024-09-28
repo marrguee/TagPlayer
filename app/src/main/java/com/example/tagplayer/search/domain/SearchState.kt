@@ -1,23 +1,24 @@
 package com.example.tagplayer.search.domain
 
-import com.example.tagplayer.main.presentation.SongUi
-import com.example.tagplayer.search.presentation.SearchListenerAdapter
-import com.example.tagplayer.search.presentation.SearchUi
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
+import com.example.tagplayer.search.presentation.SongSearchListenerAdapter
+import com.example.tagplayer.search.presentation.SongSearchUi
 
 interface SearchState {
-    fun dispatch(searchResultAdapter: SearchListenerAdapter)
+    fun dispatch(searchResultAdapter: SongSearchListenerAdapter)
+    fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = viewModel.clearObserver()
 
-    class SearchHistorySuccess(private val list: List<SearchUi>) : SearchState {
-        override fun dispatch(searchResultAdapter: SearchListenerAdapter) = Unit
+    class SongsSuccess(private val list: List<SongSearchUi>) : SearchState {
+        override fun dispatch(searchResultAdapter: SongSearchListenerAdapter) {
+            searchResultAdapter.submitList(list)
+        }
     }
 
-//    class SongsSuccess(private val list: List<SongUi>) : SearchState {
-//        override fun dispatch(searchResultAdapter: SearchListenerAdapter) {
-//            searchResultAdapter.submitList(list)
-//        }
-//    }
-
     class Error(private val cause: String) : SearchState {
-        override fun dispatch(searchResultAdapter: SearchListenerAdapter) = Unit
+        override fun dispatch(searchResultAdapter: SongSearchListenerAdapter) = Unit
+    }
+
+    object Empty : SearchState {
+        override fun dispatch(searchResultAdapter: SongSearchListenerAdapter) = Unit
     }
 }

@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.tagplayer.home.domain.SongDomain
+import com.example.tagplayer.search.domain.SongSearchDomain
 
 @Entity("songs")
 data class Song(
@@ -21,6 +22,17 @@ data class Song(
         object ToDomain : Mapper<SongDomain> {
             override fun map(id: Long, title: String, duration: Long, uri: String) =
                 SongDomain(id, title, duration, Uri.parse(uri))
+        }
+
+        object ToDomainSearch : Mapper<SongSearchDomain> {
+            override fun map(
+                id: Long,
+                title: String,
+                duration: Long,
+                uri: String
+            ): SongSearchDomain {
+                return SongSearchDomain(id, title, duration.toString())
+            }
         }
     }
 

@@ -16,6 +16,14 @@ interface ItemUiType {
                     .inflate(R.layout.item_tag, parent, false)
             )
     }
+
+//    object SearchType : ItemUiType {
+//        override fun viewHolder(parent: ViewGroup): GenericViewHolder<*> =
+//            GenericViewHolder.SearchHolder(
+//                LayoutInflater.from(parent.context)
+//                    .inflate(R.layout.item_search, parent, false)
+//            )
+//    }
 }
 
 interface ItemUiListenerType {
@@ -42,6 +50,14 @@ interface ItemUiListenerType {
             GenericListenerViewHolder.RecentlyDateHolderListener(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_date, parent, false)
+            )
+    }
+
+    object SongListenerType : ItemUiListenerType {
+        override fun viewHolder(parent: ViewGroup): GenericListenerViewHolder<*, *> =
+            GenericListenerViewHolder.SongHolderListener(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_song, parent, false)
             )
     }
 }

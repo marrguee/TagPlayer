@@ -1,28 +1,18 @@
 package com.example.tagplayer.search.domain
 
+import com.example.tagplayer.core.domain.PlaySongForeground
 import com.example.tagplayer.home.domain.DomainError
 import com.example.tagplayer.home.domain.HandleError
-import com.example.tagplayer.home.domain.SongDomain
-import com.example.tagplayer.main.presentation.SongUi
-import com.example.tagplayer.core.domain.PlaySongForeground
-import com.example.tagplayer.core.data.database.models.SearchHistoryTable
-import com.example.tagplayer.search.presentation.SearchUi
+import com.example.tagplayer.search.presentation.SongSearchUi
 
-interface SearchInteractor : UpdateSearchHistory<SearchHistoryTable>, PlaySongForeground {
-    suspend fun searchHistory() : SearchResponse
+interface SearchInteractor : PlaySongForeground {
     suspend fun findSongsByTitle(title: String) : SearchResponse
 
     class Base(
-        private val repository: SearchRepository<SearchDomain, SongDomain>,
+        private val repository: SearchRepository<SongSearchDomain>,
         private val handleError: HandleError.Presentation,
-        private val searchModelMapper: SearchDomain.Mapper<SearchUi>,
-        private val songsModelMapper: SongDomain.Mapper<SongUi>
+        private val songsModelMapper: SongSearchDomain.Mapper<SongSearchUi>
     ) : SearchInteractor {
-        override suspend fun searchHistory() = try {
-            SearchResponse.SearchSuccess(repository.searchHistory().map { it.map(searchModelMapper) })
-        } catch (e: DomainError) {
-            SearchResponse.Error(handleError.handle(e))
-        }
 
         override suspend fun findSongsByTitle(title: String) = try {
             SearchResponse.SongsSuccess(repository.findSongsByTitle(title).map {
@@ -30,10 +20,6 @@ interface SearchInteractor : UpdateSearchHistory<SearchHistoryTable>, PlaySongFo
             })
         } catch (e: DomainError) {
             SearchResponse.Error(handleError.handle(e))
-        }
-
-        override suspend fun updateSearch(searchHistoryTable: SearchHistoryTable) {
-            repository.updateSearch(searchHistoryTable)
         }
 
         override fun playSongForeground(id: Long) {

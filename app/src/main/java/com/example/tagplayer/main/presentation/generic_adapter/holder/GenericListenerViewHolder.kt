@@ -9,6 +9,7 @@ import com.example.tagplayer.main.presentation.CustomTextView
 import com.example.tagplayer.main.presentation.ItemUiListener
 import com.example.tagplayer.recently.presentation.RecentlyUi.DateUi
 import com.example.tagplayer.recently.presentation.RecentlyUi.RecentlySongUi
+import com.example.tagplayer.search.presentation.SongSearchUi
 
 abstract class GenericListenerViewHolder<T : ItemUiListener, L>(root: View) : RecyclerView.ViewHolder(root) {
     abstract fun bind(item: T, listener: (L) -> Unit)
@@ -39,5 +40,17 @@ abstract class GenericListenerViewHolder<T : ItemUiListener, L>(root: View) : Re
             }
         }
     }
-}
 
+    class SongHolderListener(root: View) : GenericListenerViewHolder<SongSearchUi, Long>(root) {
+        private val titleTextView: CustomTextView = itemView.findViewById(R.id.titleTextView)
+        private val durationTextView: CustomTextView = itemView.findViewById(R.id.durationTextView)
+
+        override fun bind(item: SongSearchUi, listener: (Long) -> Unit) {
+            item.bind(titleTextView, durationTextView)
+            itemView.setOnClickListener {
+                item.tap(listener)
+            }
+        }
+
+    }
+}

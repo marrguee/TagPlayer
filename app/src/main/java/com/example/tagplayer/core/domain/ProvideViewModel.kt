@@ -31,9 +31,6 @@ interface ProvideViewModel {
     ) : ViewModelProvider.Factory, ClearViewModel {
         private val viewModels: MutableMap<Class<out ViewModel>, ViewModel> = mutableMapOf()
 
-        private val clearSearchModule: () -> Unit = {
-            clear(SearchViewModel::class.java)
-        }
         private var tagSettingsFeatureModule: TagSettingsFeatureModule? = null
         private val homeAndFiltersModule: HomeAndTagsFilterProvideViewModule =
             HomeAndTagsFilterProvideViewModule(core, sharedPrefs, this)
@@ -56,7 +53,7 @@ interface ProvideViewModel {
                         RecentlyModule.Base(core, this).create()
 
                     SearchViewModel::class.java ->
-                        SearchModule.Base(core, clearSearchModule).create()
+                        SearchModule.Base(core, this).create()
 
                     TagSettingsViewModel::class.java -> {
                         if (tagSettingsFeatureModule == null) tagSettingsFeatureModule =

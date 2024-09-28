@@ -12,6 +12,7 @@ import com.example.tagplayer.home.domain.HomeInteractor
 import com.example.tagplayer.home.domain.HomeResponse
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.recently.presentation.RecentlyScreen
+import com.example.tagplayer.search.domain.SearchScreen
 import com.example.tagplayer.tagsettings.presentation.TagSettingsScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -86,6 +87,10 @@ class HomeViewModel(
 
     fun tagSettingsScreen() {
         navigation.update(TagSettingsScreen)
+    }
+
+    fun searchScreen() {
+        navigation.update(SearchScreen)
     }
 
     fun loadRecently() {
