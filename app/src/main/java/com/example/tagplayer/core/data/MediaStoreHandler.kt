@@ -7,6 +7,7 @@ import com.example.tagplayer.home.data.ExtractMedia
 interface MediaStoreHandler {
     suspend fun scan()
     suspend fun scanNewFile(uri: Uri)
+    suspend fun deleteSong(uri: Uri)
 
     class Base(
         private val extractMedia: ExtractMedia,
@@ -26,6 +27,10 @@ interface MediaStoreHandler {
         override suspend fun scanNewFile(uri: Uri) {
             val song = extractMedia.scanNewFile(uri)
             song?.let { songsDao.addSong(it) }
+        }
+
+        override suspend fun deleteSong(uri: Uri) {
+            songsDao.deleteSong(uri.toString())
         }
     }
 }

@@ -14,7 +14,6 @@ import com.example.tagplayer.core.domain.ProvideMediaStoreHandler
 import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.domain.ProvideLastPlayedDao
 import com.example.tagplayer.core.domain.ProvideMediaObserver
-import com.example.tagplayer.core.domain.ProvideMediaReceiver
 import com.example.tagplayer.core.domain.ProvidePlayerService
 import com.example.tagplayer.core.domain.ProvideSongsDao
 import com.example.tagplayer.core.domain.ProvideViewModel
@@ -27,7 +26,6 @@ class App : Application(),
     ManageResources.Provide,
     ProvideSongsDao,
     ProvideLastPlayedDao,
-    ProvideMediaReceiver,
     ProvideMediaObserver
 {
     private lateinit var core: Core
@@ -58,8 +56,6 @@ class App : Application(),
     override fun manageRecourses() = core.manageRecourses()
     override fun songsDao(): SongsDao = core.songsDao()
     override fun lastPlayedDao(): LastPlayedDao = core.lastPlayedDao()
-    override fun mediaReceiver(): MediaScannerFinishedReceiver =
-        MediaScannerFinishedReceiver(core.foregroundWrapper())
     override fun mediaObserver(): MediaObserver =
         MediaObserver(Handler(Looper.getMainLooper()), core.foregroundWrapper())
 }

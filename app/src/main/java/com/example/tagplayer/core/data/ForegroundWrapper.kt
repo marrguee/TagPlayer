@@ -19,7 +19,7 @@ interface ForegroundWrapper {
     fun scanNewMedia()
     fun playMedia(id: Long)
     fun fetchNewSong(uri: Uri)
-    fun deleteSong()
+    fun deleteSong(uri: Uri)
 
     class Base(
         private val workManager: WorkManager
@@ -69,10 +69,12 @@ interface ForegroundWrapper {
             )
         }
 
-        override fun deleteSong() {
+        override fun deleteSong(uri: Uri) {
             startWorker.invoke(
-                OneTimeWorkRequestBuilder<DeleteSongWorker>(),
-                ExistingWorkPolicy.KEEP,
+                OneTimeWorkRequestBuilder<DeleteSongWorker>().setInputData(
+                    workDataOf(URI_KEY to uri)
+                ),
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
                 DeleteSongWorker::class
             )
         }
@@ -138,6 +140,9 @@ class DeleteSongWorker(
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
+        val uri: Uri = inputData.getString(inputData.keyValueMap.keys.first())?.toUri()
+            ?: return Result.failure()
+        (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().deleteSong(uri)
         return Result.success()
     }
 }
