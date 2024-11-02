@@ -9,7 +9,7 @@ import com.google.android.material.textfield.TextInputEditText
 
 interface TagDialogState {
     fun dispatch(dialogTitle: TextView, editText: TextInputEditText, button: Button)
-    fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = viewModel.clearObserver()
+    fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
 
     class EditMode(
         private val tagSettingsUi: TagSettingsUi
@@ -34,6 +34,6 @@ interface TagDialogState {
         override fun dispatch(dialogTitle: TextView, editText: TextInputEditText, button: Button) =
             Unit
 
-        override fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = Unit
+        override fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = Unit
     }
 }

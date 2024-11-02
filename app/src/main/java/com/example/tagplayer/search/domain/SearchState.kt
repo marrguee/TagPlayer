@@ -6,7 +6,7 @@ import com.example.tagplayer.search.presentation.SongSearchUi
 
 interface SearchState {
     fun dispatch(searchResultAdapter: SongSearchListenerAdapter)
-    fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = viewModel.clearObserver()
+    fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
 
     class SongsSuccess(private val list: List<SongSearchUi>) : SearchState {
         override fun dispatch(searchResultAdapter: SongSearchListenerAdapter) {

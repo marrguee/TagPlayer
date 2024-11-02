@@ -6,13 +6,14 @@ import com.example.tagplayer.home.domain.HandleError
 import com.example.tagplayer.home.domain.SongDomain
 import com.example.tagplayer.core.data.AbstractSongBasedRepository
 import com.example.tagplayer.core.data.ForegroundWrapper
+import com.example.tagplayer.core.data.MediaStoreHandler
 import com.example.tagplayer.core.data.database.models.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
     handleError: HandleError<Exception, DomainError>,
-    private val foregroundWrapper: ForegroundWrapper,
+    foregroundWrapper: ForegroundWrapper,
     private val cacheDatasource: HomeCacheDatasource,
     private val songModelMapper: Song.Mapper<SongDomain>,
 ) : AbstractSongBasedRepository<Song, SongDomain, Any>(foregroundWrapper, handleError),
@@ -33,7 +34,7 @@ class HomeRepositoryImpl(
     }
 
     override fun scan() {
-        foregroundWrapper.scanMedia()
+        cacheDatasource.scan()
     }
 
 }

@@ -11,24 +11,15 @@ interface HomeResponse {
 
     interface HomeResponseMapper {
         fun mapRecentlySuccess(list: List<SongUi>)
-        fun mapLibrarySuccess(flow: Flow<List<SongUi>>)
         fun mapError(msg: String)
 
         class Base(
-            private val observable: CustomObservable.UpdateUi<HomeState>,
-            private val dispatcherList: DispatcherList
+            private val observable: CustomObservable.UpdateUi<HomeState>
         ) : HomeResponseMapper {
 
             override fun mapRecentlySuccess(list: List<SongUi>) {
-                observable.update(HomeState.RecentlyUpdated(list))
-            }
-
-            override fun mapLibrarySuccess(flow: Flow<List<SongUi>>) {
-//                coroutineScope.launch {
-//                    flow.flowOn(dispatcherList.io()).collect { songs ->
-//                        communication.update(HomeState.LibraryUpdated(songs))
-//                    }
-//                }
+                if (list.isEmpty()) observable.update(HomeState.HideRecently)
+                else observable.update(HomeState.RecentlyUpdated(list))
             }
 
             override fun mapError(msg: String) {
@@ -43,14 +34,6 @@ interface HomeResponse {
     ) : HomeResponse {
         override fun map(mapper: HomeResponseMapper) {
             mapper.mapRecentlySuccess(list)
-        }
-    }
-
-    class LibraryHomeResponseSuccess(
-        private val flow: Flow<List<SongUi>>
-    ) : HomeResponse {
-        override fun map(mapper: HomeResponseMapper) {
-            //mapper.mapLibrarySuccess(flow, coroutineScope)
         }
     }
 

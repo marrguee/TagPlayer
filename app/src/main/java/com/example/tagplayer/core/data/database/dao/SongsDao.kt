@@ -1,6 +1,7 @@
 package com.example.tagplayer.core.data.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.Flow
 interface SongsDao {
     @Query("SELECT * FROM songs")
     fun library() : Flow<List<Song>>
+    @Query("SELECT * FROM songs")
+    fun songs() : List<Song>
     @Query("SELECT * FROM songs WHERE songs.title LIKE '%' || :query || '%'")
     suspend fun searchSongs(query: String) : List<Song>
     @Insert(entity = Song::class, onConflict = OnConflictStrategy.REPLACE)
@@ -23,6 +26,8 @@ interface SongsDao {
     suspend fun uriById(songId: Long) : String
     @Query("DELETE FROM songs_and_tags WHERE songs_and_tags.track_id=:songId")
     suspend fun deleteSongTags(songId: Long)
+    @Delete(entity = Song::class)
+    suspend fun deleteSongs(list: List<Song>)
     @Insert(entity = SongTagCrossRef::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateSongTags(tags: List<SongTagCrossRef>)
     @Query("SELECT * FROM tags INNER JOIN songs_and_tags ON songs_and_tags.tag_id = tags.id WHERE songs_and_tags.track_id=:songId")

@@ -44,7 +44,7 @@
         android:paddingTop="9dp"
         app:layout_constraintBottom_toTopOf="@id/playbackControlContainer">
 
-        <TextView
+        <com.example.tagplayer.core.SaveVisibilityTextView
             android:id="@+id/recentlyPlayedTextView"
             style="@style/HeaderText"
             android:layout_width="match_parent"

@@ -11,7 +11,7 @@ interface EditSongTagState {
         noAllTagsTextView: CustomTextView,
         noOwnedTagsTextView: CustomTextView
     )
-    fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = viewModel.clearObserver()
+    fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
 
     class DragAndDrop(
         private val allTags: List<TagUi>,

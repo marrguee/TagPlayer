@@ -1,4 +1,4 @@
-package com.example.tagplayer.main.domain
+package com.example.tagplayer.core
 
 import android.app.NotificationManager
 import android.content.Context
@@ -17,9 +17,8 @@ import com.example.tagplayer.core.data.database.models.LastPlayed
 import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.domain.ProvideLastPlayedDao
 import com.example.tagplayer.core.domain.ProvideSongsDao
-import com.example.tagplayer.main.presentation.Navigation
-import com.example.tagplayer.main.presentation.Screen
-import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
+import com.example.tagplayer.main.domain.ManageNotification
+import com.example.tagplayer.main.domain.ShowNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

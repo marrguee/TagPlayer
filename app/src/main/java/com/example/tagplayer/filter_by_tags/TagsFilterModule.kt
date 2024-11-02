@@ -3,9 +3,9 @@ package com.example.tagplayer.filter_by_tags
 import com.example.tagplayer.core.Core
 import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.Module
+import com.example.tagplayer.core.SharedPrefs
 import com.example.tagplayer.core.data.database.models.SongTag
 import com.example.tagplayer.core.domain.ClearViewModel
-import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.main.presentation.Navigation
 
 class TagsFilterModule(

@@ -2,12 +2,11 @@ package com.example.tagplayer.main.presentation
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.replace
-import com.example.tagplayer.core.ConsumeState
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
 
 interface Screen {
     fun dispatch(fragmentManager: FragmentManager, containerId: Int)
-    fun consumed(viewModel: ConsumeState) = viewModel.consumeState()
+    fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
 
     open class Add(
         private val fragmentClass: Class<out Fragment>

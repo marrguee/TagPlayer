@@ -9,14 +9,14 @@ import com.example.tagplayer.R
 import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.HomeFragmentScreenBinding
+import com.example.tagplayer.main.presentation.BindingFragment
 import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
 import com.example.tagplayer.tagsettings.presentation.MenuAction
 
-class HomeFragment : Fragment(R.layout.home_fragment_screen) {
+class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
     private val viewModel by lazy {
         (activity as ProvideViewModel).provide(HomeViewModel::class.java)
     }
-    private lateinit var binding: HomeFragmentScreenBinding
     private lateinit var libraryAdapter: LibraryRecyclerAdapter
     private lateinit var recentlyAdapter: RecentlyRecyclerListenerAdapter
 
@@ -76,7 +76,6 @@ class HomeFragment : Fragment(R.layout.home_fragment_screen) {
             viewModel.searchScreen()
         }
 
-        viewModel.scan()
         viewModel.loadRecently()
         viewModel.startGettingFilterUpdates()
     }
@@ -85,15 +84,16 @@ class HomeFragment : Fragment(R.layout.home_fragment_screen) {
         super.onResume()
         viewModel.startGettingUpdates(object : HomeObserver {
             override fun update(data: HomeState) {
-                data.dispatch(libraryAdapter, recentlyAdapter)
+                data.dispatch(binding.recentlyPlayedTextView, libraryAdapter, recentlyAdapter)
                 data.consumed(viewModel)
             }
         })
+        viewModel.init()
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.stopGettingUpdates(HomeObserver.Empty)
+        viewModel.stopGettingUpdates()
     }
 }
 

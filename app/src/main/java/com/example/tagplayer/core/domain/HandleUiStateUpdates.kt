@@ -9,9 +9,9 @@ interface HandleUiStateUpdates<T> {
         fun stopGettingUpdates()
     }
 
-    interface ClearObserver {
-        fun clearObserver()
+    interface ClearObservable {
+        fun clear()
     }
 
-    interface All<T> : StartAndStopUpdates<T>, ClearObserver
+    interface All<T> : StartAndStopUpdates<T>, ClearObservable
 }

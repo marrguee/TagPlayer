@@ -39,7 +39,7 @@ class RecentlyViewModel(
         observable.updateObserver(RecentlyObserver.Empty)
     }
 
-    override fun clearObserver() {
+    override fun clear() {
         observable.clear()
     }
 

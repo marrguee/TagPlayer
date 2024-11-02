@@ -45,7 +45,7 @@ class SearchViewModel(
         observable.updateObserver(SearchObserver.Empty)
     }
 
-    override fun clearObserver() {
+    override fun clear() {
         observable.clear()
     }
 

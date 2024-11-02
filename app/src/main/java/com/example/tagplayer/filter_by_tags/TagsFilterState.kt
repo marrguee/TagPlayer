@@ -4,7 +4,7 @@ import com.example.tagplayer.core.domain.HandleUiStateUpdates
 
 interface TagsFilterState {
     fun dispatch(adapter: FilterTagsAdapter)
-    fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = viewModel.clearObserver()
+    fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
 
     class SelectedTagsChanged(
         private val list: List<TagFilterUi>

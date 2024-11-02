@@ -86,7 +86,7 @@ class EditSongTagsViewModel(
         observable.updateObserver(EditSongTagObserver.Empty)
     }
 
-    override fun clearObserver() {
+    override fun clear() {
         observable.clear()
     }
 

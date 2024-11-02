@@ -5,7 +5,7 @@ import com.example.tagplayer.core.domain.HandleUiStateUpdates
 
 interface RecentlyState {
     fun dispatch(recyclerView: RecyclerView)
-    fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = viewModel.clearObserver()
+    fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
 
     class RecentlyUpdated(private val list: List<RecentlyUi>) : RecentlyState {
         override fun dispatch(recyclerView: RecyclerView) {
@@ -19,6 +19,6 @@ interface RecentlyState {
 
     object Empty : RecentlyState {
         override fun dispatch(recyclerView: RecyclerView) = Unit
-        override fun consumed(viewModel: HandleUiStateUpdates.ClearObserver) = Unit
+        override fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = Unit
     }
 }

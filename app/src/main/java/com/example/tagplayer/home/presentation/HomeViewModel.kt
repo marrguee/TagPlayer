@@ -30,6 +30,10 @@ class HomeViewModel(
 ) : ViewModel(), StartPlayback, HandleUiStateUpdates.All<HomeState> {
     private var flowJob: Job? = null
 
+    fun init() {
+        interactor.scan()
+    }
+
     override fun startGettingUpdates(observer: CustomObserver<HomeState>) {
         observable.updateObserver(observer)
     }
@@ -69,8 +73,22 @@ class HomeViewModel(
         }
     }
 
-    fun stopGettingUpdates(observer: CustomObserver<HomeState>) {
-        observable.updateObserver(observer)
+
+    fun loadRecently() {
+        viewModelScope.launch {
+            interactor.recently().map(mapper)
+        }
+    }
+
+    override fun play(id: Long) =
+        interactor.playSongForeground(id)
+
+    override fun stopGettingUpdates() {
+        observable.updateObserver(HomeObserver.Empty)
+    }
+
+    override fun clear() {
+        observable.clear()
     }
 
     fun filterTagsScreen() {
@@ -91,24 +109,5 @@ class HomeViewModel(
 
     fun searchScreen() {
         navigation.update(SearchScreen)
-    }
-
-    fun loadRecently() {
-        viewModelScope.launch {
-            interactor.recently().map(mapper)
-        }
-    }
-
-    fun scan() = interactor.scan()
-
-    override fun play(id: Long) =
-        interactor.playSongForeground(id)
-
-    override fun stopGettingUpdates() {
-        observable.updateObserver(HomeObserver.Empty)
-    }
-
-    override fun clearObserver() {
-        observable.clear()
     }
 }

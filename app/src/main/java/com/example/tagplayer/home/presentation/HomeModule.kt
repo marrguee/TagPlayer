@@ -11,24 +11,26 @@ import com.example.tagplayer.home.data.HomeCacheDatasource
 import com.example.tagplayer.home.data.HomeRepositoryImpl
 import com.example.tagplayer.core.data.database.models.Song
 import com.example.tagplayer.core.domain.DispatcherList
-import com.example.tagplayer.filter_by_tags.SharedPrefs
+import com.example.tagplayer.core.SharedPrefs
 import com.example.tagplayer.main.presentation.Navigation
 
 interface HomeModule : Module<HomeViewModel> {
     class Base(
         private val core: Core,
-        private val sharedPrefs: SharedPrefs.Read<List<Long>>,
+        private val songsFilterPrefs: SharedPrefs.Read<List<Long>>,
         private val selectedTagsObservable: CustomObservable.All<List<Long>>,
     ) : HomeModule {
 
         override fun create(): HomeViewModel {
             val observable: CustomObservable.All<HomeState> = HomeObservable()
-            val responseAllMapper = HomeResponseMapper.Base(
-                observable,
-                DispatcherList.Base
-            )
+            val responseAllMapper = HomeResponseMapper.Base(observable)
+
             val homeCacheDatasource: HomeCacheDatasource.Base =
-                HomeCacheDatasource.Base(core.mediaDatabase(), sharedPrefs)
+                HomeCacheDatasource.Base(
+                    core.mediaDatabase(),
+                    core.foregroundWrapper(),
+                    songsFilterPrefs
+                )
             val allRepositoryImpl = HomeRepositoryImpl(
                 HandleError.Domain,
                 core.foregroundWrapper(),

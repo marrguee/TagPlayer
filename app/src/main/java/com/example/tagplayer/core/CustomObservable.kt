@@ -2,12 +2,6 @@ package com.example.tagplayer.core
 
 import androidx.annotation.MainThread
 
-
-interface MutableGettingUpdates<T> {
-    fun startGettingUpdates(observer: CustomObserver<T>)
-    fun stopGettingUpdates()
-}
-
 interface CustomObservable {
 
     interface UpdateUiObserver<T> {

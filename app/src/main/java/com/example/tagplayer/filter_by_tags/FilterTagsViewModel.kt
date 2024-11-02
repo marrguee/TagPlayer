@@ -76,7 +76,7 @@ class FilterTagsViewModel(
         observable.updateObserver(FilterTagObserver.Empty)
     }
 
-    override fun clearObserver() {
+    override fun clear() {
         observable.clear()
     }
 

@@ -10,7 +10,6 @@ import com.example.tagplayer.main.presentation.ComebackFragment
 import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
 
 class RecentlyFragment : ComebackFragment<RecentlyFragmentScreenBinding, RecentlyViewModel>() {
-    private lateinit var recyclerView: RecyclerView
 
     @UnstableApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +33,7 @@ class RecentlyFragment : ComebackFragment<RecentlyFragmentScreenBinding, Recentl
         super.onResume()
         viewModel.startGettingUpdates(object : RecentlyObserver {
             override fun update(data: RecentlyState) {
-                data.dispatch(recyclerView)
+                data.dispatch(binding.recentlyRecycler)
                 data.consumed(viewModel)
             }
         })

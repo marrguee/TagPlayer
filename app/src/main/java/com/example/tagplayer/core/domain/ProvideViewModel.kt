@@ -2,14 +2,13 @@ package com.example.tagplayer.core.domain
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tagplayer.home.presentation.HomeModule
 import com.example.tagplayer.home.presentation.HomeViewModel
 import com.example.tagplayer.core.Core
 import com.example.tagplayer.edit_song_tag.EditSongTagModule
 import com.example.tagplayer.edit_song_tag.EditSongTagsViewModel
 import com.example.tagplayer.filter_by_tags.FilterTagsViewModel
 import com.example.tagplayer.filter_by_tags.HomeAndTagsFilterProvideViewModule
-import com.example.tagplayer.filter_by_tags.SharedPrefs
+import com.example.tagplayer.core.SharedPrefs
 import com.example.tagplayer.main.presentation.MainViewModel
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.playback_control.presentation.PlaybackControlViewModel
@@ -27,13 +26,13 @@ interface ProvideViewModel {
     @Suppress("UNCHECKED_CAST")
     class Factory(
         private val core: Core,
-        private val sharedPrefs: SharedPrefs.Mutable<List<Long>>,
+        songsFilterPrefs: SharedPrefs.Mutable<List<Long>>
     ) : ViewModelProvider.Factory, ClearViewModel {
         private val viewModels: MutableMap<Class<out ViewModel>, ViewModel> = mutableMapOf()
 
         private var tagSettingsFeatureModule: TagSettingsFeatureModule? = null
         private val homeAndFiltersModule: HomeAndTagsFilterProvideViewModule =
-            HomeAndTagsFilterProvideViewModule(core, sharedPrefs, this)
+            HomeAndTagsFilterProvideViewModule(core, songsFilterPrefs, this)
 
         private val clearTagSettingsModule: () -> Unit = {
             clear(TagSettingsViewModel::class.java)

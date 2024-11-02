@@ -1,6 +1,5 @@
 package com.example.tagplayer.home.domain
 
-import com.example.tagplayer.core.data.database.models.SongTag
 import com.example.tagplayer.core.domain.PlaySongForeground
 import com.example.tagplayer.main.presentation.SongUi
 import kotlinx.coroutines.flow.Flow
@@ -40,7 +39,9 @@ interface HomeInteractor : PlaySongForeground, ScanSongsForeground {
         override fun playSongForeground(id: Long) =
             repository.playSongForeground(id)
 
-        override fun scan() =
+        override fun scan() {
             repository.scan()
+        }
+
     }
 }

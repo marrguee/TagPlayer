@@ -51,7 +51,7 @@ class AddTagViewModel(
         observable.updateObserver(AddTagObserver.Empty)
     }
 
-    override fun clearObserver() {
+    override fun clear() {
         observable.clear()
     }
 }

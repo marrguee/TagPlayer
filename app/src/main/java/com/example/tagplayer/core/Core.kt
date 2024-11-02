@@ -5,10 +5,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.work.WorkManager
 import com.example.tagplayer.home.data.ExtractMedia
-import com.example.tagplayer.core.domain.DispatcherList
 import com.example.tagplayer.core.data.database.MediaDatabase
 import com.example.tagplayer.core.data.MediaStoreHandler
-import com.example.tagplayer.core.data.ObserveMediaBroadcast
 import com.example.tagplayer.core.domain.ProvideMediaStoreHandler
 import com.example.tagplayer.core.data.database.dao.SongsDao
 import com.example.tagplayer.core.data.ForegroundWrapper
@@ -19,7 +17,6 @@ import com.example.tagplayer.core.domain.ProvideTagDao
 interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastPlayedDao, ProvideTagDao {
 
     fun songsDao() : SongsDao
-    fun observeMediaBroadcast() : ObserveMediaBroadcast
     fun mediaDatabase() : MediaDatabase
     fun foregroundWrapper() : ForegroundWrapper
 
@@ -37,11 +34,10 @@ interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastP
 
 
         private val mediaStoreHandler = MediaStoreHandler.Base(
-            ExtractMedia.Base(contentResolver),
+            ExtractMedia.Base(contentResolver, context),
             mediaDatabase.songsDao
         )
 
-        private val observeMediaBroadcast = ObserveMediaBroadcast(DispatcherList.Base, songsDao())
         private val manageResources = ManageResources.Base(context)
 
 
@@ -51,7 +47,7 @@ interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastP
         override fun tagDao() = mediaDatabase.tagsDao
 
         override fun manageRecourses() = manageResources
-        override fun observeMediaBroadcast() = observeMediaBroadcast
+
         override fun mediaDatabase()= mediaDatabase
 
         override fun foregroundWrapper() = foregroundWrapper
