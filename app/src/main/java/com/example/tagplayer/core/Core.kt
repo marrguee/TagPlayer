@@ -13,17 +13,19 @@ import com.example.tagplayer.core.data.ForegroundWrapper
 import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.domain.ProvideLastPlayedDao
 import com.example.tagplayer.core.domain.ProvideTagDao
+import com.example.tagplayer.playback_control.presentation.PlaybackControlObservable
 
-interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastPlayedDao, ProvideTagDao {
+interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastPlayedDao,
+    ProvideTagDao {
 
-    fun songsDao() : SongsDao
-    fun mediaDatabase() : MediaDatabase
-    fun foregroundWrapper() : ForegroundWrapper
+    fun songsDao(): SongsDao
+    fun mediaDatabase(): MediaDatabase
+    fun foregroundWrapper(): ForegroundWrapper
 
     class Base(
         context: Context,
         contentResolver: ContentResolver
-    ): Core {
+    ) : Core {
         private val mediaDatabase = Room.databaseBuilder(
             context,
             MediaDatabase::class.java,
@@ -41,14 +43,13 @@ interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastP
         private val manageResources = ManageResources.Base(context)
 
 
-
         override fun songsDao() = mediaDatabase.songsDao
         override fun lastPlayedDao() = mediaDatabase.lastPlayed
         override fun tagDao() = mediaDatabase.tagsDao
 
         override fun manageRecourses() = manageResources
 
-        override fun mediaDatabase()= mediaDatabase
+        override fun mediaDatabase() = mediaDatabase
 
         override fun foregroundWrapper() = foregroundWrapper
 

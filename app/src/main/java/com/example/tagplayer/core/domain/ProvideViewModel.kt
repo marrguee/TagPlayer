@@ -11,6 +11,7 @@ import com.example.tagplayer.filter_by_tags.HomeAndTagsFilterProvideViewModule
 import com.example.tagplayer.core.SharedPrefs
 import com.example.tagplayer.main.presentation.MainViewModel
 import com.example.tagplayer.main.presentation.Navigation
+import com.example.tagplayer.playback_control.presentation.PlaybackControlObservable
 import com.example.tagplayer.playback_control.presentation.PlaybackControlViewModel
 import com.example.tagplayer.recently.presentation.RecentlyModule
 import com.example.tagplayer.recently.presentation.RecentlyViewModel
@@ -61,7 +62,7 @@ interface ProvideViewModel {
                     }
 
                     PlaybackControlViewModel::class.java ->
-                        PlaybackControlViewModel(Communication.PlaybackControlCommunication())
+                        PlaybackControlViewModel(PlaybackControlObservable())
 
                     MainViewModel::class.java ->
                         MainViewModel(Navigation.Base)

@@ -9,33 +9,17 @@ import com.example.tagplayer.core.ModifyCustomImage
 import com.example.tagplayer.core.CustomImage
 
 interface PlaybackControlState {
-    fun dispatch(imageButton: ModifyCustomImage.Mutable, title: TextView, author: TextView, seekbar: SeekBar)
-
-    class UpdateSeekbar(
-        private val currentPosition: Long,
-    ) : PlaybackControlState {
-        override fun dispatch(
-            imageButton: ModifyCustomImage.Mutable,
-            title: TextView,
-            author: TextView,
-            seekbar: SeekBar
-        ) {
-            seekbar.progress = (currentPosition / 1000).toInt()
-        }
-    }
+    fun dispatch(imageButton: ModifyCustomImage.Mutable, title: TextView, author: TextView)
 
     class UpdateMetadata(
         private val context: Context,
-        private val duration: Long,
         private val mediaMetadata: MediaMetadata
     ) : PlaybackControlState {
         override fun dispatch(
             imageButton: ModifyCustomImage.Mutable,
             title: TextView,
-            author: TextView,
-            seekbar: SeekBar
+            author: TextView
         ) {
-            seekbar.max = (duration / 1000).toInt()
             imageButton.background(CustomImage.ByteArrayVariant(context, mediaMetadata.artworkData))
             title.text = mediaMetadata.title
             author.text = mediaMetadata.artist
@@ -48,8 +32,7 @@ interface PlaybackControlState {
         override fun dispatch(
             imageButton: ModifyCustomImage.Mutable,
             title: TextView,
-            author: TextView,
-            seekbar: SeekBar
+            author: TextView
         ) {
             imageButton.src(
                 if(playWhenReady)
@@ -58,5 +41,13 @@ interface PlaybackControlState {
                     R.drawable.play
             )
         }
+    }
+
+    object Empty : PlaybackControlState {
+        override fun dispatch(
+            imageButton: ModifyCustomImage.Mutable,
+            title: TextView,
+            author: TextView
+        ) = Unit
     }
 }

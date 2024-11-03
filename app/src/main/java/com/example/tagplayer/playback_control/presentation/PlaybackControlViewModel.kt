@@ -11,60 +11,40 @@ import androidx.media3.common.Player.Listener
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.example.tagplayer.core.CustomObservable
+import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.TagPlayerService
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
+import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlaybackControlViewModel(
-    private val communication: Communication<PlaybackControlState>
-) : ViewModel() {
-    fun observe(owner: LifecycleOwner, observer: Observer<in PlaybackControlState>){
-        communication.observe(owner, observer)
-    }
-    @UnstableApi
-    fun connectToService(context: Context){
+    private val observable: CustomObservable.All<PlaybackControlState>
+) : ViewModel(), HandleUiStateUpdates.All<PlaybackControlState> {
+    private lateinit var controller: MediaController
 
+    @UnstableApi
+    fun connectToService(context: Context) {
         val sessionToken = SessionToken(
             context,
-            ComponentName(context,
-                TagPlayerService::class.java)
+            ComponentName(
+                context,
+                TagPlayerService::class.java
+            )
         )
-        val controllerFuture =
+        val controllerFuture: ListenableFuture<MediaController> =
             MediaController.Builder(context, sessionToken)
                 .buildAsync()
 
         controllerFuture.addListener({
-            val controller = controllerFuture.get()
-            communication.update(
-                PlaybackControlState.UpdatePlayPause(
-                    controller.playWhenReady
-                )
-            )
-            communication.update(
-                PlaybackControlState.UpdateMetadata(
-                    context,
-                    controller.currentPosition,
-                    controller.mediaMetadata
-                )
-            )
-
-            viewModelScope.launch {
-                while (true) {
-                    communication.update(
-                        PlaybackControlState.UpdateSeekbar(
-                            controller.currentPosition
-                        )
-                    )
-                    delay(1000)
-                }
-            }
+            controller = controllerFuture.get()
             controller.addListener(object : Listener {
-
                 override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
                     super.onPlayWhenReadyChanged(playWhenReady, reason)
-                    communication.update(
+                    observable.update(
                         PlaybackControlState.UpdatePlayPause(
                             controller.playWhenReady
                         )
@@ -73,10 +53,9 @@ class PlaybackControlViewModel(
 
                 override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
                     super.onMediaMetadataChanged(mediaMetadata)
-                    communication.update(
+                    observable.update(
                         PlaybackControlState.UpdateMetadata(
                             context,
-                            controller.currentPosition,
                             controller.mediaMetadata
                         )
                     )
@@ -84,4 +63,22 @@ class PlaybackControlViewModel(
             })
         }, MoreExecutors.directExecutor())
     }
+
+    fun playPause() {
+        if (controller.playWhenReady)
+            controller.pause()
+        else
+            controller.play()
+    }
+
+    fun resetSong() {
+        controller.seekToPrevious()
+    }
+
+    override fun startGettingUpdates(observer: CustomObserver<PlaybackControlState>) =
+        observable.updateObserver(observer)
+
+    override fun stopGettingUpdates() = observable.updateObserver(PlaybackControlObserver.Empty)
+
+    override fun clear() = observable.clear()
 }
