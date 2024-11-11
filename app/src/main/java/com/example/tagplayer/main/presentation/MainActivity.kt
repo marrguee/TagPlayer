@@ -1,5 +1,6 @@
 package com.example.tagplayer.main.presentation
 
+import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), ProvideViewModel
 
     private val mediaObserver by lazy {
         (application as ProvideMediaObserver).mediaObserver()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if(savedInstanceState == null) {
+            viewModel.homeScreen()
+        }
     }
 
     override fun onResume() {

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
+import com.example.tagplayer.home.presentation.HomeScreen
 
 class MainViewModel(
     private val observable: CustomObservable.All<Screen>
@@ -15,6 +16,10 @@ class MainViewModel(
 
     override fun stopGettingUpdates() {
         observable.updateObserver(MainActivityCallback.Empty)
+    }
+
+    fun homeScreen() {
+        observable.update(HomeScreen())
     }
 
     override fun clear() {

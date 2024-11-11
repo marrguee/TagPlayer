@@ -42,7 +42,7 @@ interface Screen {
         }
     }
 
-    class Replace(
+    open class Replace(
         private val fragmentClass: Class<out Fragment>
     ) : Screen {
         override fun dispatch(

@@ -5,7 +5,7 @@ interface HandleError<E, R> {
 
     object Domain : HandleError<Exception, DomainError> {
         override fun handle(error: Exception): DomainError {
-            return JustError
+            return JustSomeError
         }
     }
 

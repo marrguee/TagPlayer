@@ -12,25 +12,38 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
-    handleError: HandleError<Exception, DomainError>,
     foregroundWrapper: ForegroundWrapper,
+    private val handleError: HandleError<Exception, DomainError>,
     private val cacheDatasource: HomeCacheDatasource,
     private val songModelMapper: Song.Mapper<SongDomain>,
 ) : AbstractSongBasedRepository<Song, SongDomain, Any>(foregroundWrapper, handleError),
     HomeRepository<SongDomain>
 {
-    override fun library(): Flow<List<SongDomain>> =
+    override fun library(): Flow<List<SongDomain>> = try {
         cacheDatasource.library().map { list -> list.map { it.map(songModelMapper) } }
-
-    override suspend fun recently(): List<SongDomain> =
-        cacheDatasource.recently().map { it.map(songModelMapper) }
-
-    override suspend fun filters(): List<Long> {
-        return cacheDatasource.filters()
+    } catch (e: Exception) {
+        throw handleError.handle(e)
     }
 
-    override suspend fun filtered(tags: List<Long>): List<SongDomain> {
-        return cacheDatasource.filtered(tags).map { it.map(songModelMapper) }
+    override suspend fun recently(): List<SongDomain> = try {
+        cacheDatasource.recently().map { it.map(songModelMapper) }
+    } catch (e: Exception) {
+        throw handleError.handle(e)
+    }
+
+
+    override suspend fun filters(): List<Long> = try {
+        cacheDatasource.filters()
+    } catch (e: Exception) {
+        throw handleError.handle(e)
+    }
+
+    override suspend fun filtered(tags: List<Long>): Flow<List<SongDomain>> = try {
+        cacheDatasource.filtered(tags).map {
+                flow -> flow.map { list -> list.map(songModelMapper)}
+        }
+    } catch (e: Exception) {
+        throw handleError.handle(e)
     }
 
     override fun scan() {

@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.tagplayer.home.presentation.HomeViewModel
 import com.example.tagplayer.core.Core
-import com.example.tagplayer.edit_song_tag.EditSongTagModule
-import com.example.tagplayer.edit_song_tag.EditSongTagsViewModel
-import com.example.tagplayer.filter_by_tags.FilterTagsViewModel
+import com.example.tagplayer.edit_song_tag.presentation.EditSongTagModule
+import com.example.tagplayer.edit_song_tag.presentation.EditSongTagsViewModel
+import com.example.tagplayer.filter_by_tags.presentation.FilterTagsViewModel
 import com.example.tagplayer.filter_by_tags.HomeAndTagsFilterProvideViewModule
 import com.example.tagplayer.core.SharedPrefs
 import com.example.tagplayer.main.presentation.MainViewModel

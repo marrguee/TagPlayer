@@ -9,6 +9,6 @@ interface HomeRepository<T> :
         fun library() : Flow<List<T>>
         suspend fun recently() : List<T>
         suspend fun filters(): List<Long>
-        suspend fun filtered(tags: List<Long>): List<T>
+        suspend fun filtered(tags: List<Long>): Flow<List<T>>
     }
 

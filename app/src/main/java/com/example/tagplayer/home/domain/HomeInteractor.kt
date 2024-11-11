@@ -1,15 +1,15 @@
 package com.example.tagplayer.home.domain
 
 import com.example.tagplayer.core.domain.PlaySongForeground
+import com.example.tagplayer.home.presentation.SongsResponse
+import com.example.tagplayer.home.presentation.TagFiltersResponse
 import com.example.tagplayer.main.presentation.SongUi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface HomeInteractor : PlaySongForeground, ScanSongsForeground {
-    fun libraryFlow(): Flow<List<SongUi>>
-    suspend fun recently(): HomeResponse
-    suspend fun filters(): List<Long>
-    suspend fun filtered(tags: List<Long>): List<SongUi>
+    fun libraryFlow(): SongsResponse
+    suspend fun filters(): TagFiltersResponse
+    suspend fun filtered(tags: List<Long>): SongsResponse
 
     class Base(
         private val repository: HomeRepository<SongDomain>,
@@ -17,31 +17,35 @@ interface HomeInteractor : PlaySongForeground, ScanSongsForeground {
         private val modelMapper: SongDomain.Mapper<SongUi>
     ) : HomeInteractor {
 
-        override fun libraryFlow() =
-            repository.library().map { list -> list.map { it.map(modelMapper) } }
-
-        override suspend fun recently(): HomeResponse = try {
-            HomeResponse.RecentlyHomeResponseSuccess(
-                repository.recently().map { it.map(modelMapper) }
+        override fun libraryFlow() = try {
+            SongsResponse.SelectedLibrary(
+                repository.library().map { list -> list.map { it.map(modelMapper) } }
             )
         } catch (e: DomainError) {
-            HomeResponse.HomeResponseError(handleError.handle(e))
+            SongsResponse.Error(handleError.handle(e))
         }
 
-        override suspend fun filters(): List<Long> {
-            return repository.filters()
+        override suspend fun filters(): TagFiltersResponse = try {
+            val list = repository.filters()
+            if (list.isEmpty()) TagFiltersResponse.EmptyList
+            else TagFiltersResponse.FilledList(list)
+        } catch (e: DomainError) {
+            TagFiltersResponse.Error(handleError.handle(e))
         }
 
-        override suspend fun filtered(tags: List<Long>): List<SongUi> {
-            return repository.filtered(tags).map { it.map(modelMapper) }
+        override suspend fun filtered(tags: List<Long>): SongsResponse = try {
+            SongsResponse.SelectedLibrary(
+                repository.filtered(tags).map { list -> list.map { it.map(modelMapper) } }
+            )
+        } catch (e: DomainError) {
+            SongsResponse.Error(handleError.handle(e))
         }
 
         override fun playSongForeground(id: Long) =
             repository.playSongForeground(id)
 
-        override fun scan() {
+        override fun scan() =
             repository.scan()
-        }
 
     }
 }

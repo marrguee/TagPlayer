@@ -4,9 +4,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.tagplayer.home.presentation.HomeState
-import com.example.tagplayer.edit_song_tag.EditSongTagState
-import com.example.tagplayer.filter_by_tags.TagFilterUi
-import com.example.tagplayer.filter_by_tags.TagsFilterState
+import com.example.tagplayer.edit_song_tag.presentation.EditSongTagState
+import com.example.tagplayer.filter_by_tags.presentation.TagsFilterState
 import com.example.tagplayer.recently.presentation.RecentlyState
 import com.example.tagplayer.playback_control.presentation.PlaybackControlState
 import com.example.tagplayer.search.domain.SearchState

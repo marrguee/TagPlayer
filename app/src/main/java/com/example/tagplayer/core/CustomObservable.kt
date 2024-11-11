@@ -46,14 +46,15 @@ interface CustomObservable {
     }
 
     open class AutomaticClear<T>(
-        private val empty: T
+        private val empty: T,
+        private val emptyObserver: CustomObserver<T>
     ) : Mutable<T> {
-        private var observer: CustomObserver<T> = CustomObserver.Empty()
+        private var observer: CustomObserver<T> = emptyObserver
         private var cache: T = empty
 
         override fun updateObserver(newObserver: CustomObserver<T>) = synchronized(AutomaticClear::class) {
             observer = newObserver
-            if (cache != empty) {
+            if (cache != empty && observer != emptyObserver) {
                 observer.update(cache)
                 cache = empty
             }

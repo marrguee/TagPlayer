@@ -17,6 +17,12 @@ interface SongsDao {
     fun library() : Flow<List<Song>>
     @Query("SELECT * FROM songs")
     fun songs() : List<Song>
+    @Query(
+        "SELECT * FROM songs INNER JOIN songs_and_tags " +
+                "ON songs_and_tags.track_id = songs.id " +
+                "WHERE songs_and_tags.tag_id IN (:tags)"
+    )
+    fun songsByTagsId(tags: List<Long>) : Flow<List<Song>>
     @Query("SELECT * FROM songs WHERE songs.title LIKE '%' || :query || '%'")
     suspend fun searchSongs(query: String) : List<Song>
     @Insert(entity = Song::class, onConflict = OnConflictStrategy.REPLACE)
@@ -35,10 +41,4 @@ interface SongsDao {
     suspend fun updateSongTags(tags: List<SongTagCrossRef>)
     @Query("SELECT * FROM tags INNER JOIN songs_and_tags ON songs_and_tags.tag_id = tags.id WHERE songs_and_tags.track_id=:songId")
     suspend fun songTags(songId: Long) : List<SongTag>
-    @Query(
-        "SELECT * FROM songs INNER JOIN songs_and_tags " +
-                "ON songs_and_tags.track_id = songs.id " +
-                "WHERE songs_and_tags.tag_id IN (:tags)"
-    )
-    suspend fun songsByTagsId(tags: List<Long>) : List<Song>
 }

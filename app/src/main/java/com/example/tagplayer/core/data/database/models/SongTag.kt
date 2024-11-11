@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.tagplayer.filter_by_tags.TagFilterDomain
+import com.example.tagplayer.filter_by_tags.domain.TagFilterDomain
 import com.example.tagplayer.tagsettings.data.TagData
 import com.example.tagplayer.tagsettings.domain.TagDomain
 

@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.example.tagplayer.R
-import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.HomeFragmentScreenBinding
 import com.example.tagplayer.main.presentation.BindingFragment
@@ -18,7 +16,6 @@ class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
         (activity as ProvideViewModel).provide(HomeViewModel::class.java)
     }
     private lateinit var libraryAdapter: LibraryRecyclerAdapter
-    private lateinit var recentlyAdapter: RecentlyRecyclerListenerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,20 +43,12 @@ class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
         libraryAdapter = LibraryRecyclerAdapter(menuOptions) { id ->
             viewModel.play(id)
         }
-        recentlyAdapter = RecentlyRecyclerListenerAdapter(menuOptions) { id ->
-            viewModel.play(id)
-        }
         binding.libraryRecycler.adapter = libraryAdapter
-        binding.recentlyRecycler.adapter = recentlyAdapter
 
         if (savedInstanceState == null) {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.playbackControlContainer, PlaybackControlFragment())
                 .commit()
-        }
-
-        binding.recentlyPlayedTextView.setOnClickListener {
-            viewModel.recentlyPlayedScreen()
         }
 
         binding.tagFilterButton.apply {
@@ -72,34 +61,29 @@ class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
             }
         }
 
+        binding.recentlyButton.setOnClickListener {
+            viewModel.recentlyPlayedScreen()
+        }
+
         binding.searchView.setOnClickListener {
             viewModel.searchScreen()
         }
 
-        viewModel.loadRecently()
-        viewModel.startGettingFilterUpdates()
+        viewModel.init(SaveRestoreTagFilter(savedInstanceState))
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.startGettingUpdates(object : HomeObserver {
             override fun update(data: HomeState) {
-                data.dispatch(binding.recentlyPlayedTextView, libraryAdapter, recentlyAdapter)
+                data.dispatch(requireContext(), libraryAdapter)
                 data.consumed(viewModel)
             }
         })
-        viewModel.init()
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.stopGettingUpdates()
-    }
-}
-
-interface HomeObserver : CustomObserver<HomeState> {
-
-    object Empty : HomeObserver {
-        override fun update(data: HomeState) = Unit
     }
 }
