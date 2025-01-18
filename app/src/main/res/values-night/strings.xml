@@ -10,7 +10,7 @@
     <string name="apply">Apply</string>
     <string name="select_tags">Select tags</string>
     <string name="no_tags_attached">No tags attached</string>
-    <string name="tags_do_not_exist">Tags do not exist</string>
+    <string name="tags_do_not_exist">Tags are out</string>
     <string name="empty_string"> </string>
     <string name="restart_current_song">Restart current song</string>
     <string name="nothing_is_playing">Nothing is playing...</string>

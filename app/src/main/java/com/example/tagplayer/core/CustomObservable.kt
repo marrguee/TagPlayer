@@ -18,15 +18,23 @@ interface CustomObservable {
         fun clear()
     }
 
+    interface HandleSaveAndRestoreState<T> {
+        fun save(bundle: HandleSaveRestoreState.Save<T>)
+        fun restore(bundle: HandleSaveRestoreState.Restore<T>)
+    }
+
     interface Mutable<T> : UpdateUiObserver<T>, UpdateUi<T>
 
     interface All<T> : Mutable<T>, Clear
 
+    interface AllHandleState<T> : All<T>, HandleSaveAndRestoreState<T>
+    interface MutableHandleState<T> : Mutable<T>, HandleSaveAndRestoreState<T>
+
     open class ManualClear<T>(
-        private val empty: T
+        protected val empty: T
     ) : All<T> {
         private var observer: CustomObserver<T> = CustomObserver.Empty()
-        private var cache: T = empty
+        protected var cache: T = empty
 
         override fun updateObserver(newObserver: CustomObserver<T>) = synchronized(ManualClear::class) {
             observer = newObserver
@@ -50,7 +58,7 @@ interface CustomObservable {
         private val emptyObserver: CustomObserver<T>
     ) : Mutable<T> {
         private var observer: CustomObserver<T> = emptyObserver
-        private var cache: T = empty
+        protected var cache: T = empty
 
         override fun updateObserver(newObserver: CustomObserver<T>) = synchronized(AutomaticClear::class) {
             observer = newObserver
@@ -67,4 +75,28 @@ interface CustomObservable {
             }
         }
     }
+
+    open class StateHandleManualClear<T>(
+        empty: T
+    ) : ManualClear<T>(empty), AllHandleState<T> {
+        override fun save(bundle: HandleSaveRestoreState.Save<T>) {
+            bundle.save(cache)
+        }
+        override fun restore(bundle: HandleSaveRestoreState.Restore<T>) {
+            cache = bundle.restore()
+        }
+    }
+
+    open class StateHandleAutomaticClear<T>(
+        empty: T,
+        emptyObserver: CustomObserver<T>
+    ) : AutomaticClear<T>(empty, emptyObserver), MutableHandleState<T> {
+        override fun save(bundle: HandleSaveRestoreState.Save<T>) {
+            bundle.save(cache)
+        }
+        override fun restore(bundle: HandleSaveRestoreState.Restore<T>) {
+            cache = bundle.restore()
+        }
+    }
+
 }

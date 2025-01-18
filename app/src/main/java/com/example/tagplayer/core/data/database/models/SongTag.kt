@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.tagplayer.filter_by_tags.domain.TagFilterDomain
-import com.example.tagplayer.tagsettings.data.TagData
-import com.example.tagplayer.tagsettings.domain.TagDomain
+import com.example.tagplayer.tag_settings.data.TagData
+import com.example.tagplayer.tag_settings.domain.TagDomain
 
 @Entity(
     tableName = "tags",

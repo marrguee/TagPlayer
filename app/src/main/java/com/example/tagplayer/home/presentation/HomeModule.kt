@@ -5,18 +5,21 @@ import com.example.tagplayer.home.domain.HandleError
 import com.example.tagplayer.home.domain.SongDomain
 import com.example.tagplayer.core.Core
 import com.example.tagplayer.core.CustomObservable
+import com.example.tagplayer.core.HandleDeath
 import com.example.tagplayer.core.Module
 import com.example.tagplayer.home.data.HomeCacheDatasource
 import com.example.tagplayer.home.data.HomeRepositoryImpl
 import com.example.tagplayer.core.data.database.models.Song
 import com.example.tagplayer.core.SharedPrefs
 import com.example.tagplayer.main.presentation.Navigation
+import java.util.concurrent.atomic.AtomicLong
 
 interface HomeModule : Module<HomeViewModel> {
     class Base(
         private val core: Core,
         private val songsFilterPrefs: SharedPrefs.Read<List<Long>>,
-        private val tagFiltersObservable: CustomObservable.Mutable<TagFiltersResponse>,
+        private val tagFiltersObservable: CustomObservable.AllHandleState<TagFiltersState>,
+        private val selectedSongId: AtomicLong,
     ) : HomeModule {
 
         override fun create(): HomeViewModel {
@@ -50,7 +53,8 @@ interface HomeModule : Module<HomeViewModel> {
                 tagFiltersObservable,
                 tagFilterMapper,
                 Navigation.Base,
-                HandelDeath.Base()
+                HandleDeath.Base(),
+                selectedSongId
             )
         }
     }

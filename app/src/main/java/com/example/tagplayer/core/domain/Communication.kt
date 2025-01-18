@@ -4,13 +4,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.tagplayer.home.presentation.HomeState
-import com.example.tagplayer.edit_song_tag.presentation.EditSongTagState
-import com.example.tagplayer.filter_by_tags.presentation.TagsFilterState
+import com.example.tagplayer.edit_song_tags.presentation.EditSongTagState
+import com.example.tagplayer.filter_by_tags.presentation.FilterScreenState
 import com.example.tagplayer.recently.presentation.RecentlyState
 import com.example.tagplayer.playback_control.presentation.PlaybackControlState
 import com.example.tagplayer.search.domain.SearchState
-import com.example.tagplayer.tagsettings.add_tag.TagDialogState
-import com.example.tagplayer.tagsettings.presentation.TagSettingsState
+import com.example.tagplayer.tag_settings.add_tag.TagDialogState
+import com.example.tagplayer.tag_settings.presentation.TagSettingsState
 
 interface Communication<T> {
     fun update(data: T)
@@ -93,13 +93,13 @@ interface Communication<T> {
         }
     }
 
-    class TagsFilterCommunication : Communication<TagsFilterState> {
-        private val liveData = MutableLiveData<TagsFilterState>()
-        override fun update(data: TagsFilterState) {
+    class TagsFilterCommunication : Communication<FilterScreenState> {
+        private val liveData = MutableLiveData<FilterScreenState>()
+        override fun update(data: FilterScreenState) {
             liveData.value = data
         }
 
-        override fun observe(owner: LifecycleOwner, observer: Observer<in TagsFilterState>) {
+        override fun observe(owner: LifecycleOwner, observer: Observer<in FilterScreenState>) {
             liveData.observe(owner, observer)
         }
     }

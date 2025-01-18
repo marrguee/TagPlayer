@@ -23,7 +23,7 @@ import com.example.tagplayer.core.data.database.models.SongTagCrossRef
     views = [
         SongLastPlayedCrossRef::class,
     ],
-    version = 6,
+    version = 7,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
@@ -31,6 +31,7 @@ import com.example.tagplayer.core.data.database.models.SongTagCrossRef
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6, FifeToSixMigration::class),
+        AutoMigration(from = 6, to = 7),
     ]
 )
 @TypeConverters(TimestampConverter::class)

@@ -3,7 +3,7 @@ package com.example.tagplayer.main.presentation.generic_adapter.holder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
-import com.example.tagplayer.edit_song_tag.presentation.TagUi
+import com.example.tagplayer.edit_song_tags.presentation.TagUi
 import com.example.tagplayer.main.presentation.CustomTextView
 import com.example.tagplayer.main.presentation.ItemUi
 

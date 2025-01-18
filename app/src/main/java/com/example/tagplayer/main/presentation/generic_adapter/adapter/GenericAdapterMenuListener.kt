@@ -6,7 +6,7 @@ import com.example.tagplayer.main.presentation.generic_adapter.diffutils.Generic
 import com.example.tagplayer.main.presentation.generic_adapter.holder.GenericMenuListenerViewHolder
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUIMenuListenerType
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiMenuListener
-import com.example.tagplayer.tagsettings.presentation.MenuAction
+import com.example.tagplayer.tag_settings.presentation.MenuAction
 
 @Suppress("UNCHECKED_CAST")
 abstract class GenericAdapterMenuListener<T : ItemUiMenuListener, L>(

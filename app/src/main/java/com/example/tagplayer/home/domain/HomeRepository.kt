@@ -7,7 +7,6 @@ interface HomeRepository<T> :
     PlaySongForeground,
     ScanSongsForeground {
         fun library() : Flow<List<T>>
-        suspend fun recently() : List<T>
         suspend fun filters(): List<Long>
         suspend fun filtered(tags: List<Long>): Flow<List<T>>
     }

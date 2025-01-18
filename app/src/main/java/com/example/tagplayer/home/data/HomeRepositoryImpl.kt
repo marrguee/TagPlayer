@@ -25,13 +25,6 @@ class HomeRepositoryImpl(
         throw handleError.handle(e)
     }
 
-    override suspend fun recently(): List<SongDomain> = try {
-        cacheDatasource.recently().map { it.map(songModelMapper) }
-    } catch (e: Exception) {
-        throw handleError.handle(e)
-    }
-
-
     override suspend fun filters(): List<Long> = try {
         cacheDatasource.filters()
     } catch (e: Exception) {

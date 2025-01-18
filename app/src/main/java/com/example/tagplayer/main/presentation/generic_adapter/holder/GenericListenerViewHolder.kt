@@ -3,7 +3,7 @@ package com.example.tagplayer.main.presentation.generic_adapter.holder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
-import com.example.tagplayer.filter_by_tags.presentation.TagFilterUi
+import com.example.tagplayer.filter_by_tags.presentation.FilterUi
 import com.example.tagplayer.main.presentation.CustomTextView
 import com.example.tagplayer.main.presentation.ItemUiListener
 import com.example.tagplayer.recently.presentation.RecentlyUi.DateUi
@@ -30,9 +30,9 @@ abstract class GenericListenerViewHolder<T : ItemUiListener, L>(root: View) : Re
         }
     }
 
-    class TagFilterHolderListener(root: View) : GenericListenerViewHolder<TagFilterUi, Long>(root) {
+    class TagFilterHolderListener(root: View) : GenericListenerViewHolder<FilterUi, Long>(root) {
         private val textView: CustomTextView = itemView.findViewById(R.id.tagTextView)
-        override fun bind(item: TagFilterUi, listener: (Long) -> Unit) {
+        override fun bind(item: FilterUi, listener: (Long) -> Unit) {
             item.bind(textView)
             textView.setOnClickListener {
                 item.tap(listener)

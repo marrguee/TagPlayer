@@ -9,5 +9,5 @@ class RecentlyListenerAdapter(
 ) : GenericListenerAdapter<RecentlyUi, Long>(
     GenericDiffUtil(),
     listener,
-    listOf(ItemUiListenerType.RecentlyListenerType, ItemUiListenerType.RecentlyDateListenerType)
+    listOf(ItemUiListenerType.RecentlyListenerType)
 )

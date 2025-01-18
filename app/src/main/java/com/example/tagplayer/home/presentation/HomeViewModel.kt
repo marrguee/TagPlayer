@@ -1,52 +1,60 @@
 package com.example.tagplayer.home.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.CustomObserver
+import com.example.tagplayer.core.HandleDeath
+import com.example.tagplayer.core.HandleSaveRestoreState
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.core.domain.StartPlayback
-import com.example.tagplayer.edit_song_tag.presentation.EditSongTagsScreen
+import com.example.tagplayer.edit_song_tags.presentation.EditSongTagsScreen
 import com.example.tagplayer.filter_by_tags.presentation.FilterTagsScreen
 import com.example.tagplayer.home.domain.HomeInteractor
+import com.example.tagplayer.main.presentation.HandleSaveAndRestoreState
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.recently.presentation.RecentlyScreen
 import com.example.tagplayer.search.domain.SearchScreen
-import com.example.tagplayer.tagsettings.presentation.TagSettingsScreen
+import com.example.tagplayer.tag_settings.presentation.TagSettingsScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicLong
 
 class HomeViewModel(
     private val interactor: HomeInteractor,
     private val observable: CustomObservable.All<HomeState>,
-    private val tagFiltersObservable: CustomObservable.Mutable<TagFiltersResponse>,
+    private val tagFiltersObservable: CustomObservable.AllHandleState<TagFiltersState>,
     private val tagFilteredMapper: TagFilterMapper,
     private val navigation: Navigation.Navigate,
-    private val handleDeath: HandelDeath,
-) : ViewModel(), StartPlayback, HandleUiStateUpdates.All<HomeState> {
-    private var tagFiltersResponse: TagFiltersResponse = TagFiltersResponse.Empty
+    private val handleDeath: HandleDeath,
+    private val selectedSongId: AtomicLong
+) : ViewModel(), StartPlayback, HandleUiStateUpdates.All<HomeState>,
+    HandleSaveAndRestoreState<TagFiltersState> {
 
-    fun init(bundle: HandleSaveRestoreState<TagFiltersResponse>) {
+    override fun init(
+        bundle: HandleSaveRestoreState.Restore<TagFiltersState>
+    ) {
         if (bundle.empty()) {
+            Log.d("HomeViewModel: ", "bundle.empty()")
             viewModelScope.launch(Dispatchers.IO) {
                 val filters = interactor.filters()
-                tagFiltersResponse = filters
                 tagFiltersObservable.update(filters)
             }
-            handleDeath.handleDeath()
+            handleDeath.handleFirstStart()
         } else if (handleDeath.deathHappened()) {
-            tagFiltersResponse = bundle.restore()
-            tagFiltersObservable.update(tagFiltersResponse)
+            Log.d("HomeViewModel: ", "deathHappened")
+            tagFiltersObservable.restore(bundle)
             handleDeath.handleDeath()
         }
     }
 
     override fun startGettingUpdates(observer: CustomObserver<HomeState>) {
         observable.updateObserver(observer)
-        tagFiltersObservable.updateObserver(object : CustomObserver<TagFiltersResponse> {
-            override fun update(data: TagFiltersResponse) {
-                tagFiltersResponse = data
-                tagFiltersResponse.map(tagFilteredMapper)
+        tagFiltersObservable.updateObserver(object : CustomObserver<TagFiltersState> {
+            override fun update(data: TagFiltersState) {
+                Log.d("HomeViewModel: ", "data.map(tagFilteredMapper)")
+                data.map(tagFilteredMapper)
             }
         })
         interactor.scan()
@@ -57,18 +65,24 @@ class HomeViewModel(
         tagFiltersObservable.updateObserver(TagFiltersObserver.Empty)
     }
 
+    override fun save(
+        bundle: HandleSaveRestoreState.Save<TagFiltersState>
+    ) {
+        tagFiltersObservable.save(bundle)
+    }
+
     override fun play(id: Long) =
         interactor.playSongForeground(id)
 
-    fun filterTagsScreen() {
-        tagFiltersObservable.updateObserver(TagFiltersObserver.Empty)
-        tagFiltersObservable.update(tagFiltersResponse)
-        navigation.update(FilterTagsScreen)
-    }
+    fun filterTagsScreen() = navigation.update(FilterTagsScreen)
 
-    fun editSongTagsScreen(songId: Long) = navigation.update(EditSongTagsScreen(songId))
+    fun editSongTagsScreen(songId: Long) {
+        selectedSongId.set(songId)
+        navigation.update(EditSongTagsScreen)
+    }
     fun recentlyPlayedScreen() = navigation.update(RecentlyScreen)
     fun tagSettingsScreen() = navigation.update(TagSettingsScreen)
     fun searchScreen() = navigation.update(SearchScreen)
     override fun clear() = observable.clear()
+
 }

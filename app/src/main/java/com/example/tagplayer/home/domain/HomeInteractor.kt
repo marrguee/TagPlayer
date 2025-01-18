@@ -2,13 +2,13 @@ package com.example.tagplayer.home.domain
 
 import com.example.tagplayer.core.domain.PlaySongForeground
 import com.example.tagplayer.home.presentation.SongsResponse
-import com.example.tagplayer.home.presentation.TagFiltersResponse
+import com.example.tagplayer.home.presentation.TagFiltersState
 import com.example.tagplayer.main.presentation.SongUi
 import kotlinx.coroutines.flow.map
 
 interface HomeInteractor : PlaySongForeground, ScanSongsForeground {
     fun libraryFlow(): SongsResponse
-    suspend fun filters(): TagFiltersResponse
+    suspend fun filters(): TagFiltersState
     suspend fun filtered(tags: List<Long>): SongsResponse
 
     class Base(
@@ -25,12 +25,12 @@ interface HomeInteractor : PlaySongForeground, ScanSongsForeground {
             SongsResponse.Error(handleError.handle(e))
         }
 
-        override suspend fun filters(): TagFiltersResponse = try {
+        override suspend fun filters(): TagFiltersState = try {
             val list = repository.filters()
-            if (list.isEmpty()) TagFiltersResponse.EmptyList
-            else TagFiltersResponse.FilledList(list)
+            if (list.isEmpty()) TagFiltersState.EmptyList
+            else TagFiltersState.FilledList(list)
         } catch (e: DomainError) {
-            TagFiltersResponse.Error(handleError.handle(e))
+            TagFiltersState.Error(handleError.handle(e))
         }
 
         override suspend fun filtered(tags: List<Long>): SongsResponse = try {

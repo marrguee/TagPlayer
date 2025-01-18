@@ -6,7 +6,10 @@ import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.ClearViewModel
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.core.domain.StartPlayback
+import com.example.tagplayer.core.HandleDeath
+import com.example.tagplayer.core.HandleSaveRestoreState
 import com.example.tagplayer.main.presentation.ComebackViewModel
+import com.example.tagplayer.main.presentation.HandleSaveAndRestoreState
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.main.presentation.Screen
 import com.example.tagplayer.recently.domain.RecentlyInteractor
@@ -15,19 +18,15 @@ import kotlinx.coroutines.launch
 
 class RecentlyViewModel(
     private val interactor: RecentlyInteractor,
-    private val observable: CustomObservable.All<RecentlyState>,
+    private val observable: CustomObservable.AllHandleState<RecentlyState>,
     private val mapper: RecentlyResponse.HistoryResponseMapper,
     private val navigation: Navigation.Navigate,
+    private val handleDeath: HandleDeath,
     clear: ClearViewModel
-) : ComebackViewModel(clear), HandleUiStateUpdates.All<RecentlyState>, StartPlayback {
-    fun recently() {
-        viewModelScope.launch {
-            interactor.recently().map(mapper)
-        }
-    }
+) : ComebackViewModel(clear), HandleUiStateUpdates.All<RecentlyState>, StartPlayback,
+    HandleSaveAndRestoreState<RecentlyState> {
 
     override fun play(id: Long) {
-        //val now: Date = Calendar.getInstance().time
         interactor.playSongForeground(id)
     }
 
@@ -46,6 +45,22 @@ class RecentlyViewModel(
     override fun comeback() {
         super.comeback()
         navigation.update(Screen.Pop)
+    }
+
+    override fun init(bundle: HandleSaveRestoreState.Restore<RecentlyState>) {
+        if (bundle.empty()) {
+            viewModelScope.launch {
+                interactor.recently().map(mapper)
+            }
+            handleDeath.handleFirstStart()
+        } else if (handleDeath.deathHappened()) {
+            observable.restore(bundle)
+            handleDeath.handleDeath()
+        }
+    }
+
+    override fun save(bundle: HandleSaveRestoreState.Save<RecentlyState>) {
+        observable.save(bundle)
     }
 }
 

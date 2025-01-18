@@ -49,10 +49,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/menuBlock"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="9dp"
-        app:layout_constraintBottom_toTopOf="@id/playbackControlContainer">
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/libraryTextView"
@@ -70,13 +69,5 @@
             tools:listitem="@layout/item_song"/>
 
     </LinearLayout>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/playbackControlContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

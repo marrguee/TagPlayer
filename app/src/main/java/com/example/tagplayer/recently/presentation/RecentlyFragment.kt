@@ -19,14 +19,7 @@ class RecentlyFragment : ComebackFragment<RecentlyFragmentScreenBinding, Recentl
         }
         binding.recentlyRecycler.adapter = adapter
 
-        viewModel.recently()
-
-        if (savedInstanceState == null) {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.playbackRecentlyControlContainer, PlaybackControlFragment())
-                .commit()
-        }
-
+        viewModel.init(SaveRestoreRecentlyState(savedInstanceState))
     }
 
     override fun onResume() {
@@ -42,5 +35,10 @@ class RecentlyFragment : ComebackFragment<RecentlyFragmentScreenBinding, Recentl
     override fun onPause() {
         super.onPause()
         viewModel.stopGettingUpdates()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.save(SaveRestoreRecentlyState(outState))
     }
 }

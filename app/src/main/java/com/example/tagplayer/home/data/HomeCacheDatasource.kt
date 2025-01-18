@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.map
 
 interface HomeCacheDatasource : ScanSongsForeground {
     fun library(): Flow<List<Song>>
-    suspend fun recently() : List<Song>
     suspend fun filters(): List<Long>
     suspend fun filtered(tags: List<Long>): Flow<List<Song>>
 
@@ -23,8 +22,8 @@ interface HomeCacheDatasource : ScanSongsForeground {
         override fun library(): Flow<List<Song>> =
             database.songsDao.library()
 
-        override suspend fun recently(): List<Song> =
-            database.lastPlayed.recently()
+//        override suspend fun recently(): List<Song> =
+//            database.lastPlayed.recently()
 
         override suspend fun filters(): List<Long> {
             return songFilterPrefs.read()

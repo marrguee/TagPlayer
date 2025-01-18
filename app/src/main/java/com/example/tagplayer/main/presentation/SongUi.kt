@@ -5,7 +5,7 @@ import com.example.tagplayer.core.domain.CompareContent
 import com.example.tagplayer.core.domain.HandleTap
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUIMenuListenerType
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiMenuListener
-import com.example.tagplayer.tagsettings.presentation.MenuAction
+import com.example.tagplayer.tag_settings.presentation.MenuAction
 
 data class SongUi(
     private val id: Long,

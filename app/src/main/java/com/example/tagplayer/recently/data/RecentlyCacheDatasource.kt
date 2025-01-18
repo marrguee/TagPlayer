@@ -8,9 +8,7 @@ interface RecentlyCacheDatasource {
     suspend fun recently() : List<SongLastPlayedCrossRef>
     class Base(
         private val database: MediaDatabase
-    ) :
-        //AbstractCacheDatasource<Any, SongLastPlayedCrossRef>(),
-        RecentlyCacheDatasource {
+    ) : RecentlyCacheDatasource {
 
         override suspend fun recently(): List<SongLastPlayedCrossRef> =
             database.lastPlayed.fullRecently()

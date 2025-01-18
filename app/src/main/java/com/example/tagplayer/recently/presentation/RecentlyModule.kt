@@ -2,13 +2,14 @@ package com.example.tagplayer.recently.presentation
 
 import com.example.tagplayer.home.domain.HandleError
 import com.example.tagplayer.core.Core
+import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.Module
 import com.example.tagplayer.recently.data.RecentlyCacheDatasource
 import com.example.tagplayer.recently.data.RecentlyRepositoryImpl
 import com.example.tagplayer.core.data.database.models.SongLastPlayedCrossRef
 import com.example.tagplayer.core.domain.ClearViewModel
-import com.example.tagplayer.core.domain.Communication
 import com.example.tagplayer.core.domain.DispatcherList
+import com.example.tagplayer.core.HandleDeath
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.recently.domain.RecentlyResponse.HistoryResponseMapper
 import com.example.tagplayer.recently.domain.RecentlyInteractor
@@ -31,7 +32,7 @@ interface RecentlyModule : Module<RecentlyViewModel> {
                 recentlyRepositoryImpl,
                 HandleError.Presentation,
             )
-            val observable = RecentlyObservable()
+            val observable: CustomObservable.AllHandleState<RecentlyState> = RecentlyObservable()
             val responseHistoryMapper = HistoryResponseMapper.Base(
                 observable,
                 DispatcherList.Base
@@ -41,6 +42,7 @@ interface RecentlyModule : Module<RecentlyViewModel> {
                 observable,
                 responseHistoryMapper,
                 Navigation.Base,
+                HandleDeath.Base(),
                 clear
             )
         }
