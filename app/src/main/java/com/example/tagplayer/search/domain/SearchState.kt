@@ -14,8 +14,9 @@ interface SearchState {
         }
     }
 
-    class Error(private val cause: String) : SearchState {
+    class Error(private val error: String) : SearchState {
         override fun dispatch(searchResultAdapter: SongSearchListenerAdapter) = Unit
+        override fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
     }
 
     object Empty : SearchState {

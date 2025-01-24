@@ -26,8 +26,7 @@ interface TagSettingsModule : Module<TagSettingsViewModel> {
                 HandleError.Domain,
                 core.foregroundWrapper(),
                 tagSettingsCacheDatasource,
-                SongTag.Mapper.ToDomain,
-                TagDomain.Mapper.ToData
+                SongTag.Mapper.ToDomain
             )
             val tagSettingsInteractor: TagSettingsInteractor = TagSettingsInteractor.Base(
                 tagSettingsRepositoryImpl,

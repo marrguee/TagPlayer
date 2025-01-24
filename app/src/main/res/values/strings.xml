@@ -18,4 +18,7 @@
     <string name="empty_string"> </string>
     <string name="restart_current_song">Restart current song</string>
     <string name="nothing_is_playing">Nothing is playing...</string>
+    <string name="query_hint">Search</string>
+    <string name="filter_by_tags_content_description">Filter by tags</string>
+    <string name="recently_content_description">Recently</string>
 </resources>

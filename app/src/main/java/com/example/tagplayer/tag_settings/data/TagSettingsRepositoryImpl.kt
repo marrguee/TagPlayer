@@ -11,16 +11,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class TagSettingsRepositoryImpl(
-    handleError: HandleError<Exception, DomainError>,
+    private val handleError: HandleError<Exception, DomainError>,
     foregroundWrapper: ForegroundWrapper,
     private val cacheDatasource: TagSettingsCacheDatasource.Base,
     private val tagModelMapper: SongTag.Mapper.ToDomain,
-    private val tagModelMapperToData: TagDomain.Mapper.ToData,
-) : AbstractSongBasedRepository<SongTag, TagDomain, Any>(foregroundWrapper, handleError),
+) : AbstractSongBasedRepository(foregroundWrapper),
     TagSettingsRepository<TagDomain>
 {
-    override fun tags(): Flow<List<TagDomain>> {
-        return cacheDatasource.tags().map { list -> list.map { it.map(tagModelMapper) } }
+    override fun tags(): Flow<List<TagDomain>> = try {
+        cacheDatasource.tags().map { list -> list.map { it.map(tagModelMapper) } }
+    } catch (e: Exception) {
+        throw handleError.handle(e)
     }
 
     override suspend fun removeTag(id: Long) =

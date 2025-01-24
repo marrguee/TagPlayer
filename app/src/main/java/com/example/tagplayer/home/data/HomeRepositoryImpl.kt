@@ -16,7 +16,7 @@ class HomeRepositoryImpl(
     private val handleError: HandleError<Exception, DomainError>,
     private val cacheDatasource: HomeCacheDatasource,
     private val songModelMapper: Song.Mapper<SongDomain>,
-) : AbstractSongBasedRepository<Song, SongDomain, Any>(foregroundWrapper, handleError),
+) : AbstractSongBasedRepository(foregroundWrapper),
     HomeRepository<SongDomain>
 {
     override fun library(): Flow<List<SongDomain>> = try {

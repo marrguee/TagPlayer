@@ -54,4 +54,11 @@
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@drawable/searchview_background</item>
+        <item name="queryBackground">@android:color/transparent</item>
+        <item name="iconifiedByDefault">false</item>
+        <item name="queryHint">@string/query_hint</item>
+    </style>
+
 </resources>

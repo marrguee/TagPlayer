@@ -9,16 +9,20 @@ import com.example.tagplayer.recently.domain.RecentlyDomain
 import com.example.tagplayer.recently.domain.RecentlyRepository
 
 class RecentlyRepositoryImpl(
-    handleError: HandleError<Exception, DomainError>,
+    private val handleError: HandleError<Exception, DomainError>,
     foregroundWrapper: ForegroundWrapper,
     private val cacheDatasource: RecentlyCacheDatasource,
     private val historyModelMapper: SongLastPlayedCrossRef.Mapper<RecentlyDomain>,
 ) :
-    AbstractSongBasedRepository<SongLastPlayedCrossRef, RecentlyDomain, Any>(foregroundWrapper, handleError),
+    AbstractSongBasedRepository(foregroundWrapper),
     RecentlyRepository<RecentlyDomain>
 {
-    override suspend fun recently(): List<RecentlyDomain> =
+    override suspend fun recently(): List<RecentlyDomain> = try {
         historyModelMapper.map(cacheDatasource.recently())
+    } catch (e: Exception) {
+        throw handleError.handle(e)
+    }
+
 
 
 }

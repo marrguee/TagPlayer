@@ -1,7 +1,9 @@
 package com.example.tagplayer.home.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.HomeFragmentScreenBinding
@@ -28,9 +30,7 @@ class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
             )
         )
 
-        libraryAdapter = LibraryRecyclerAdapter(menuOptions) { id ->
-            viewModel.play(id)
-        }
+        libraryAdapter = LibraryRecyclerAdapter(menuOptions) { id -> viewModel.play(id) }
         binding.libraryRecycler.adapter = libraryAdapter
 
         binding.tagFilterButton.apply {
@@ -43,12 +43,16 @@ class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
             }
         }
 
-        binding.recentlyButton.setOnClickListener {
-            viewModel.recentlyPlayedScreen()
-        }
+        binding.recentlyButton.setOnClickListener { viewModel.recentlyPlayedScreen() }
 
-        binding.searchView.setOnClickListener {
-            viewModel.searchScreen()
+        with(binding.searchView) {
+            setOnClickListener { viewModel.searchScreen() }
+            setOnQueryTextFocusChangeListener { _, focus: Boolean ->
+                if (focus) {
+                    clearFocus()
+                    performClick()
+                }
+            }
         }
     }
 

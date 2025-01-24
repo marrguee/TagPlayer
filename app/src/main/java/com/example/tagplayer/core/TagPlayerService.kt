@@ -33,7 +33,6 @@ class TagPlayerService : MediaSessionService() {
     private lateinit var showNotification: ShowNotification
     private lateinit var notificationManager: NotificationManager
     private lateinit var coroutineScope: CoroutineScope
-    private var firstStart = true
 
     override fun onCreate() {
         super.onCreate()
@@ -171,7 +170,6 @@ class TagPlayerService : MediaSessionService() {
         const val START_SERVICE = "START_SERVICE"
         const val STOP_SERVICE = "STOP_SERVICE"
         const val RESTART_ACTION = "RESTART_ACTION"
-        const val ACTION_SERVICE_STARTED = "ACTION_SERVICE_STARTED"
         const val ACTION_SERVICE_STOPPED = "ACTION_SERVICE_STOPPED"
     }
 }

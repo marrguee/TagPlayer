@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 
-class CustomImageButton@JvmOverloads constructor(
+class CustomImageButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
@@ -23,7 +23,7 @@ class CustomImageButton@JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (w <= 0 || h <= 0) return
-        with(viewRect){
+        with(viewRect) {
             left = 0
             top = 0
             right = w
@@ -37,7 +37,7 @@ class CustomImageButton@JvmOverloads constructor(
     }
 
     override fun setBackgroundResource(resId: Int) {
-        throw IllegalStateException("Background Recourse error! Cannot set background as recourse")
+        throw IllegalStateException(BACKGROUND_RECOURSE_ERROR)
     }
 
     override fun setBackground(background: Drawable?) {
@@ -54,5 +54,9 @@ class CustomImageButton@JvmOverloads constructor(
         setImageResource(resourceId)
     }
 
+    companion object {
+        private const val BACKGROUND_RECOURSE_ERROR =
+            "Background Recourse error! Cannot set background as recourse"
+    }
 
 }

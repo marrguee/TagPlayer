@@ -5,20 +5,20 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:windowSoftInputMode="stateVisible|adjustResize">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:iconifiedByDefault="false"
-        app:queryHint="Hint"/>
+        style="@style/SearchViewStyle"
+        android:layout_margin="16dp"/>
     
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

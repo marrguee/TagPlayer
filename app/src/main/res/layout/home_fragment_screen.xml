@@ -12,27 +12,33 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <SearchView
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="16dp">
+
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            style="@style/SearchViewStyle"/>
+
         <ImageButton
             android:id="@+id/tagFilterButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:contentDescription="@string/filter_by_tags_content_description"
             android:minWidth="32dp"
             android:minHeight="32dp"
             android:maxWidth="48dp"
             android:maxHeight="48dp"
             android:src="@drawable/ic_tags"
             android:background="@null"/>
+
         <ImageButton
             android:id="@+id/recentlyButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:contentDescription="@string/recently_content_description"
             android:minWidth="32dp"
             android:minHeight="32dp"
             android:maxWidth="48dp"

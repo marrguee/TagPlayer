@@ -2,6 +2,7 @@ package com.example.tagplayer.home.domain
 
 import android.net.Uri
 import com.example.tagplayer.main.presentation.SongUi
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 data class SongDomain(
@@ -12,13 +13,14 @@ data class SongDomain(
 ) {
 
     interface Mapper<T> {
-        fun map(id: Long, title: String, duration: Long, uri: Uri) : T
+        fun map(id: Long, title: String, duration: Long, uri: Uri): T
 
         object ToPresentation : Mapper<SongUi> {
             override fun map(id: Long, title: String, duration: Long, uri: Uri): SongUi {
                 val minutes = TimeUnit.MILLISECONDS.toMinutes(duration)
                 val seconds = TimeUnit.MILLISECONDS.toSeconds(duration) % 60
-                val formattedDuration = String.format("%02d:%02d", minutes, seconds)
+                val formattedDuration =
+                    String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
                 return SongUi(id, title, formattedDuration)
             }
         }

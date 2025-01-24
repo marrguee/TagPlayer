@@ -17,7 +17,7 @@ data class Song(
 ) {
 
     interface Mapper<T> {
-        fun map(id: Long, title: String, duration: Long, uri: String) : T
+        fun map(id: Long, title: String, duration: Long, uri: String): T
 
         object ToDomain : Mapper<SongDomain> {
             override fun map(id: Long, title: String, duration: Long, uri: String) =
@@ -25,14 +25,8 @@ data class Song(
         }
 
         object ToDomainSearch : Mapper<SongSearchDomain> {
-            override fun map(
-                id: Long,
-                title: String,
-                duration: Long,
-                uri: String
-            ): SongSearchDomain {
-                return SongSearchDomain(id, title, duration.toString())
-            }
+            override fun map(id: Long, title: String, duration: Long, uri: String) =
+                SongSearchDomain(id, title, duration)
         }
     }
 
