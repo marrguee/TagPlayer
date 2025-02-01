@@ -11,14 +11,15 @@ class CustomImageButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : AppCompatImageButton(context, attrs, defStyleAttr), ModifyCustomImage.Mutable {
-    private val imageFacade: ImageFacade = ImageFacade.Base(context)
-    private var curImage: CustomImage = CustomImage.Empty(context)
-    private val viewRect = Rect()
-
-    init {
-        imageFacade.changeImage(curImage)
+) : AppCompatImageButton(context, attrs, defStyleAttr), ModifyCustomImage.Mutable, HandleAnimationCycle {
+    private var defBackground: Drawable? = null
+    private val imageFacade: ImageFacade = ImageFacade.Base().apply {
+        defBackground?.let {
+            changeImage(CustomImage.DrawableVariant(it))
+        }
     }
+    private val viewRect = Rect()
+    private val rotatingLines = RotatingLines { invalidate() }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -29,11 +30,13 @@ class CustomImageButton @JvmOverloads constructor(
             right = w
             bottom = h
         }
-        imageFacade.prepare(viewRect)
+        rotatingLines.onSizeChanged(viewRect)
+        imageFacade.prepare(rotatingLines)
     }
 
     override fun onDraw(canvas: Canvas) {
-        imageFacade.drawOnCanvas(canvas, viewRect, drawable)
+        rotatingLines.onDraw(canvas, width, height)
+        imageFacade.drawOnCanvas(canvas, rotatingLines, drawable)
     }
 
     override fun setBackgroundResource(resId: Int) {
@@ -41,13 +44,18 @@ class CustomImageButton @JvmOverloads constructor(
     }
 
     override fun setBackground(background: Drawable?) {
-        curImage = CustomImage.DrawableVariant(context, background)
-        imageFacade?.changeImage(CustomImage.DrawableVariant(context, background))
+        background?.let {
+            defBackground = background
+        }
     }
 
     override fun background(image: CustomImage) {
-        curImage = image
-        imageFacade?.changeImage(image)
+        if (image == CustomImage.Empty)
+            defBackground?.let {
+                imageFacade.changeImage(CustomImage.DrawableVariant(it))
+            }
+        else imageFacade.changeImage(image)
+        invalidate()
     }
 
     override fun src(resourceId: Int) {
@@ -56,7 +64,13 @@ class CustomImageButton @JvmOverloads constructor(
 
     companion object {
         private const val BACKGROUND_RECOURSE_ERROR =
-            "Background Recourse error! Cannot set background as recourse"
+            "Background Recourse error! Cannot set background from xml"
     }
+
+    override fun startAnimation() =
+        rotatingLines.startAnimation()
+
+    override fun pauseAnimation() =
+        rotatingLines.pauseAnimation()
 
 }

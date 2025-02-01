@@ -30,6 +30,8 @@ interface SongsDao {
     suspend fun addSongs(songs: List<Song>)
     @Query("SELECT songs.uri FROM songs WHERE songs.id = :songId LIMIT 1")
     suspend fun uriById(songId: Long) : String
+    @Query("SELECT songs.title FROM songs WHERE songs.id = :songId LIMIT 1")
+    suspend fun titleById(songId: Long) : String
     @Query("DELETE FROM songs_and_tags WHERE songs_and_tags.track_id=:songId")
     suspend fun deleteSongTags(songId: Long)
     @Delete(entity = Song::class)

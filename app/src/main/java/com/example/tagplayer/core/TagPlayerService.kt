@@ -1,125 +1,127 @@
 package com.example.tagplayer.core
 
-import android.app.NotificationManager
-import android.content.Context
+import android.app.PendingIntent
 import android.content.Intent
+import android.media.session.PlaybackState
+import android.os.Build
+import android.os.Bundle
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.COMMAND_SEEK_TO_NEXT
 import androidx.media3.common.Player.COMMAND_SEEK_TO_NEXT_MEDIA_ITEM
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaSession
+import androidx.media3.session.MediaSession.ConnectionResult
 import androidx.media3.session.MediaSession.ControllerInfo
 import androidx.media3.session.MediaSessionService
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
+import com.example.tagplayer.R
 import com.example.tagplayer.core.data.database.models.LastPlayed
-import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.domain.ProvideLastPlayedDao
 import com.example.tagplayer.core.domain.ProvideSongsDao
-import com.example.tagplayer.main.domain.ManageNotification
-import com.example.tagplayer.main.domain.ShowNotification
+import com.example.tagplayer.main.presentation.MainActivity
+import com.google.common.collect.ImmutableList
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Date
 
 @UnstableApi
 class TagPlayerService : MediaSessionService() {
-    private lateinit var mediaSession: MediaSession
-    private lateinit var manageNotification: ManageNotification
-    private lateinit var showNotification: ShowNotification
-    private lateinit var notificationManager: NotificationManager
-    private lateinit var coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope =
+        CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    private var mediaSession: MediaSession? = null
 
     override fun onCreate() {
         super.onCreate()
-        coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-        val player = ExoPlayer.Builder(this)
-            .setAudioAttributes(AudioAttributes.DEFAULT, true)
+        mediaSession = MediaSession.Builder(
+                this,
+        ExoPlayer.Builder(this)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(C.USAGE_MEDIA)
+                    .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                    .build(),
+                true
+            )
             .build()
-
-        mediaSession =
-            MediaSession.Builder(this, player)
-                .setCallback(TagPlayerCallback())
-                //.setSessionActivity() - open activity when tap
-                .build()
-
-        manageNotification = ManageNotification.Base(
-            this,
-            mediaSession,
-            (application as ManageResources.Provide).manageRecourses()
         )
-
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        showNotification = ShowNotification.Base(
-            this,
-            notificationManager,
-            manageNotification
+        .setCallback(TagPlayerCallback())
+        .setSessionActivity(
+            PendingIntent.getActivity(
+                this,
+                0,
+                Intent(applicationContext, MainActivity::class.java),
+                PendingIntent.FLAG_IMMUTABLE
+            )
         )
+        .setCustomLayout(
+            ImmutableList.of(
+                CommandButton.Builder()
+                    .setDisplayName(STOP_SERVICE)
+                    .setIconResId(R.drawable.ic_stop)
+                    .setSessionCommand(SessionCommand(STOP_SERVICE, Bundle()))
+                    .build()
+            )
+        )
+        .build()
 
-        manageNotification.prepareChannel(notificationManager)
-
-        mediaSession.player.repeatMode = Player.REPEAT_MODE_ONE
-
-        mediaSession.player.addListener(object : Player.Listener {
-
-            override fun onEvents(player: Player, events: Player.Events) {
-                super.onEvents(player, events)
-                if (events.containsAny(
-                        Player.EVENT_PLAY_WHEN_READY_CHANGED,
-                        Player.EVENT_MEDIA_METADATA_CHANGED))
-                    showNotification.show()
-            }
-        })
-
+        setMediaNotificationProvider(CustomMediaNotificationProvider(this))
+        mediaSession?.player?.repeatMode = Player.REPEAT_MODE_ONE
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        val player = mediaSession.player
 
         intent?.let {
-            when(it.action) {
+            when (it.action) {
+                START_PLAYBACK -> coroutineScope.launch {
+                    val songId = it.getLongExtra(MEDIA_ID_KEY, -1)
 
-                START_SERVICE ->
-                    coroutineScope.launch {
-                        val songId = it.getLongExtra(ID_KEY, -1)
+                    val songsDao =
+                        (application as ProvideSongsDao).songsDao()
+                    val lastPlayedDao =
+                        (application as ProvideLastPlayedDao).lastPlayedDao()
 
-                        val songsDao =
-                            (application as ProvideSongsDao).songsDao()
-                        val lastPlayedDao =
-                            (application as ProvideLastPlayedDao).lastPlayedDao()
+                    val uri = songsDao.uriById(songId)
+                    val title = songsDao.titleById(songId)
+                    val requestedSong = MediaItem.fromUri(uri).buildUpon()
+                        .setMediaMetadata(
+                            MediaMetadata.Builder()
+                                .setTitle(title)
+                                .build()
+                        )
+                        .build()
 
-                        val uri = songsDao.uriById(songId)
-                        val requestedSong = MediaItem.fromUri(uri)
-
-                        withContext(Dispatchers.Main.immediate) {
-                            with(player) {
-                                if(currentMediaItem == requestedSong)
-                                    return@withContext
-                                if(mediaItemCount > 0) {
-                                    stop()
-                                    clearMediaItems()
-                                }
-                                addMediaItem(requestedSong)
-                                lastPlayedDao.wasPlayed(LastPlayed(songId, Date()))
-                                prepare()
-                                play()
+                    withContext(Dispatchers.Main.immediate) {
+                        mediaSession?.player?.let { player ->
+                            if (player.mediaItemCount > 0) {
+                                player.stop()
+                                player.clearMediaItems()
                             }
+                            player.addMediaItem(requestedSong)
+                            lastPlayedDao.wasPlayed(LastPlayed(songId, Date()))
+                            player.prepare()
+                            player.play()
                         }
+
                     }
-
-                STOP_SERVICE -> stopSelf()
-
-                PLAY_ACTION -> player.play()
-
-                PAUSE_ACTION -> player.pause()
-
-                RESTART_ACTION -> player.seekToPrevious()
+                }
+                PLAY_ACTION -> mediaSession?.player?.play()
+                PAUSE_ACTION ->  mediaSession?.player?.pause()
+                REWIND_ACTION ->  mediaSession?.player?.seekToPrevious()
                 else -> {}
             }
         }
@@ -127,50 +129,73 @@ class TagPlayerService : MediaSessionService() {
         return START_NOT_STICKY
     }
 
-    override fun onGetSession(controllerInfo: ControllerInfo) = mediaSession
+    override fun onGetSession(controllerInfo: ControllerInfo): MediaSession? = mediaSession
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        with(mediaSession.player){
-            if (!playWhenReady
-                || mediaItemCount == 0
-                || playbackState == Player.STATE_ENDED) {
-                stopSelf()
-            }
+        val player = mediaSession?.player
+        if (player!!.playWhenReady) {
+            player.pause()
         }
+        stopSelf()
     }
 
     override fun onDestroy() {
-        mediaSession.run {
-            player.release()
-            release()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            stopForeground(true)
         }
+        coroutineScope.cancel()
+        mediaSession = null
         super.onDestroy()
     }
 
+    companion object {
+        const val MEDIA_ID_KEY = "MEDIA_ID_KEY"
+        const val START_PLAYBACK = "START_PLAYBACK"
+        const val PLAY_ACTION = "PLAY_ACTION"
+        const val PAUSE_ACTION = "PAUSE_ACTION"
+        const val STOP_SERVICE = "STOP_SERVICE"
+        const val REWIND_ACTION = "REWIND_ACTION"
+    }
+
     private inner class TagPlayerCallback : MediaSession.Callback {
+
         override fun onConnect(
             session: MediaSession,
             controller: ControllerInfo
-        ): MediaSession.ConnectionResult {
-            return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
+        ): ConnectionResult {
+            val sessionCommands = ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
+                .add(SessionCommand(STOP_SERVICE, Bundle.EMPTY))
+                .build()
+            return ConnectionResult.AcceptedResultBuilder(session)
+                .setAvailableSessionCommands(sessionCommands)
                 .setAvailablePlayerCommands(
-                    MediaSession.ConnectionResult.DEFAULT_PLAYER_COMMANDS.buildUpon()
+                    ConnectionResult.DEFAULT_PLAYER_COMMANDS.buildUpon()
                         .remove(COMMAND_SEEK_TO_NEXT)
                         .remove(COMMAND_SEEK_TO_NEXT_MEDIA_ITEM)
                         .build()
                 )
                 .build()
         }
-    }
 
-    companion object {
-        const val ID_KEY = "ID_KEY"
-        const val PLAY_ACTION = "PLAY_ACTION"
-        const val PAUSE_ACTION = "PAUSE_ACTION"
-        const val START_SERVICE = "START_SERVICE"
-        const val STOP_SERVICE = "STOP_SERVICE"
-        const val RESTART_ACTION = "RESTART_ACTION"
-        const val ACTION_SERVICE_STOPPED = "ACTION_SERVICE_STOPPED"
+        override fun onCustomCommand(
+            session: MediaSession,
+            controller: ControllerInfo,
+            customCommand: SessionCommand,
+            args: Bundle
+        ): ListenableFuture<SessionResult> {
+            if (customCommand.customAction == STOP_SERVICE) {
+                session.run {
+                    player.stop()
+                    player.release()
+                    release()
+                }
+                stopService(Intent(applicationContext, TagPlayerService::class.java))
+            }
+            PlaybackState.STATE_NONE
+            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        }
     }
 }
 

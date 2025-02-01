@@ -16,7 +16,7 @@
         android:background="@color/white">
 
         <TextView
-            style="@style/HeaderText"
+            style="@style/H1Text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/all_tags"/>

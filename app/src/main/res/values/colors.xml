@@ -8,4 +8,7 @@
     <color name="dark_gray">#C1C1C1</color>
     <color name="filter_tag_selected">#2196F3</color>
     <color name="filter_tag_not_selected">#FFFFFF</color>
+    <color name="accent_1">#F8F4E9</color>
+    <color name="dark">#191813</color>
+    <color name="soft_dark">#C1C1C1</color>
 </resources>

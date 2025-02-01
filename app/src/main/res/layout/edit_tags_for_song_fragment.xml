@@ -11,7 +11,7 @@
         android:id="@+id/songTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/HeaderText"
+        android:textAppearance="@style/H1Text"
         android:text="@string/drag_and_drop_tags_visa_versa"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/allTagsRecyclerView"
         app:layout_constraintTop_toTopOf="@id/allTagsRecyclerView"
-        android:textAppearance="@style/HeaderText"
+        android:textAppearance="@style/H1Text"
         android:gravity="center"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -75,7 +75,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@id/ownedTagsRecyclerView"
-        android:textAppearance="@style/HeaderText"
+        android:textAppearance="@style/H1Text"
         android:gravity="center"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

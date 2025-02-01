@@ -1,6 +1,5 @@
 package com.example.tagplayer.home.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tagplayer.core.CustomObservable
@@ -36,14 +35,12 @@ class HomeViewModel(
         bundle: HandleSaveRestoreState.Restore<TagFiltersState>
     ) {
         if (bundle.empty()) {
-            Log.d("HomeViewModel: ", "bundle.empty()")
             viewModelScope.launch(Dispatchers.IO) {
                 val filters = interactor.filters()
                 tagFiltersObservable.update(filters)
             }
             handleDeath.handleFirstStart()
         } else if (handleDeath.deathHappened()) {
-            Log.d("HomeViewModel: ", "deathHappened")
             tagFiltersObservable.restore(bundle)
             handleDeath.handleDeath()
         }
@@ -53,7 +50,6 @@ class HomeViewModel(
         observable.updateObserver(observer)
         tagFiltersObservable.updateObserver(object : CustomObserver<TagFiltersState> {
             override fun update(data: TagFiltersState) {
-                Log.d("HomeViewModel: ", "data.map(tagFilteredMapper)")
                 data.map(tagFilteredMapper)
             }
         })
@@ -65,14 +61,10 @@ class HomeViewModel(
         tagFiltersObservable.updateObserver(TagFiltersObserver.Empty)
     }
 
-    override fun save(
-        bundle: HandleSaveRestoreState.Save<TagFiltersState>
-    ) {
+    override fun save(bundle: HandleSaveRestoreState.Save<TagFiltersState>) =
         tagFiltersObservable.save(bundle)
-    }
 
-    override fun play(id: Long) =
-        interactor.playSongForeground(id)
+    override fun play(id: Long) = interactor.playSongForeground(id)
 
     fun filterTagsScreen() = navigation.update(FilterTagsScreen)
 

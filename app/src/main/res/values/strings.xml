@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TagPlayer</string>
+    <string name="app_name">Viri Player</string>
     <string name="first_tab_name">All</string>
     <string name="second_tab_name">History</string>
     <string name="notification_channel_name">Tag_playback</string>
@@ -21,4 +21,5 @@
     <string name="query_hint">Search</string>
     <string name="filter_by_tags_content_description">Filter by tags</string>
     <string name="recently_content_description">Recently</string>
+    <string name="logo_content_description">Settings</string>
 </resources>

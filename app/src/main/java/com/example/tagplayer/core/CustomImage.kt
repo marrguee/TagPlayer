@@ -1,6 +1,6 @@
 package com.example.tagplayer.core
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -8,74 +8,111 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.core.graphics.drawable.toBitmap
-import com.example.tagplayer.R
+import java.io.ByteArrayOutputStream
 import kotlin.math.abs
 
-abstract class CustomImage(context: Context) {
-    protected var imageBm: Bitmap
-    private val imageBmBounds: Rect
+abstract class CustomImage: Parcelable {
+    private var imageBmBounds: Rect = Rect()
     private val imageBmPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
     }
+    protected var imageBm: Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8)
+        set(value) {
+            field = value
 
-    init {
-        imageBm = ContextCompat.getDrawable(
-            context,
-            R.drawable.placeholder_music
-        )!!.run {
-            toBitmap(
-                minimumWidth,
-                minimumHeight,
-                Bitmap.Config.ARGB_8888
+            if (value.width != value.height) {
+                val indent = abs(value.width - value.height) / 2
+
+                field = if (value.width > value.height) {
+                    Bitmap.createBitmap(value, indent, 0, value.height, value.height)
+                } else {
+                    Bitmap.createBitmap(value, 0, indent, value.width, value.width)
+                }
+            }
+
+            imageBmBounds = Rect(
+                0, 0,
+                field.width, field.height
             )
         }
-
-        if (imageBm.width != imageBm.height) {
-            val indent = abs(imageBm.width - imageBm.height) / 2
-
-            imageBm = if (imageBm.width > imageBm.height) {
-                Bitmap.createBitmap(imageBm, indent, 0, imageBm.height, imageBm.height)
-            } else {
-                Bitmap.createBitmap(imageBm, 0, indent, imageBm.width, imageBm.width)
-            }
-        }
-
-        imageBmBounds = Rect(
-            0, 0,
-            imageBm.width, imageBm.height
-        )
-    }
 
     fun drawOnCanvas(canvas: Canvas, zoomedViewRect: Rect) {
         canvas.drawBitmap(imageBm, imageBmBounds, zoomedViewRect, imageBmPaint)
     }
 
-    class ByteArrayVariant(context: Context, byteArray: ByteArray?) : CustomImage(context) {
-        init {
-            if(byteArray != null) {
-                imageBm = BitmapFactory.decodeByteArray(
-                    byteArray,
-                    0,
-                    byteArray.size
-                )
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        val byteArray = bitmapToByteArray(imageBm)
+        parcel.writeByteArray(byteArray)
+    }
+
+    override fun describeContents(): Int = 0
+
+    companion object {
+        fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
+            return ByteArrayOutputStream().use { stream ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                stream.toByteArray()
             }
+        }
+
+        fun byteArrayToBitmap(byteArray: ByteArray): Bitmap {
+            return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         }
     }
 
-    class DrawableVariant(context: Context, drawable: Drawable?) : CustomImage(context) {
+    @SuppressLint("ParcelCreator")
+    class ByteArrayVariant(byteArray: ByteArray) :
+        CustomImage() {
         init {
-            drawable?.run {
-                imageBm = toBitmap(
-                    drawable.minimumWidth,
-                    drawable.minimumHeight,
+            imageBm = byteArrayToBitmap(byteArray)
+        }
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<ByteArrayVariant> = object : Parcelable.Creator<ByteArrayVariant> {
+            override fun createFromParcel(parcel: Parcel): ByteArrayVariant {
+                val parcelByteArray = parcel.createByteArray() ?: byteArrayOf()
+                return ByteArrayVariant(parcelByteArray)
+            }
+
+            override fun newArray(size: Int): Array<ByteArrayVariant?> = arrayOfNulls(size)
+        }
+    }
+
+    @SuppressLint("ParcelCreator")
+    class DrawableVariant(drawable: Drawable) :
+        CustomImage() {
+        init {
+            drawable.let {
+                imageBm = it.toBitmap(
+                    it.minimumWidth,
+                    it.minimumHeight,
                     Bitmap.Config.ARGB_8888
                 )
             }
         }
+        @JvmField
+        val CREATOR: Parcelable.Creator<DrawableVariant> = object : Parcelable.Creator<DrawableVariant> {
+            override fun createFromParcel(parcel: Parcel): DrawableVariant {
+                val byteArray = parcel.createByteArray() ?: byteArrayOf()
+                val bitmap = byteArrayToBitmap(byteArray)
+                return DrawableVariant(BitmapDrawable(null, bitmap))
+            }
+
+            override fun newArray(size: Int): Array<DrawableVariant?> = arrayOfNulls(size)
+        }
     }
 
-    class Empty(context: Context) : CustomImage(context)
+    @SuppressLint("ParcelCreator")
+    object Empty : CustomImage() {
+        @JvmField
+        val CREATOR: Parcelable.Creator<Empty> = object : Parcelable.Creator<Empty> {
+            override fun createFromParcel(parcel: Parcel): Empty = Empty
+            override fun newArray(size: Int): Array<Empty?> = arrayOfNulls(size)
+        }
+    }
 }

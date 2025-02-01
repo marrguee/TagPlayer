@@ -3,26 +3,20 @@ package com.example.tagplayer.home.data
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
-import android.database.ContentObserver
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
+import android.provider.MediaStore.VOLUME_EXTERNAL_PRIMARY
 import com.example.tagplayer.core.data.database.models.Song
 
 interface ExtractMedia {
     suspend fun media(): List<Song>
     suspend fun scanNewFile(uri: Uri): Song?
-    suspend fun mediaStoreChanged(): Boolean
+    suspend fun mediaStoreChanged(context: Context): Boolean
 
-    class Base(
-        private val contentResolver: ContentResolver,
-        private val context: Context
-    ) : ExtractMedia {
-        private var lastVersion = String()
+    class Base(private val contentResolver: ContentResolver) : ExtractMedia {
+        private var mediaStoreVersion: String = String()
+        private var generationVersion: Long = 0
         private val projection = arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
@@ -94,11 +88,24 @@ interface ExtractMedia {
 
         }
 
-        override suspend fun mediaStoreChanged() = MediaStore.getVersion(context).let {
-            if (it == lastVersion) false
-            else {
-                lastVersion = it
-                true
+        override suspend fun mediaStoreChanged(context: Context): Boolean {
+            val version =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    MediaStore.getVersion(context, VOLUME_EXTERNAL_PRIMARY)
+                else
+                    MediaStore.getVersion(context)
+
+            if (mediaStoreVersion == version) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val newGeneration = MediaStore.getGeneration(context, VOLUME_EXTERNAL_PRIMARY)
+                    if (generationVersion == newGeneration) return false
+                    generationVersion = newGeneration
+                    return true
+                }
+                return false
+            } else {
+                mediaStoreVersion = version
+                return true
             }
         }
     }

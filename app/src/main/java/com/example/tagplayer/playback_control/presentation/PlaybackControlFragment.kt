@@ -1,9 +1,9 @@
 package com.example.tagplayer.playback_control.presentation
 
-import android.os.Bundle
-import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.TimeBar
+import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.PlaybackControlFragmentBinding
 import com.example.tagplayer.main.presentation.BindingFragment
@@ -15,11 +15,6 @@ class PlaybackControlFragment : BindingFragment<PlaybackControlFragmentBinding>(
         (requireActivity() as ProvideViewModel).provide(PlaybackControlViewModel::class.java)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.connectToService(requireContext())
-    }
-
     override fun onResume() {
         super.onResume()
         viewModel.startGettingUpdates(object : PlaybackControlObserver {
@@ -29,14 +24,10 @@ class PlaybackControlFragment : BindingFragment<PlaybackControlFragmentBinding>(
                 }
             }
         })
+        viewModel.connectService(requireContext())
 
-        binding.playPause.setOnClickListener {
-            viewModel.playPause()
-        }
-
-        binding.resetSong.setOnClickListener {
-            viewModel.resetSong()
-        }
+        binding.playPause.setOnClickListener { viewModel.playPause() }
+        binding.rewindSong.setOnClickListener { viewModel.rewindSong() }
 
         binding.timeBar.addListener(object : TimeBar.OnScrubListener {
             override fun onScrubStart(timeBar: TimeBar, position: Long) {
@@ -49,10 +40,15 @@ class PlaybackControlFragment : BindingFragment<PlaybackControlFragmentBinding>(
                 if (!canceled) viewModel.seekTo(position)
             }
         })
+
+        binding.playPause.startAnimation()
+
     }
 
     override fun onPause() {
         super.onPause()
+        viewModel.disconnectService()
         viewModel.stopGettingUpdates()
+        binding.playPause.pauseAnimation()
     }
 }

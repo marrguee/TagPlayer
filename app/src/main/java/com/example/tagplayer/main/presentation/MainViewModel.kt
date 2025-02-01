@@ -1,6 +1,7 @@
 package com.example.tagplayer.main.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.media3.common.util.UnstableApi
 import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
@@ -16,10 +17,6 @@ class MainViewModel(
 
     override fun stopGettingUpdates() {
         observable.updateObserver(MainActivityCallback.Empty)
-    }
-
-    fun homeScreen() {
-        observable.update(HomeScreen())
     }
 
     override fun clear() {

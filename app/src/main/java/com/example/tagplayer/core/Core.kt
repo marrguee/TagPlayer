@@ -36,7 +36,7 @@ interface Core : ProvideMediaStoreHandler, ManageResources.Provide, ProvideLastP
 
 
         private val mediaStoreHandler = MediaStoreHandler.Base(
-            ExtractMedia.Base(contentResolver, context),
+            ExtractMedia.Base(contentResolver),
             mediaDatabase.songsDao
         )
 

@@ -1,9 +1,7 @@
 package com.example.tagplayer.home.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.HomeFragmentScreenBinding
