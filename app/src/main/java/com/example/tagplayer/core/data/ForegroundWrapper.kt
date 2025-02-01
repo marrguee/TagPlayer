@@ -7,6 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -18,8 +19,8 @@ interface ForegroundWrapper {
     fun scanMedia()
     fun scanNewMedia()
     fun playMedia(id: Long)
-    fun fetchNewSong(uri: Uri)
-    fun deleteSong(uri: Uri)
+    fun fetchNewSong(uri: String)
+    fun deleteSong(uri: String)
 
     class Base(
         private val workManager: WorkManager
@@ -53,13 +54,14 @@ interface ForegroundWrapper {
         override fun playMedia(id: Long) {
             startWorker.invoke(
                 OneTimeWorkRequestBuilder<PlaySongWorker>()
-                    .setInputData(workDataOf(PLAY_MEDIA_ID_KEY to id)),
+                    .setInputData(workDataOf(PLAY_MEDIA_ID_KEY to id))
+                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST),
                 ExistingWorkPolicy.KEEP,
                 PlaySongWorker::class
             )
         }
 
-        override fun fetchNewSong(uri: Uri) {
+        override fun fetchNewSong(uri: String) {
             startWorker.invoke(
                 OneTimeWorkRequestBuilder<FetchSongWorker>().setInputData(
                     workDataOf(URI_KEY to uri)
@@ -69,7 +71,7 @@ interface ForegroundWrapper {
             )
         }
 
-        override fun deleteSong(uri: Uri) {
+        override fun deleteSong(uri: String) {
             startWorker.invoke(
                 OneTimeWorkRequestBuilder<DeleteSongWorker>().setInputData(
                     workDataOf(URI_KEY to uri)
@@ -86,13 +88,13 @@ interface ForegroundWrapper {
     }
 }
 
-
 class MediaWorker(
     context: Context,
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result = try {
-        (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().scan()
+        (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler()
+            .scan(applicationContext)
         Result.success()
     } catch (e: Exception) {
         Result.failure()
@@ -128,10 +130,14 @@ class FetchSongWorker(
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
-        val uri: Uri = inputData.getString(inputData.keyValueMap.keys.first())?.toUri()
-            ?: return Result.failure()
-        (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().scanNewFile(uri)
-        return Result.success()
+        return try {
+            val uri: Uri = inputData.getString(inputData.keyValueMap.keys.first())?.toUri()
+                ?: return Result.failure()
+            (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().scanNewFile(uri)
+            Result.success()
+        } catch (e: Exception) {
+            Result.failure()
+        }
     }
 }
 
@@ -140,9 +146,13 @@ class DeleteSongWorker(
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
-        val uri: Uri = inputData.getString(inputData.keyValueMap.keys.first())?.toUri()
-            ?: return Result.failure()
-        (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().deleteSong(uri)
-        return Result.success()
+        return try {
+            val uri: Uri = inputData.getString(inputData.keyValueMap.keys.first())?.toUri()
+                ?: return Result.failure()
+            (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().deleteSong(uri)
+            Result.success()
+        } catch (e: Exception) {
+            Result.failure()
+        }
     }
 }

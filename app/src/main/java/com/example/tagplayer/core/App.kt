@@ -2,9 +2,9 @@ package com.example.tagplayer.core
 
 import android.app.Application
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.util.UnstableApi
@@ -35,19 +35,15 @@ class App : Application(),
         super.onCreate()
         core = Core.Base(this, contentResolver)
         val songsFilterPrefs = SharedPrefs.TagFilterSharedPref(
-            getSharedPreferences(
-                "TagPlayerSharedPreferences",
-                MODE_PRIVATE
-            )
+            getSharedPreferences("TagPlayerSharedPreferences", MODE_PRIVATE)
         )
         factory = ProvideViewModel.Factory(core, songsFilterPrefs)
-
     }
 
     override fun start(id: Long) {
         val intent = Intent(this, TagPlayerService::class.java)
-        intent.action = TagPlayerService.START_SERVICE
-        intent.putExtra(TagPlayerService.ID_KEY, id)
+        intent.action = TagPlayerService.START_PLAYBACK
+        intent.putExtra(TagPlayerService.MEDIA_ID_KEY, id)
         ContextCompat.startForegroundService(this, intent)
     }
 

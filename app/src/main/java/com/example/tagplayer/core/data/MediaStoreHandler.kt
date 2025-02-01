@@ -1,11 +1,12 @@
 package com.example.tagplayer.core.data
 
+import android.content.Context
 import android.net.Uri
 import com.example.tagplayer.core.data.database.dao.SongsDao
 import com.example.tagplayer.home.data.ExtractMedia
 
 interface MediaStoreHandler {
-    suspend fun scan()
+    suspend fun scan(context: Context)
     suspend fun scanNewFile(uri: Uri)
     suspend fun deleteSong(uri: Uri)
 
@@ -14,8 +15,8 @@ interface MediaStoreHandler {
         private val songsDao: SongsDao
     ) : MediaStoreHandler {
 
-        override suspend fun scan() {
-            if (!extractMedia.mediaStoreChanged()) return
+        override suspend fun scan(context: Context) {
+            if (!extractMedia.mediaStoreChanged(context)) return
             val currentList = extractMedia.media()
             val savedList = songsDao.songs()
             val deleted = savedList.filterNot { currentList.contains(it) }

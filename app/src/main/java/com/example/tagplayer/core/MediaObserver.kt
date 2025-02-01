@@ -12,9 +12,7 @@ class MediaObserver(
 ) : ContentObserver(handler) {
     override fun onChange(selfChange: Boolean, uri: Uri?, flags: Int) {
         if (uri == null) return
-        if (flags == ContentResolver.NOTIFY_INSERT || flags == ContentResolver.NOTIFY_UPDATE)
-            foregroundWrapper.fetchNewSong(uri)
-        if (flags == ContentResolver.NOTIFY_DELETE)
-            foregroundWrapper.deleteSong(uri)
+        if ((flags and ContentResolver.NOTIFY_UPDATE) == ContentResolver.NOTIFY_UPDATE)
+            foregroundWrapper.fetchNewSong(uri.toString())
     }
 }

@@ -1,20 +1,23 @@
 package com.example.tagplayer.playback_control.presentation
 
-import android.content.Context
 import android.widget.TextView
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.DefaultTimeBar
 import com.example.tagplayer.R
-import com.example.tagplayer.core.ModifyCustomImage
 import com.example.tagplayer.core.CustomImage
+import com.example.tagplayer.core.ModifyCustomImage
 
 @UnstableApi
 interface PlaybackState {
-    fun dispatch(imageButton: ModifyCustomImage.Mutable, title: TextView, author: TextView, timeBar: DefaultTimeBar)
+    fun dispatch(
+        imageButton: ModifyCustomImage.Mutable,
+        title: TextView,
+        author: TextView,
+        timeBar: DefaultTimeBar
+    )
 
     class UpdateMetadata(
-        private val context: Context,
         private val mediaMetadata: MediaMetadata
     ) : PlaybackState {
 
@@ -24,7 +27,12 @@ interface PlaybackState {
             author: TextView,
             timeBar: DefaultTimeBar
         ) {
-            imageButton.background(CustomImage.ByteArrayVariant(context, mediaMetadata.artworkData))
+            imageButton.background(
+                if (mediaMetadata.artworkData != null)
+                    CustomImage.ByteArrayVariant(mediaMetadata.artworkData!!)
+                else
+                    CustomImage.Empty
+            )
             title.text = mediaMetadata.title
             author.text = mediaMetadata.artist
         }
@@ -40,10 +48,10 @@ interface PlaybackState {
             timeBar: DefaultTimeBar
         ) {
             imageButton.src(
-                if(isPlaying)
+                if (isPlaying)
                     R.drawable.ic_pause_with_bg
                 else
-                    R.drawable.play
+                    R.drawable.ic_play_with_bg
             )
         }
     }
@@ -67,6 +75,17 @@ interface PlaybackState {
             timeBar: DefaultTimeBar
         ) {
             timeBar.setPosition(position)
+        }
+    }
+
+    class UpdateTimeBarEnabled(private val enable: Boolean) : PlaybackState {
+        override fun dispatch(
+            imageButton: ModifyCustomImage.Mutable,
+            title: TextView,
+            author: TextView,
+            timeBar: DefaultTimeBar
+        ) {
+            timeBar.isEnabled = enable
         }
     }
 
