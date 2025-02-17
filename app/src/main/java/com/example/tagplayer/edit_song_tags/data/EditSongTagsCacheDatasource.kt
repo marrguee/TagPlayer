@@ -6,7 +6,7 @@ import com.example.tagplayer.core.data.database.models.SongTag
 import com.example.tagplayer.core.data.database.models.SongTagCrossRef
 
 interface EditSongTagsCacheDatasource {
-    suspend fun allTags() : List<SongTag>
+    suspend fun allTags(owned: List<Long>) : List<SongTag>
     suspend fun ownedTags(songId: Long) : List<SongTag>
     suspend fun saveOwnedTags(songId: Long, ownedTags: List<SongTagCrossRef>)
 
@@ -15,8 +15,8 @@ interface EditSongTagsCacheDatasource {
         private val songsDao: SongsDao,
     ) : EditSongTagsCacheDatasource {
 
-        override suspend fun allTags(): List<SongTag> =
-            tagsDao.tagsList()
+        override suspend fun allTags(owned: List<Long>): List<SongTag> =
+            tagsDao.tagsWithoutOwnedList(owned)
 
         override suspend fun ownedTags(songId: Long): List<SongTag> =
             songsDao.songTags(songId)

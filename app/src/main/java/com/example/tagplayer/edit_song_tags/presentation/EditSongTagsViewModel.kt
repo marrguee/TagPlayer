@@ -25,6 +25,7 @@ class EditSongTagsViewModel(
     private val navigation: Navigation.Navigate,
     private val observable: CustomObservable.AllHandleState<EditSongTagState>,
     private val handleDeath: HandleDeath,
+    private val tagUiMapper: TagUi.Mapper<Long>,
     private var allTagList: MutableList<TagUi> = mutableListOf(),
     private var ownedTagList: MutableList<TagUi> = mutableListOf(),
 ) : ComebackViewModel(clear), HandleUiStateUpdates.All<EditSongTagState>,
@@ -90,10 +91,10 @@ class EditSongTagsViewModel(
     override fun init(bundle: HandleSaveRestoreState.Restore<EditSongTagState>) {
         if (bundle.empty()){
             viewModelScope.launch(dispatcherList.io()) {
-                ownedTagList = interactor.ownedTags(songId) as MutableList<TagUi>
-                allTagList = interactor.allTags().filterNot {
-                    ownedTagList.contains(it)
-                } as MutableList<TagUi>
+                ownedTagList = interactor.ownedTags(songId).toMutableList()
+                allTagList = interactor.allTags(
+                    ownedTagList.map { it.map(tagUiMapper) }
+                ).toMutableList()
 
                 withContext(dispatcherList.ui()) {
                     if (allTagList.isEmpty())

@@ -20,7 +20,20 @@ data class TagUi(
     private val color: String
 ) : ItemUi, Parcelable {
 
-    fun mapToDomain(): TagDomain = TagDomain(id, title, color)
+    fun <T> map(mapper: Mapper<T>): T = mapper.map(id, title, color)
+
+    interface Mapper<T> {
+        fun map(id: Long, title: String, color: String): T
+
+        object Domain: Mapper<TagDomain> {
+            override fun map(id: Long, title: String, color: String): TagDomain =
+                TagDomain(id, title, color)
+        }
+
+        object Id: Mapper<Long> {
+            override fun map(id: Long, title: String, color: String): Long = id
+        }
+    }
 
     override fun type(): ItemUiType = ItemUiType.TagType
 

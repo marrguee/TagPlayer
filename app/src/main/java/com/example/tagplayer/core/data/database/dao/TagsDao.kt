@@ -13,6 +13,8 @@ interface TagsDao {
     fun tags() : Flow<List<SongTag>>
     @Query("SELECT * FROM tags")
     suspend fun tagsList() : List<SongTag>
+    @Query("SELECT * FROM tags WHERE tags.id NOT IN(:owned)")
+    suspend fun tagsWithoutOwnedList(owned: List<Long>) : List<SongTag>
     @Query("SELECT * FROM tags LEFT JOIN songs_and_tags " +
             "ON songs_and_tags.tag_id = tags.id " +
             "WHERE songs_and_tags.track_id = :songId")

@@ -10,6 +10,7 @@ import com.example.tagplayer.edit_song_tags.data.EditSongTagsCacheDatasource
 import com.example.tagplayer.edit_song_tags.data.EditSongTagsRepositoryImpl
 import com.example.tagplayer.edit_song_tags.presentation.EditSongObservable
 import com.example.tagplayer.edit_song_tags.presentation.EditSongTagsViewModel
+import com.example.tagplayer.edit_song_tags.presentation.TagUi
 import com.example.tagplayer.main.presentation.Navigation
 
 class EditSongTagModule(
@@ -20,7 +21,7 @@ class EditSongTagModule(
     private val repository = EditSongTagsRepositoryImpl(
         EditSongTagsCacheDatasource.Base(core.tagDao(), core.songsDao())
     )
-    private val interactor = EditSongTagInteractor.Base(repository)
+    private val interactor = EditSongTagInteractor.Base(repository, TagUi.Mapper.Domain)
     private val observable = EditSongObservable()
 
     override fun create(): EditSongTagsViewModel =
@@ -30,6 +31,7 @@ class EditSongTagModule(
             interactor,
             Navigation.Base,
             observable,
-            HandleDeath.Base()
+            HandleDeath.Base(),
+            TagUi.Mapper.Id
         )
 }
