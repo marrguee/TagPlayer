@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.tagplayer.main.presentation.CustomTextView
+<com.example.tagplayer.core.CustomTextView
     android:id="@+id/tagTextView"
-    style="@style/TagTextView"
     xmlns:tools="http://schemas.android.com/tools"
     tools:text="tag tag tag"
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:textAppearance="@style/H2Text"
+    style="@style/TagTextView"
+    android:paddingBottom="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android" />

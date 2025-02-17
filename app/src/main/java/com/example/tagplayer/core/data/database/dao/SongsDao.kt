@@ -12,20 +12,42 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SongsDao {
-    @Query("SELECT * FROM songs")
-    fun library() : Flow<List<Song>>
+    @Query(
+        "SELECT * FROM songs ORDER BY " +
+        "CASE WHEN :asc = 1 THEN songs.title END ASC, "+
+        "CASE WHEN :asc = 0 THEN songs.title END DESC"
+    )
+    fun songsSortByTitle(asc: Boolean) : Flow<List<Song>>
+    @Query(
+        "SELECT * FROM songs ORDER BY " +
+                "CASE WHEN :asc = 1 THEN songs.data_modified END ASC, "+
+                "CASE WHEN :asc = 0 THEN songs.data_modified END DESC"
+    )
+    fun songsSortByDate(asc: Boolean) : Flow<List<Song>>
     @Query("SELECT * FROM songs")
     fun songs() : List<Song>
     @Query(
         "SELECT * FROM songs INNER JOIN songs_and_tags " +
                 "ON songs_and_tags.track_id = songs.id " +
-                "WHERE songs_and_tags.tag_id IN (:tags)"
+                "WHERE songs_and_tags.tag_id IN (:tags) " +
+                "GROUP BY songs.id HAVING COUNT(DISTINCT songs_and_tags.tag_id) = :count " +
+                "ORDER BY CASE WHEN :asc = 1 THEN songs.title END ASC, "+
+                "CASE WHEN :asc = 0 THEN songs.title END DESC"
     )
-    fun songsByTagsId(tags: List<Long>) : Flow<List<Song>>
-    @Query("SELECT * FROM songs WHERE songs.title LIKE '%' || :query || '%'")
+    fun songsTagsSortByTitle(tags: List<Long>, count: Int, asc: Boolean) : Flow<List<Song>>
+    @Query(
+        "SELECT * FROM songs INNER JOIN songs_and_tags " +
+                "ON songs_and_tags.track_id = songs.id " +
+                "WHERE songs_and_tags.tag_id IN (:tags) " +
+                "GROUP BY songs.id HAVING COUNT(DISTINCT songs_and_tags.tag_id) = :count " +
+                "ORDER BY CASE WHEN :asc = 1 THEN songs.data_modified END ASC, "+
+                "CASE WHEN :asc = 0 THEN songs.data_modified END DESC"
+    )
+    fun songsTagsSortByDate(tags: List<Long>, count: Int, asc: Boolean) : Flow<List<Song>>
+    @Query("SELECT * FROM songs WHERE songs.title LIKE '%' || TRIM(:query) || '%' COLLATE NOCASE")
     suspend fun searchSongs(query: String) : List<Song>
     @Insert(entity = Song::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addSong(track: Song) //todo what could be if track was deleted from system
+    suspend fun addSong(track: Song)
     @Insert(entity = Song::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun addSongs(songs: List<Song>)
     @Query("SELECT songs.uri FROM songs WHERE songs.id = :songId LIMIT 1")
@@ -36,8 +58,8 @@ interface SongsDao {
     suspend fun deleteSongTags(songId: Long)
     @Delete(entity = Song::class)
     suspend fun deleteSongs(list: List<Song>)
-    @Query("DELETE FROM songs WHERE songs.uri =:uri")
-    suspend fun deleteSong(uri: String)
+    @Query("DELETE FROM songs WHERE songs.id =:songId")
+    suspend fun deleteSong(songId: Long)
     @Insert(entity = SongTagCrossRef::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateSongTags(tags: List<SongTagCrossRef>)
     @Query("SELECT * FROM tags INNER JOIN songs_and_tags ON songs_and_tags.tag_id = tags.id " +

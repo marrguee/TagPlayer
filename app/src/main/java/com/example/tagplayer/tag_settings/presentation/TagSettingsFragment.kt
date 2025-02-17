@@ -1,17 +1,19 @@
 package com.example.tagplayer.tag_settings.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import com.example.tagplayer.R
-import com.example.tagplayer.databinding.TagsSettingsFragmentScreenBinding
+import com.example.tagplayer.databinding.FragmentTagsSettingsBinding
 import com.example.tagplayer.main.presentation.ComebackFragment
 
-class TagSettingsFragment : ComebackFragment<TagsSettingsFragmentScreenBinding, TagSettingsViewModel>() {
-
+class TagSettingsFragment : ComebackFragment<FragmentTagsSettingsBinding, TagSettingsViewModel>() {
     private lateinit var adapter: TagsAdapter
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.setOnTouchListener { _, _ -> true }
 
         binding.addTagButton.setOnClickListener {
             viewModel.showTagDialog(requireActivity().supportFragmentManager)

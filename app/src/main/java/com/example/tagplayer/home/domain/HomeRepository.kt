@@ -6,8 +6,9 @@ import kotlinx.coroutines.flow.Flow
 interface HomeRepository<T> :
     PlaySongForeground,
     ScanSongsForeground {
-        fun library() : Flow<List<T>>
+        fun library(sortingType: SortingType) : Flow<List<T>>
         suspend fun filters(): List<Long>
-        suspend fun filtered(tags: List<Long>): Flow<List<T>>
+        fun filtered(tags: List<Long>, sortingType: SortingType): Flow<List<T>>
+        suspend fun croppedRecently(): List<SongDomain>
     }
 

@@ -7,9 +7,9 @@ import com.example.tagplayer.home.presentation.HomeState
 import com.example.tagplayer.edit_song_tags.presentation.EditSongTagState
 import com.example.tagplayer.filter_by_tags.presentation.FilterScreenState
 import com.example.tagplayer.recently.presentation.RecentlyState
-import com.example.tagplayer.playback_control.presentation.PlaybackState
+import com.example.tagplayer.playback_control.presentation.PlayState
 import com.example.tagplayer.search.domain.SearchState
-import com.example.tagplayer.tag_settings.add_tag.TagDialogState
+import com.example.tagplayer.tag_settings.add_tag.presentation.TagDialogState
 import com.example.tagplayer.tag_settings.presentation.TagSettingsState
 
 interface Communication<T> {
@@ -60,13 +60,13 @@ interface Communication<T> {
         }
     }
 
-    class PlaybackControlCommunication : Communication<PlaybackState> {
-        private val liveData = MutableLiveData<PlaybackState>()
-        override fun update(data: PlaybackState) {
+    class PlaybackControlCommunication : Communication<PlayState> {
+        private val liveData = MutableLiveData<PlayState>()
+        override fun update(data: PlayState) {
             liveData.value = data
         }
 
-        override fun observe(owner: LifecycleOwner, observer: Observer<in PlaybackState>) {
+        override fun observe(owner: LifecycleOwner, observer: Observer<in PlayState>) {
             liveData.observe(owner, observer)
         }
     }

@@ -1,0 +1,13 @@
+package com.example.tagplayer.playback_control.presentation
+
+import android.content.Context
+import android.util.AttributeSet
+import com.example.tagplayer.R
+
+class PlaybackTitleTextView@JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+) : PlaceholderTextView(context, attrs, defStyleAttr) {
+    override val defaultTextId: Int = R.string.placeholder_song_title
+}

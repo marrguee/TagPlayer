@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.tagplayer.filter_by_tags.domain.TagFilterDomain
-import com.example.tagplayer.tag_settings.data.TagData
+import com.example.tagplayer.playback_control.domain.TagPlaybackDomain
 import com.example.tagplayer.tag_settings.domain.TagDomain
 
 @Entity(
@@ -23,11 +23,6 @@ data class SongTag(
     interface Mapper<T> {
         fun map(id: Long, title: String, color: String) : T
 
-        object ToData : Mapper<TagData> {
-            override fun map(id: Long, title: String, color: String) =
-                TagData(id, title, color)
-        }
-
         object ToDomain : Mapper<TagDomain> {
             override fun map(id: Long, title: String, color: String) =
                 TagDomain(id, title, color)
@@ -36,6 +31,11 @@ data class SongTag(
         object ToFilterDomain : Mapper<TagFilterDomain> {
             override fun map(id: Long, title: String, color: String) =
                 TagFilterDomain(id, title, color)
+        }
+
+        object ToPlaybackDomain : Mapper<TagPlaybackDomain> {
+            override fun map(id: Long, title: String, color: String) =
+                TagPlaybackDomain(title, color)
         }
     }
 

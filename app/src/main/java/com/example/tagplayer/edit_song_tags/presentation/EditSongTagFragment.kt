@@ -3,27 +3,28 @@ package com.example.tagplayer.edit_song_tags.presentation
 import android.content.ClipData
 import android.os.Bundle
 import android.view.DragEvent
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import com.example.tagplayer.databinding.EditTagsForSongFragmentBinding
-import com.example.tagplayer.main.presentation.ComebackFragment
+import android.widget.Toast
+import com.example.tagplayer.R
+import com.example.tagplayer.databinding.FragmentEditTagsForSongBinding
+import com.example.tagplayer.main.presentation.ArgumentsComebackFragment
 
-class EditSongTagFragment : ComebackFragment<EditTagsForSongFragmentBinding, EditSongTagsViewModel>() {
+class EditSongTagFragment
+    : ArgumentsComebackFragment<FragmentEditTagsForSongBinding, EditSongTagsViewModel>(
+        listOf("SONG_ID")
+    ) {
     private lateinit var allTagsAdapter: EditSongTagListenerAdapter
     private lateinit var ownedTagsAdapter: EditSongTagListenerAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = EditTagsForSongFragmentBinding.inflate(inflater)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val songId = arguments?.getLong(keyList[0])
+        if (songId == null) {
+            Toast.makeText(context, R.string.song_id_not_valid, Toast.LENGTH_SHORT).show()
+            viewModel.comeback()
+        }
+        viewModel.consumeId(songId!!)
 
         allTagsAdapter = EditSongTagListenerAdapter()
         ownedTagsAdapter = EditSongTagListenerAdapter()

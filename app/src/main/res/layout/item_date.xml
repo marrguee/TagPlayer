@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp">
 
-    <com.example.tagplayer.main.presentation.CustomTextView
+    <com.example.tagplayer.core.CustomTextView
         android:id="@+id/dateTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

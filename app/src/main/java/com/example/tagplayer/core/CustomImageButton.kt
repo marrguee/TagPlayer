@@ -6,12 +6,14 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
+import com.example.tagplayer.R
 
 class CustomImageButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : AppCompatImageButton(context, attrs, defStyleAttr), ModifyCustomImage.Mutable, HandleAnimationCycle {
+) : AppCompatImageButton(context, attrs, defStyleAttr),
+    ModifyCustomImage.All {
     private var defBackground: Drawable? = null
     private val imageFacade: ImageFacade = ImageFacade.Base().apply {
         defBackground?.let {
@@ -60,6 +62,10 @@ class CustomImageButton @JvmOverloads constructor(
 
     override fun src(resourceId: Int) {
         setImageResource(resourceId)
+    }
+
+    override fun enabled(enabled: Boolean) {
+        isEnabled = enabled
     }
 
     companion object {

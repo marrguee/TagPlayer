@@ -1,6 +1,7 @@
 package com.example.tagplayer.core
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.media.session.PlaybackState
 import android.os.Build
@@ -37,17 +38,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Date
 
-@UnstableApi
+
 class TagPlayerService : MediaSessionService() {
     private val coroutineScope: CoroutineScope =
         CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var mediaSession: MediaSession? = null
 
+    @UnstableApi
     override fun onCreate() {
         super.onCreate()
-        mediaSession = MediaSession.Builder(
-                this,
+        setMediaNotificationProvider(CustomMediaNotificationProvider(this))
+        mediaSession = MediaSession.Builder(this,
         ExoPlayer.Builder(this)
             .setAudioAttributes(
                 AudioAttributes.Builder()
@@ -67,18 +69,8 @@ class TagPlayerService : MediaSessionService() {
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
-        .setCustomLayout(
-            ImmutableList.of(
-                CommandButton.Builder()
-                    .setDisplayName(STOP_SERVICE)
-                    .setIconResId(R.drawable.ic_stop)
-                    .setSessionCommand(SessionCommand(STOP_SERVICE, Bundle()))
-                    .build()
-            )
-        )
         .build()
 
-        setMediaNotificationProvider(CustomMediaNotificationProvider(this))
         mediaSession?.player?.repeatMode = Player.REPEAT_MODE_ONE
     }
 
@@ -100,6 +92,12 @@ class TagPlayerService : MediaSessionService() {
                     val requestedSong = MediaItem.fromUri(uri).buildUpon()
                         .setMediaMetadata(
                             MediaMetadata.Builder()
+                                .setExtras(
+                                    HandleMediaExtras.Base
+                                        .putMediaId(songId)
+                                        .putMediaUri(uri)
+                                        .build()
+                                )
                                 .setTitle(title)
                                 .build()
                         )
@@ -151,25 +149,28 @@ class TagPlayerService : MediaSessionService() {
     }
 
     companion object {
-        const val MEDIA_ID_KEY = "MEDIA_ID_KEY"
-        const val START_PLAYBACK = "START_PLAYBACK"
-        const val PLAY_ACTION = "PLAY_ACTION"
-        const val PAUSE_ACTION = "PAUSE_ACTION"
-        const val STOP_SERVICE = "STOP_SERVICE"
-        const val REWIND_ACTION = "REWIND_ACTION"
+        private const val MEDIA_ID_KEY = "MEDIA_ID_KEY"
+        private const val START_PLAYBACK = "START_PLAYBACK"
+        private const val PLAY_ACTION = "PLAY_ACTION"
+        private const val PAUSE_ACTION = "PAUSE_ACTION"
+        private const val REWIND_ACTION = "REWIND_ACTION"
+
+        fun startIntent(context: Context, id: Long): Intent {
+            val intent = Intent(context, TagPlayerService::class.java)
+            intent.action = START_PLAYBACK
+            intent.putExtra(MEDIA_ID_KEY, id)
+            return intent
+        }
     }
 
+    @UnstableApi
     private inner class TagPlayerCallback : MediaSession.Callback {
 
         override fun onConnect(
             session: MediaSession,
             controller: ControllerInfo
         ): ConnectionResult {
-            val sessionCommands = ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
-                .add(SessionCommand(STOP_SERVICE, Bundle.EMPTY))
-                .build()
             return ConnectionResult.AcceptedResultBuilder(session)
-                .setAvailableSessionCommands(sessionCommands)
                 .setAvailablePlayerCommands(
                     ConnectionResult.DEFAULT_PLAYER_COMMANDS.buildUpon()
                         .remove(COMMAND_SEEK_TO_NEXT)
@@ -177,24 +178,6 @@ class TagPlayerService : MediaSessionService() {
                         .build()
                 )
                 .build()
-        }
-
-        override fun onCustomCommand(
-            session: MediaSession,
-            controller: ControllerInfo,
-            customCommand: SessionCommand,
-            args: Bundle
-        ): ListenableFuture<SessionResult> {
-            if (customCommand.customAction == STOP_SERVICE) {
-                session.run {
-                    player.stop()
-                    player.release()
-                    release()
-                }
-                stopService(Intent(applicationContext, TagPlayerService::class.java))
-            }
-            PlaybackState.STATE_NONE
-            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
     }
 }

@@ -4,7 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 
-interface HandleSaveRestoreState<T> {
+interface HandleSaveRestoreState {
     interface Save<T> {
         fun save(data: T)
     }
@@ -29,7 +29,7 @@ interface HandleSaveRestoreState<T> {
                 bundle?.getParcelable(key, Any::class.java)!!
             } else {
                 bundle?.getParcelable(key)!!
-            }  as T
+            } as T
         }
     }
 }

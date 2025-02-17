@@ -2,17 +2,20 @@ package com.example.tagplayer.home.presentation
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.ProvideViewModel
-import com.example.tagplayer.databinding.HomeFragmentScreenBinding
+import com.example.tagplayer.databinding.FragmentHomeBinding
 import com.example.tagplayer.main.presentation.BindingFragment
 import com.example.tagplayer.tag_settings.presentation.MenuAction
 
-class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
+class HomeFragment : BindingFragment<FragmentHomeBinding>() {
     private val viewModel by lazy {
         (activity as ProvideViewModel).provide(HomeViewModel::class.java)
     }
-    private lateinit var libraryAdapter: LibraryRecyclerAdapter
+    private lateinit var recentlyAdapter: LibraryRecyclerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,29 +30,56 @@ class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
                 }
             )
         )
+        recentlyAdapter = LibraryRecyclerAdapter(menuOptions) { id -> viewModel.play(id) }
 
-        libraryAdapter = LibraryRecyclerAdapter(menuOptions) { id -> viewModel.play(id) }
-        binding.libraryRecycler.adapter = libraryAdapter
-
-        binding.tagFilterButton.apply {
-            setOnLongClickListener {
-                viewModel.tagSettingsScreen()
-                true
+        with(binding) {
+            recentlyRecycler.adapter = recentlyAdapter
+            PagerSnapHelper().attachToRecyclerView(recentlyRecycler)
+            libraryRecycler.adapter = LibraryRecyclerAdapter(menuOptions) {
+                id -> viewModel.play(id)
             }
-            setOnClickListener {
-                viewModel.filterTagsScreen()
-            }
-        }
 
-        binding.recentlyButton.setOnClickListener { viewModel.recentlyPlayedScreen() }
-
-        with(binding.searchView) {
-            setOnClickListener { viewModel.searchScreen() }
-            setOnQueryTextFocusChangeListener { _, focus: Boolean ->
-                if (focus) {
-                    clearFocus()
-                    performClick()
+            tagFilterButton.apply {
+                setOnLongClickListener {
+                    viewModel.tagSettingsScreen()
+                    true
                 }
+                setOnClickListener {
+                    viewModel.filterTagsScreen()
+                }
+            }
+
+            recentlyTextView.setOnClickListener { viewModel.recentlyPlayedScreen() }
+
+            with(searchView) {
+                setOnClickListener { viewModel.searchScreen() }
+                setOnQueryTextFocusChangeListener { _, focus: Boolean ->
+                    if (focus) {
+                        clearFocus()
+                        performClick()
+                    }
+                }
+            }
+
+            sortSpinner.adapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.sort_options,
+                R.layout.item_spinner_sort
+            ).apply {
+                setDropDownViewResource(R.layout.item_spinner_sort_drop_down)
+            }
+
+            sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.sortSongs(position)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {}
             }
         }
     }
@@ -57,13 +87,14 @@ class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         viewModel.init(SaveRestoreTagFilter(savedInstanceState))
+        if (savedInstanceState != null) binding.motionLayout.transitionState = savedInstanceState
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.startGettingUpdates(object : HomeObserver {
             override fun update(data: HomeState) {
-                data.dispatch(requireContext(), libraryAdapter)
+                data.dispatch(requireContext(), recentlyAdapter, binding.libraryRecycler)
                 data.consumed(viewModel)
             }
         })
@@ -77,5 +108,6 @@ class HomeFragment : BindingFragment<HomeFragmentScreenBinding>() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.save(SaveRestoreTagFilter(outState))
+        outState.putAll(binding.motionLayout.transitionState)
     }
 }

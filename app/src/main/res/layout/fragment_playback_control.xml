@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motionLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@android:color/transparent"
+    app:layoutDescription="@xml/fragment_playback_control_scene">
+
+    <View
+        android:id="@+id/left_line"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/left_line_drawable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/playPause"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <View
+        android:id="@+id/background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintStart_toEndOf="@id/left_line"
+        app:layout_constraintEnd_toStartOf="@id/right_line"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <View
+        android:id="@+id/right_line"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/right_line_drawable"
+        app:layout_constraintStart_toEndOf="@id/playPause"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.example.tagplayer.core.CustomImageButton
+        android:id="@+id/playPause"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="18dp"
+        android:enabled="false"
+        android:adjustViewBounds="true"
+        android:backgroundTintMode="src_in"
+        android:background="@drawable/placeholder_playback"
+        android:src="@drawable/ic_play_with_bg"
+        app:layout_constraintBottom_toTopOf="@id/timeBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.tagplayer.playback_control.presentation.PlaybackTitleTextView
+        android:id="@+id/songTitle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/padding"
+        app:layout_constraintEnd_toStartOf="@id/rewindSong"
+        app:layout_constraintStart_toEndOf="@id/playPause"
+        app:layout_constraintTop_toTopOf="@+id/playPause"
+        app:layout_constraintVertical_weight="1"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="24dp"
+        android:gravity="start|bottom"
+        android:freezesText="true"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@android:color/transparent"
+        android:textAppearance="@style/PlaybackControlSongTitleText"
+        tools:text="@string/placeholder_song_title"/>
+
+    <View
+        android:id="@+id/padding"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="0.2"
+        app:layout_constraintTop_toBottomOf="@id/songTitle"
+        app:layout_constraintStart_toEndOf="@id/playPause"
+        app:layout_constraintEnd_toStartOf="@id/rewindSong"
+        app:layout_constraintBottom_toTopOf="@id/songAuthor"/>
+
+    <com.example.tagplayer.playback_control.presentation.PlaybackAuthorTextView
+        android:id="@+id/songAuthor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constraintVertical_weight="1"
+        android:layout_marginHorizontal="12dp"
+        android:background="@android:color/transparent"
+        android:freezesText="true"
+        android:gravity="start|top"
+        android:textAppearance="@style/PlaybackControlSongAuthorText"
+        app:layout_constraintBottom_toBottomOf="@id/playPause"
+        app:layout_constraintEnd_toStartOf="@id/rewindSong"
+        app:layout_constraintStart_toEndOf="@id/playPause"
+        app:layout_constraintTop_toBottomOf="@+id/padding"
+        tools:text="@string/placeholder_song_author" />
+
+    <ImageButton
+        android:id="@+id/rewindSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="-2dp"
+        android:layout_marginHorizontal="18dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/restart_current_song"
+        android:src="@drawable/ic_reset"
+        app:layout_constraintBottom_toTopOf="@id/timeBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/timeBar"
+        android:layout_width="0dp"
+        android:layout_height="12dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingVertical="5dp"
+        android:thumb="@drawable/seekbar_thumb"
+        android:progressDrawable="@drawable/seekbar_playback"
+        app:layout_constraintTop_toBottomOf="@id/playPause"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/songTagsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        android:layout_marginHorizontal="16dp"
+        style="@style/TagsRecycler"
+        tools:listitem="@layout/item_tag"
+        android:orientation="horizontal"/>
+    
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/shareButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/songTagsRecycler"
+        android:layout_marginVertical="8dp"
+        android:background="@android:color/transparent"
+        android:text="@string/share"
+        android:textColor="@color/dark"
+        app:icon="@drawable/ic_share"
+        app:iconTint="@color/dark"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/editTagsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shareButton"
+        android:background="@android:color/transparent"
+        android:text="@string/edit_tag_s"
+        android:textColor="@color/dark"
+        app:icon="@drawable/ic_edit_tags"
+        app:iconTint="@color/dark"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/trashButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTagsButton"
+        android:background="@android:color/transparent"
+        android:text="@string/trash"
+        android:textColor="@color/dark"
+        app:icon="@drawable/ic_trash"
+        app:iconTint="@color/dark"/>
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

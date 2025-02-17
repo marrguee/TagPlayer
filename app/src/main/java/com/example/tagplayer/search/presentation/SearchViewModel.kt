@@ -3,12 +3,13 @@ package com.example.tagplayer.search.presentation
 import androidx.lifecycle.viewModelScope
 import com.example.tagplayer.core.CustomObservable
 import com.example.tagplayer.core.CustomObserver
-import com.example.tagplayer.core.HandleSaveRestoreState
 import com.example.tagplayer.core.domain.ClearViewModel
 import com.example.tagplayer.core.domain.DispatcherList
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.core.domain.PlaySongForeground
+import com.example.tagplayer.edit_song_tags.presentation.EditSongTagsScreen
 import com.example.tagplayer.main.presentation.ComebackViewModel
+import com.example.tagplayer.main.presentation.NavigateEditSongTagScreen
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.main.presentation.Screen
 import com.example.tagplayer.search.domain.SearchInteractor
@@ -18,25 +19,30 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchViewModel(
+    clear: ClearViewModel,
+    private val dispatcherList: DispatcherList,
     private val interactor: SearchInteractor,
     private val observable: CustomObservable.All<SearchState>,
     private val searchResponseMapper: SearchResponse.SearchResponseMapper,
-    private val dispatcherList: DispatcherList,
     private val navigation: Navigation.Navigate,
-    clear: ClearViewModel
-) : ComebackViewModel(clear), PlaySongForeground, HandleUiStateUpdates.All<SearchState> {
+) : ComebackViewModel(clear), PlaySongForeground, HandleUiStateUpdates.All<SearchState>,
+    NavigateEditSongTagScreen {
 
     fun findSongs(query: String) {
         viewModelScope.launch(dispatcherList.io()) {
-            val result: SearchResponse = interactor.findSongsByTitle(query)
+            val response = interactor.findSongsByTitle(query)
             withContext(dispatcherList.ui()){
-                result.map(searchResponseMapper)
+                response.map(searchResponseMapper)
             }
         }
     }
 
     override fun playSongForeground(id: Long) =
         interactor.playSongForeground(id)
+
+    override fun editSongTagsScreen(songId: Long) {
+        navigation.update(EditSongTagsScreen(listOf(songId)))
+    }
 
     override fun startGettingUpdates(observer: CustomObserver<SearchState>) {
         observable.updateObserver(observer)
