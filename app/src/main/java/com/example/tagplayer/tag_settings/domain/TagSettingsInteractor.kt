@@ -14,7 +14,6 @@ interface TagSettingsInteractor {
     class Base(
         private val repository: TagSettingsRepository<TagDomain>,
         private val tagModelMapperToUi: TagDomain.Mapper<TagSettingsUi>,
-        private val tagModelMapperToDomain: SongTag.Mapper<TagDomain>,
         private val handleError: HandleError.Presentation,
     ) : TagSettingsInteractor {
 

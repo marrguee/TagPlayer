@@ -1,7 +1,7 @@
 package com.example.tagplayer.core.domain
 
-import com.example.tagplayer.core.data.MediaStoreHandler
+import com.example.tagplayer.home.data.HandleMediaStore
 
 interface ProvideMediaStoreHandler {
-    fun mediaStoreHandler() : MediaStoreHandler
+    fun mediaStoreHandler() : HandleMediaStore
 }

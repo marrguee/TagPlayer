@@ -8,8 +8,9 @@
     <string name="all_tags">All tags</string>
     <string name="apply">Apply</string>
     <string name="select_tags">Select tags</string>
-    <string name="add_tag_title">Enter tag data</string>
-    <string name="add_tag_button">Add</string>
+    <string name="add_tag_title">Which sensation will be next?</string>
+    <string name="create_tag_button">Create</string>
+    <string name="create_tag">Add tag</string>
     <string name="edit_tag_title">Edit tag data</string>
     <string name="edit_tag_button">Edit</string>
     <string name="drag_and_drop_tags_visa_versa">Drag and drop tags visa versa</string>
@@ -17,9 +18,32 @@
     <string name="tags_do_not_exist">Tags are out</string>
     <string name="empty_string"> </string>
     <string name="restart_current_song">Restart current song</string>
-    <string name="nothing_is_playing">Nothing is playing...</string>
+    <string name="placeholder_song_title">Nothing is playing…</string>
+    <string name="placeholder_song_author">Unknown Artist</string>
     <string name="query_hint">Search</string>
     <string name="filter_by_tags_content_description">Filter by tags</string>
     <string name="recently_content_description">Recently</string>
     <string name="logo_content_description">Settings</string>
+    <string name="song_id_not_valid">Song id not valid</string>
+    <string name="tag_s_filter">Tag\'s filter</string>
+    <string name="accept_changes">Accept changes</string>
+    <string name="share">Share</string>
+    <string name="edit_tag_s">Edit tag\'s</string>
+    <string name="edit_tag">Edit</string>
+    <string name="trash">Trash</string>
+    <string-array name="sort_options">
+        <item>Newest</item>
+        <item>Oldest</item>
+        <item>A-to-Z</item>
+        <item>Z-to-A</item>
+    </string-array>
+    <string name="sharedPrefName">TagPlayerSharedPreferences</string>
+    <string name="song_delete_success">Song deleted successfully</string>
+    <string name="song_delete_failed">Song couldn\'t be deleted</string>
+    <string name="database_name">MediaDatabase.db</string>
+    <string name="tag_s_name">Tag\'s name…</string>
+    <string name="filters_header">Filters</string>
+    <string name="remove_tag">Remove</string>
+    <string name="clear_filters">Clear filters</string>
+    <string name="song_s_context_menu">Song\'s context menu</string>
 </resources>

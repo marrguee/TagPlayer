@@ -7,7 +7,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.view.animation.LinearInterpolator
 import androidx.core.graphics.toRectF
-import com.example.tagplayer.HandleInternalDraw
 
 class RotatingLines(private val invalidateFun: () -> Unit): HandleInternalDraw, HandleAnimationCycle {
     private val viewRect = Rect()

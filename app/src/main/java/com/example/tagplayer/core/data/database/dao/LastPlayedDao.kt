@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.Flow
 interface LastPlayedDao {
     @Query("SELECT * FROM songLastPlayedCrossRef")
     suspend fun fullRecently() : List<SongLastPlayedCrossRef>
+    @Query("SELECT * FROM songLastPlayedCrossRef LIMIT 6")
+    suspend fun croppedRecently() : List<SongLastPlayedCrossRef>
     @Insert(entity = LastPlayed::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun wasPlayed(lastPlayed: LastPlayed)
 }

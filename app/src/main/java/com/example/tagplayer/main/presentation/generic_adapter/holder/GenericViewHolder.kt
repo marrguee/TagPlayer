@@ -4,8 +4,9 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
 import com.example.tagplayer.edit_song_tags.presentation.TagUi
-import com.example.tagplayer.main.presentation.CustomTextView
+import com.example.tagplayer.core.CustomTextView
 import com.example.tagplayer.main.presentation.ItemUi
+import com.example.tagplayer.playback.presentation.TagPlaybackUi
 
 abstract class GenericViewHolder<T : ItemUi>(root: View) : RecyclerView.ViewHolder(root) {
     abstract fun bind(item: T)
@@ -14,6 +15,14 @@ abstract class GenericViewHolder<T : ItemUi>(root: View) : RecyclerView.ViewHold
         private val tagTextView: CustomTextView = itemView.findViewById(R.id.tagTextView)
 
         override fun bind(item: TagUi) {
+            item.bind(tagTextView)
+        }
+    }
+
+    class TagHolder(root: View) : GenericViewHolder<TagPlaybackUi>(root) {
+        private val tagTextView: CustomTextView = itemView.findViewById(R.id.tagTextView)
+
+        override fun bind(item: TagPlaybackUi) {
             item.bind(tagTextView)
         }
     }

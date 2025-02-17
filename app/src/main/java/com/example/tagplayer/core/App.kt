@@ -4,16 +4,17 @@ import android.app.Application
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.provider.MediaStore
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.util.UnstableApi
+import com.example.tagplayer.GlideApp
+import com.example.tagplayer.R
 import com.example.tagplayer.core.data.database.dao.LastPlayedDao
 import com.example.tagplayer.core.data.database.dao.SongsDao
-import com.example.tagplayer.core.domain.ProvideMediaStoreHandler
 import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.domain.ProvideLastPlayedDao
 import com.example.tagplayer.core.domain.ProvideMediaObserver
+import com.example.tagplayer.core.domain.ProvideMediaStoreHandler
 import com.example.tagplayer.core.domain.ProvidePlayerService
 import com.example.tagplayer.core.domain.ProvideSongsDao
 import com.example.tagplayer.core.domain.ProvideViewModel
@@ -35,16 +36,20 @@ class App : Application(),
         super.onCreate()
         core = Core.Base(this, contentResolver)
         val songsFilterPrefs = SharedPrefs.TagFilterSharedPref(
-            getSharedPreferences("TagPlayerSharedPreferences", MODE_PRIVATE)
+            getSharedPreferences(
+                ContextCompat.getString(this, R.string.sharedPrefName),
+                MODE_PRIVATE
+            )
         )
         factory = ProvideViewModel.Factory(core, songsFilterPrefs)
+        GlideApp.get(this)
     }
 
     override fun start(id: Long) {
-        val intent = Intent(this, TagPlayerService::class.java)
-        intent.action = TagPlayerService.START_PLAYBACK
-        intent.putExtra(TagPlayerService.MEDIA_ID_KEY, id)
-        ContextCompat.startForegroundService(this, intent)
+        ContextCompat.startForegroundService(
+            this,
+            TagPlayerService.startIntent(this, id)
+        )
     }
 
     override fun <T : ViewModel> provide(clazz: Class<out T>) = factory.create(clazz)

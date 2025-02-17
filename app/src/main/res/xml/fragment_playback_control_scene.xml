@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/startPlayback">
+        <Constraint android:id="@+id/timeBar">
+            <PropertySet android:visibility="visible" android:alpha="1"/>
+        </Constraint>
+        <Constraint android:id="@+id/songTagsRecycler">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+        <Constraint android:id="@+id/shareButton">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+        <Constraint android:id="@+id/editTagsButton">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+        <Constraint android:id="@+id/trashButton">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/endPlayback">
+        <Constraint android:id="@+id/timeBar">
+            <PropertySet android:visibility="gone" android:alpha="0"/>
+            <Layout app:layout_constraintBottom_toBottomOf="@id/playPause"/>
+        </Constraint>
+        <Constraint android:id="@+id/songTagsRecycler">
+            <PropertySet android:alpha="1"/>
+            <Layout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeBar"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"/>
+        </Constraint>
+        <Constraint android:id="@+id/shareButton">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+        <Constraint android:id="@+id/editTagsButton">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+        <Constraint android:id="@+id/trashButton">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+    </ConstraintSet>
+
+    <Transition
+        android:id="@+id/playbackTransition"
+        app:constraintSetStart="@id/startPlayback"
+        app:constraintSetEnd="@id/endPlayback"
+        app:duration="500">
+        <OnClick
+            app:touchRegionId="@id/motionLayout"
+            app:dragDirection="dragUp"
+            app:onTouchUp="autoCompleteToEnd"
+            app:dragScale="0.2"
+            app:moveWhenScrollAtTop="true"
+            app:touchAnchorSide="middle"/>
+
+    </Transition>
+
+
+</MotionScene>

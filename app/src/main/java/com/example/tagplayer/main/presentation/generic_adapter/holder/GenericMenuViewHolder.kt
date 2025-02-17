@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
-import com.example.tagplayer.main.presentation.CustomTextView
+import com.example.tagplayer.core.CustomTextView
 import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiMenu
 import com.example.tagplayer.tag_settings.presentation.MenuAction
 import com.example.tagplayer.tag_settings.presentation.TagSettingsUi

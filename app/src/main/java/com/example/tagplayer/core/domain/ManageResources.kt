@@ -8,10 +8,11 @@ import com.example.tagplayer.R
 
 interface ManageResources {
     interface Provide {
-        fun manageRecourses() : ManageResources
+        fun manageRecourses(): ManageResources
     }
-    fun notificationChannelName() : String
-    fun notificationChannelId() : String
+
+    fun notificationChannelName(): String
+    fun notificationChannelId(): String
 
     class Base(private val context: Context) : ManageResources {
         override fun notificationChannelName() =

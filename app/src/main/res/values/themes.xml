@@ -1,7 +1,9 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.TagPlayer" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="popupMenuStyle">@style/CustomPopupMenu</item>
     </style>
 
     <style name="Theme.TagPlayer" parent="Base.Theme.TagPlayer" />
@@ -11,8 +13,23 @@
         <item name="android:fontFamily">@font/raleway_semibold_600</item>
     </style>
 
+    <style name="H3Text" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/raleway_regular_400</item>
+    </style>
+
+    <style name="ButtonText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/raleway_medium_500</item>
+    </style>
+
     <style name="H2Text" parent="TextAppearance.AppCompat">
         <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/raleway_regular_400</item>
+    </style>
+
+    <style name="H4Text" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">8sp</item>
         <item name="android:fontFamily">@font/raleway_regular_400</item>
     </style>
 
@@ -26,6 +43,26 @@
         <item name="android:fontFamily">@font/raleway_regular_400</item>
     </style>
 
+    <style name="RecyclerItemSongH1" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/raleway_medium_500</item>
+    </style>
+
+    <style name="RoundedSquare">
+        <item name="cornerSize">10%</item>
+    </style>
+
+    <style name="PickerRoundedSquare">
+        <item name="android:padding">0.75dp</item>
+        <item name="strokeColor">@color/soft_black</item>
+        <item name="strokeWidth">0.75dp</item>
+    </style>
+
+    <style name="RecyclerItemSongH2" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/raleway_medium_500</item>
+    </style>
+
     <style name="CustomCardView" parent="Widget.MaterialComponents.CardView">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay_card_custom_corners</item>
         <item name="backgroundTint">@color/white</item>
@@ -36,13 +73,17 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#000000</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:background">@drawable/oval_background</item>
+        <item name="android:background">@drawable/background_tag_oval</item>
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="TagTextViewPlayback" parent="TagTextView">
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="CustomScrollBar">
@@ -50,20 +91,6 @@
         <item name="android:scrollbarThumbVertical">@drawable/scroller_thumb</item>
     </style>
 
-    <style name="TagTextViewSelected" parent="Widget.AppCompat.TextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#000000</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:background">@drawable/oval_background_filled</item>
-        <item name="android:paddingStart">8dp</item>
-        <item name="android:paddingEnd">8dp</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:layout_margin">2dp</item>
-    </style>
-    
     <style name="ShapeAppearanceOverlay_card_custom_corners" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopLeft">16dp</item>
@@ -80,7 +107,45 @@
         <item name="searchIcon">@drawable/ic_search</item>
         <item name="android:paddingStart">-8dp</item>
     </style>
-    
+
+    <style name="TagsRecycler">
+        <item name="layoutManager">com.google.android.flexbox.FlexboxLayoutManager</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_default</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:textAppearance">@style/ButtonText</item>
+    </style>
+
+    <style name="ImageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/button_default</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+    </style>
+
+    <style name="CustomPopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">?android:attr/colorPrimary</item>
+        <item name="minWidth">0dp</item>
+    </style>
+
+    <style name="RootViewStyle">
+        <item name="android:background">?android:attr/colorPrimary</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+    </style>
+
     <drawable name="media3_notification_seek_to_previous">@drawable/ic_restart</drawable>
     <drawable name="media3_notification_play">@drawable/ic_play</drawable>
     <drawable name="media3_notification_pause">@drawable/ic_pause</drawable>

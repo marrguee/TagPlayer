@@ -15,4 +15,20 @@ interface ItemUIMenuListenerType {
                     .inflate(R.layout.item_song, parent, false),
             )
     }
+
+    object SearchMenuType : ItemUIMenuListenerType {
+        override fun viewHolder(parent: ViewGroup) =
+            GenericMenuListenerViewHolder.SearchHolderMenu(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_song, parent, false),
+            )
+    }
+
+    object RecentlyMenuType : ItemUIMenuListenerType {
+        override fun viewHolder(parent: ViewGroup) =
+            GenericMenuListenerViewHolder.RecentlyHolderMenu(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_song, parent, false),
+            )
+    }
 }

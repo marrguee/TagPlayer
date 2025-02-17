@@ -10,6 +10,6 @@ interface DispatcherList {
     object Base : DispatcherList {
         override fun io() = Dispatchers.IO
 
-        override fun ui() = Dispatchers.Main
+        override fun ui() = Dispatchers.Main.immediate
     }
 }

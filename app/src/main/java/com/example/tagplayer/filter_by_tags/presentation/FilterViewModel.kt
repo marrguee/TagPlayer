@@ -6,6 +6,7 @@ import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.HandleDeath
 import com.example.tagplayer.core.HandleSaveRestoreState
 import com.example.tagplayer.core.domain.ClearViewModel
+import com.example.tagplayer.core.domain.DispatcherList
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.filter_by_tags.domain.FilterTagsInteractor
 import com.example.tagplayer.home.presentation.TagFiltersState
@@ -14,15 +15,20 @@ import com.example.tagplayer.main.presentation.HandleSaveAndRestoreState
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.main.presentation.Screen
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FilterViewModel(
+    clear: ClearViewModel,
+    private val dispatcherList: DispatcherList,
     private val observable: CustomObservable.AllHandleState<FilterScreenState>,
-    private val tagFiltersObservable: CustomObservable.Mutable<TagFiltersState>,
+    private val tagFiltersObservable: MutableStateFlow<TagFiltersState>,
     private val interactor: FilterTagsInteractor,
     private val navigation: Navigation.Navigate,
-    clear: ClearViewModel,
     private val handleDeath: HandleDeath,
     private var allTags: MutableList<FilterUi> = mutableListOf()
 ) : ComebackViewModel(clear), HandleUiStateUpdates.All<FilterScreenState>,
@@ -30,14 +36,10 @@ class FilterViewModel(
 
     override fun init(bundle: HandleSaveRestoreState.Restore<FilterScreenState>) {
         if (bundle.empty()) {
-            viewModelScope.launch {
+            viewModelScope.launch(dispatcherList.io()) {
                 allTags = interactor.tags() as MutableList
-                tagFiltersObservable.updateObserver(object : CustomObserver<TagFiltersState> {
-                    override fun update(data: TagFiltersState) {
-                        data.mapIntoAllList(allTags)
-                    }
-                })
-                withContext(Dispatchers.Main.immediate) {
+                tagFiltersObservable.value.mapIntoAllList(allTags)
+                withContext(dispatcherList.ui()) {
                     observable.update(FilterScreenState.SelectedChangedScreen(allTags.toList()))
                 }
             }
@@ -63,14 +65,22 @@ class FilterViewModel(
         viewModelScope.launch {
             val selectedTagsIds = allTags.filter { it.selected() }.map { it.id() }
             interactor.applyFilter(selectedTagsIds)
-            withContext(Dispatchers.Main.immediate) {
-                tagFiltersObservable.update(
+            withContext(dispatcherList.ui()) {
+                tagFiltersObservable.emit(
                     if (selectedTagsIds.isEmpty()) TagFiltersState.EmptyList
                     else TagFiltersState.FilledList(selectedTagsIds.toList())
                 )
                 comeback()
             }
         }
+    }
+
+    fun clearFilter() {
+        val newList = allTags.map {
+            if (it.selected()) it.copy().apply { changeSelected() } else it
+        }
+        allTags = newList.toMutableList()
+        observable.update(FilterScreenState.SelectedChangedScreen(newList.toList()))
     }
 
     override fun startGettingUpdates(observer: CustomObserver<FilterScreenState>) {

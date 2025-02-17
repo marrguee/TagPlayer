@@ -14,6 +14,7 @@ interface SongsResponse {
 
     interface SongsResponseMapper {
         fun mapFlow(flow: Flow<List<SongUi>>)
+        fun mapList(list: List<SongUi>)
         fun mapError(error: String)
 
         class Base(
@@ -31,6 +32,10 @@ interface SongsResponse {
                 }
             }
 
+            override fun mapList(list: List<SongUi>) {
+                observable.update(HomeState.RecentlyUpdated(list))
+            }
+
             override fun mapError(error: String) {
                 observable.update(HomeState.Error(error))
             }
@@ -40,6 +45,12 @@ interface SongsResponse {
     class SelectedLibrary(private val flow: Flow<List<SongUi>>): SongsResponse {
         override fun map(mapper: SongsResponseMapper) {
             mapper.mapFlow(flow)
+        }
+    }
+
+    class SelectedRecently(private val list: List<SongUi>): SongsResponse {
+        override fun map(mapper: SongsResponseMapper) {
+            mapper.mapList(list)
         }
     }
 

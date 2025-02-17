@@ -7,9 +7,10 @@ import com.example.tagplayer.main.presentation.SongUi
 import kotlinx.coroutines.flow.map
 
 interface HomeInteractor : PlaySongForeground, ScanSongsForeground {
-    fun libraryFlow(): SongsResponse
+    fun libraryFlow(sortingType: SortingType): SongsResponse
     suspend fun filters(): TagFiltersState
-    suspend fun filtered(tags: List<Long>): SongsResponse
+    suspend fun filtered(tags: List<Long>, sortingType: SortingType): SongsResponse
+    suspend fun croppedRecently(): SongsResponse
 
     class Base(
         private val repository: HomeRepository<SongDomain>,
@@ -17,9 +18,9 @@ interface HomeInteractor : PlaySongForeground, ScanSongsForeground {
         private val modelMapper: SongDomain.Mapper<SongUi>
     ) : HomeInteractor {
 
-        override fun libraryFlow() = try {
+        override fun libraryFlow(sortingType: SortingType) = try {
             SongsResponse.SelectedLibrary(
-                repository.library().map { list -> list.map { it.map(modelMapper) } }
+                repository.library(sortingType).map { list -> list.map { it.map(modelMapper) } }
             )
         } catch (e: DomainError) {
             SongsResponse.Error(handleError.handle(e))
@@ -33,9 +34,18 @@ interface HomeInteractor : PlaySongForeground, ScanSongsForeground {
             TagFiltersState.Error(handleError.handle(e))
         }
 
-        override suspend fun filtered(tags: List<Long>): SongsResponse = try {
+        override suspend fun filtered(tags: List<Long>, sortingType: SortingType): SongsResponse =
+        try {
             SongsResponse.SelectedLibrary(
-                repository.filtered(tags).map { list -> list.map { it.map(modelMapper) } }
+                repository.filtered(tags, sortingType).map { list -> list.map { it.map(modelMapper) } }
+            )
+        } catch (e: DomainError) {
+            SongsResponse.Error(handleError.handle(e))
+        }
+
+        override suspend fun croppedRecently(): SongsResponse = try {
+            SongsResponse.SelectedRecently(
+                repository.croppedRecently().map { it.map(modelMapper) }
             )
         } catch (e: DomainError) {
             SongsResponse.Error(handleError.handle(e))

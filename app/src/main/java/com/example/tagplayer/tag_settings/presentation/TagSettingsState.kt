@@ -12,7 +12,7 @@ interface TagSettingsState {
         }
     }
 
-    class Error(private val message: String) : TagSettingsState {
+    class Error(private val error: String) : TagSettingsState {
         override fun dispatch(adapter: TagsAdapter) = Unit
     }
 

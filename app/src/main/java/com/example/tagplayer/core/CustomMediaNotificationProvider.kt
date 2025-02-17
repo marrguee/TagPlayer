@@ -21,15 +21,12 @@ class CustomMediaNotificationProvider(context: Context) :
     ): IntArray {
         val defaultRewindCommandButton = mediaButtons.getOrNull(0)
         val defaultPlayPauseCommandButton = mediaButtons.getOrNull(1)
-        val stopCommandButton = mediaButtons.getOrNull(2)
         val notificationMediaButtons =
             if (defaultRewindCommandButton != null &&
-                defaultPlayPauseCommandButton != null &&
-                stopCommandButton != null) {
+                defaultPlayPauseCommandButton != null) {
                 ImmutableList.builder<CommandButton>().apply {
                     add(defaultPlayPauseCommandButton)
                     add(defaultRewindCommandButton)
-                    add(stopCommandButton)
                 }.build()
             } else {
                 mediaButtons
