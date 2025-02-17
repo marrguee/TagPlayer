@@ -2,23 +2,18 @@ package com.example.tagplayer.core
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.toRectF
-import com.example.tagplayer.HandleInternalDraw
 import com.example.tagplayer.R
 
 class CustomImageButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : AppCompatImageButton(context, attrs, defStyleAttr), ModifyCustomImage.Mutable, HandleAnimationCycle {
+) : AppCompatImageButton(context, attrs, defStyleAttr),
+    ModifyCustomImage.All {
     private var defBackground: Drawable? = null
     private val imageFacade: ImageFacade = ImageFacade.Base().apply {
         defBackground?.let {
@@ -67,6 +62,10 @@ class CustomImageButton @JvmOverloads constructor(
 
     override fun src(resourceId: Int) {
         setImageResource(resourceId)
+    }
+
+    override fun enabled(enabled: Boolean) {
+        isEnabled = enabled
     }
 
     companion object {

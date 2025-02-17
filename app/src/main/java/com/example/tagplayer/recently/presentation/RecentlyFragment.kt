@@ -3,18 +3,27 @@ package com.example.tagplayer.recently.presentation
 import android.os.Bundle
 import android.view.View
 import androidx.media3.common.util.UnstableApi
-import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
-import com.example.tagplayer.databinding.RecentlyFragmentScreenBinding
+import com.example.tagplayer.databinding.FragmentRecentlyBinding
 import com.example.tagplayer.main.presentation.ComebackFragment
-import com.example.tagplayer.playback_control.presentation.PlaybackControlFragment
+import com.example.tagplayer.tag_settings.presentation.MenuAction
 
-class RecentlyFragment : ComebackFragment<RecentlyFragmentScreenBinding, RecentlyViewModel>() {
+class RecentlyFragment : ComebackFragment<FragmentRecentlyBinding, RecentlyViewModel>() {
 
     @UnstableApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = RecentlyListenerAdapter {
+        val menuOptions = listOf(
+            Pair(
+                R.id.editSongTagsMenu,
+                object : MenuAction {
+                    override fun action(vararg args: Any) {
+                        viewModel.editSongTagsScreen(args[0] as Long)
+                    }
+                }
+            )
+        )
+        val adapter = RecentlyListenerAdapter(menuOptions) {
             viewModel.play(it)
         }
         binding.recentlyRecycler.adapter = adapter

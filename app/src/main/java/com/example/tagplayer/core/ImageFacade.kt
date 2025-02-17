@@ -7,7 +7,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.toRectF
-import com.example.tagplayer.HandleInternalDraw
 
 interface ImageFacade{
     fun changeImage(newImage: CustomImage)

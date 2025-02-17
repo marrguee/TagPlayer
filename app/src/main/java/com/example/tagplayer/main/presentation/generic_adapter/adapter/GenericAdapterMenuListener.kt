@@ -25,4 +25,5 @@ abstract class GenericAdapterMenuListener<T : ItemUiMenuListener, L>(
     override fun onBindViewHolder(holder: GenericMenuListenerViewHolder<T, L>, position: Int) {
         holder.bind(currentList[position], menuOptions, listener)
     }
+
 }

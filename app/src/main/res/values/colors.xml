@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="soft_black">#181818</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#F44336</color>
     <color name="track_item_bg">#E3DFFD</color>
@@ -8,7 +9,31 @@
     <color name="dark_gray">#C1C1C1</color>
     <color name="filter_tag_selected">#2196F3</color>
     <color name="filter_tag_not_selected">#FFFFFF</color>
-    <color name="accent_1">#F8F4E9</color>
+    <color name="colorPrimary">#F8F4E9</color>
     <color name="dark">#191813</color>
     <color name="soft_dark">#C1C1C1</color>
+    <color name="light">#F6F6F6</color>
+
+    <color name="picker_soft_blue">#A9B5DF</color>
+    <color name="picker_soft_green">#A0C878</color>
+    <color name="picker_mint">#A6F1E0</color>
+    <color name="picker_teal">#9ACBD0</color>
+    <color name="picker_light_yellow">#FFF4B5</color>
+    <color name="picker_pastel_purple">#F5EFFF</color>
+    <color name="picker_light_gray">#F5F5F7</color>
+    <color name="picker_sage_green">#C1CFA1</color>
+    <color name="picker_soft_teal">#C4DAD2</color>
+    <color name="picker_peach_pink">#F1D3CE</color>
+    <color name="picker_fresh_green">#A1EEBD</color>
+    <color name="picker_lime_yellow">#E9FF97</color>
+    <color name="picker_warm_orange">#FFC96F</color>
+    <color name="picker_peach">#F8C794</color>
+    <color name="picker_rose_red">#E78895</color>
+    <color name="picker_soft_pink">#FFE5E5</color>
+    <color name="picker_mint_cream">#DEF5E5</color>
+    <color name="picker_aqua">#CDFCF6</color>
+    <color name="picker_grayish_purple">#D3CEDF</color>
+    <color name="picker_warm_beige">#F8E2CF</color>
+    <color name="default_tag_color">#EC00FF</color>
+    <color name="tag_selected">#FFFFFF</color>
 </resources>

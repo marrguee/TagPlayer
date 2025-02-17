@@ -1,35 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="54dp"
     android:paddingBottom="8dp"
     android:orientation="horizontal"
     android:gravity="center_vertical">
 
-    <com.example.tagplayer.main.presentation.CustomTextView
-        android:id="@+id/titleTextView"
+    <com.example.tagplayer.core.CustomShapeableImageView
+        android:id="@+id/thumbnailImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        tools:src="@drawable/placeholder_playback"
+        android:scaleType="fitCenter"
+        android:layout_marginEnd="16dp"
+        android:layout_marginVertical="4dp"
+        android:background="@null"
+        android:adjustViewBounds="true"
+        app:shapeAppearanceOverlay="@style/RoundedSquare"/>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/raleway_extra_light"
-        android:layout_weight="5"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:maxWidth="160dp"
-        tools:text="Track title"/>
+        android:orientation="vertical"
+        android:layout_weight="8">
 
-    <com.example.tagplayer.main.presentation.CustomTextView
+        <com.example.tagplayer.core.CustomTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="180dp"
+            android:textAppearance="@style/RecyclerItemSongH1"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            tools:text="Track title Track title Track title"/>
+
+        <com.example.tagplayer.core.CustomTextView
+            android:id="@+id/authorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="180dp"
+            android:textAppearance="@style/RecyclerItemSongH2"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Track title"/>
+    </LinearLayout>
+
+    <com.example.tagplayer.core.CustomTextView
         android:id="@+id/durationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/raleway_extra_light"
+        android:textAppearance="@style/RecyclerItemSongH2"
         android:layout_weight="2"
         android:gravity="end"
-        android:textSize="12sp"
         android:maxLines="1"
         tools:text="3:42" />
 
@@ -37,10 +63,10 @@
         android:id="@+id/songMenuButton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:contentDescription="@string/song_s_context_menu"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_three_dots_vertical"
-        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_more_vertical"
         android:background="@null"/>
 
 </LinearLayout>

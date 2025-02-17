@@ -1,30 +1,35 @@
 package com.example.tagplayer.search.presentation
 
-import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.view.MenuProvider
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tagplayer.R
-import com.example.tagplayer.databinding.SearchFragmentBinding
+import com.example.tagplayer.databinding.FragmentSearchBinding
 import com.example.tagplayer.main.presentation.ComebackFragment
 import com.example.tagplayer.search.domain.SearchState
+import com.example.tagplayer.tag_settings.presentation.MenuAction
 
 
-class SearchFragment : ComebackFragment<SearchFragmentBinding, SearchViewModel>() {
+class SearchFragment : ComebackFragment<FragmentSearchBinding, SearchViewModel>() {
     private lateinit var adapter: SongSearchListenerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = SongSearchListenerAdapter { viewModel.playSongForeground(it) }
+        val menuOptions = listOf(
+            Pair(
+                R.id.editSongTagsMenu,
+                object : MenuAction {
+                    override fun action(vararg args: Any) {
+                        viewModel.editSongTagsScreen(args[0] as Long)
+                    }
+                }
+            )
+        )
+
+        adapter = SongSearchListenerAdapter(menuOptions) { viewModel.playSongForeground(it) }
         binding.searchResultRecycler.adapter = adapter
 
         with(binding.searchView) {
@@ -40,12 +45,14 @@ class SearchFragment : ComebackFragment<SearchFragmentBinding, SearchViewModel>(
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText.isNullOrEmpty() || newText.length < 3) return false
+                    if (newText.isNullOrEmpty()) return false
                     viewModel.findSongs(newText)
                     return true
                 }
             })
         }
+
+
 
     }
 

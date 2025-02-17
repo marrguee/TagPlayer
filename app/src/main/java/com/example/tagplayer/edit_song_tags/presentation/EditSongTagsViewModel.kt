@@ -6,6 +6,7 @@ import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.HandleDeath
 import com.example.tagplayer.core.HandleSaveRestoreState
 import com.example.tagplayer.core.domain.ClearViewModel
+import com.example.tagplayer.core.domain.DispatcherList
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.edit_song_tags.domain.EditSongTagInteractor
 import com.example.tagplayer.main.presentation.ComebackViewModel
@@ -18,16 +19,21 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicLong
 
 class EditSongTagsViewModel(
+    clear: ClearViewModel,
+    private val dispatcherList: DispatcherList,
     private val interactor: EditSongTagInteractor,
     private val navigation: Navigation.Navigate,
     private val observable: CustomObservable.AllHandleState<EditSongTagState>,
-    clear: ClearViewModel,
     private val handleDeath: HandleDeath,
-    private var savedSongId: AtomicLong,
     private var allTagList: MutableList<TagUi> = mutableListOf(),
     private var ownedTagList: MutableList<TagUi> = mutableListOf(),
 ) : ComebackViewModel(clear), HandleUiStateUpdates.All<EditSongTagState>,
     HandleSaveAndRestoreState<EditSongTagState> {
+    private var songId: Long = Long.MIN_VALUE
+
+    fun consumeId(songId: Long) {
+        this.songId = songId
+    }
 
     fun dragAndDrop(fromAllToOwned: Boolean, tagId: Long) {
         val (sourceList, destinationList) =
@@ -51,10 +57,10 @@ class EditSongTagsViewModel(
     }
 
     fun confirm() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (savedSongId.get() != DEFAULT_SONG_ID)
-                interactor.saveOwnedTags(savedSongId.get(), ownedTagList)
-            withContext(Dispatchers.Main.immediate) {
+        viewModelScope.launch(dispatcherList.io()) {
+            if (songId != DEFAULT_SONG_ID)
+                interactor.saveOwnedTags(songId, ownedTagList)
+            withContext(dispatcherList.ui()) {
                 navigation.update(Screen.Pop)
             }
         }
@@ -83,13 +89,13 @@ class EditSongTagsViewModel(
 
     override fun init(bundle: HandleSaveRestoreState.Restore<EditSongTagState>) {
         if (bundle.empty()){
-            viewModelScope.launch {
-                ownedTagList = interactor.ownedTags(savedSongId.get()) as MutableList<TagUi>
+            viewModelScope.launch(dispatcherList.io()) {
+                ownedTagList = interactor.ownedTags(songId) as MutableList<TagUi>
                 allTagList = interactor.allTags().filterNot {
                     ownedTagList.contains(it)
                 } as MutableList<TagUi>
 
-                withContext(Dispatchers.Main.immediate) {
+                withContext(dispatcherList.ui()) {
                     if (allTagList.isEmpty())
                         observable.update(EditSongTagState.ChangeAllTagsSplashState(true))
                     if (ownedTagList.isEmpty())
@@ -107,7 +113,6 @@ class EditSongTagsViewModel(
             observable.restore(bundle)
             handleDeath.handleDeath()
         }
-
     }
 
     override fun save(bundle: HandleSaveRestoreState.Save<EditSongTagState>) {

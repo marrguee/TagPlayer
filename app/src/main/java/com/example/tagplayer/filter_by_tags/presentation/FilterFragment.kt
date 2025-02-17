@@ -1,15 +1,18 @@
 package com.example.tagplayer.filter_by_tags.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import com.example.tagplayer.databinding.TagsFilterFragmentScreenBinding
+import com.example.tagplayer.databinding.FragmentTagsFilterBinding
 import com.example.tagplayer.main.presentation.ComebackFragment
 
-class FilterFragment : ComebackFragment<TagsFilterFragmentScreenBinding, FilterViewModel>() {
+class FilterFragment : ComebackFragment<FragmentTagsFilterBinding, FilterViewModel>() {
     private lateinit var adapter: FilterAdapter
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.setOnTouchListener { _, _ -> true }
         adapter = FilterAdapter {
             viewModel.changeTagSelectedState(it)
         }
@@ -22,6 +25,10 @@ class FilterFragment : ComebackFragment<TagsFilterFragmentScreenBinding, FilterV
 
         binding.tagFilterButton.setOnClickListener {
             viewModel.comeback()
+        }
+
+        binding.clearFiltersButton.setOnClickListener {
+            viewModel.clearFilter()
         }
 
         viewModel.init(SaveRestoreFilterState(savedInstanceState))

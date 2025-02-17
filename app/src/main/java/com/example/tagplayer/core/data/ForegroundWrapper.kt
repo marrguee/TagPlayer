@@ -2,7 +2,9 @@ package com.example.tagplayer.core.data
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
+import androidx.media3.common.util.UnstableApi
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -15,12 +17,11 @@ import com.example.tagplayer.core.domain.ProvideMediaStoreHandler
 import com.example.tagplayer.core.domain.ProvidePlayerService
 import kotlin.reflect.KClass
 
+
 interface ForegroundWrapper {
     fun scanMedia()
-    fun scanNewMedia()
     fun playMedia(id: Long)
     fun fetchNewSong(uri: String)
-    fun deleteSong(uri: String)
 
     class Base(
         private val workManager: WorkManager
@@ -34,20 +35,12 @@ interface ForegroundWrapper {
                     request.build()
                 ).enqueue()
             }
-
+        @UnstableApi
         override fun scanMedia() {
             startWorker.invoke(
                 OneTimeWorkRequestBuilder<MediaWorker>(),
                 ExistingWorkPolicy.KEEP,
                 MediaWorker::class
-            )
-        }
-
-        override fun scanNewMedia() {
-            startWorker.invoke(
-                OneTimeWorkRequestBuilder<ListenMediaWorker>(),
-                ExistingWorkPolicy.KEEP,
-                ListenMediaWorker::class
             )
         }
 
@@ -60,34 +53,25 @@ interface ForegroundWrapper {
                 PlaySongWorker::class
             )
         }
-
+        @UnstableApi
         override fun fetchNewSong(uri: String) {
             startWorker.invoke(
                 OneTimeWorkRequestBuilder<FetchSongWorker>().setInputData(
-                    workDataOf(URI_KEY to uri)
+                    workDataOf(SONG_ID_KEY to uri)
                 ),
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
                 FetchSongWorker::class
             )
         }
 
-        override fun deleteSong(uri: String) {
-            startWorker.invoke(
-                OneTimeWorkRequestBuilder<DeleteSongWorker>().setInputData(
-                    workDataOf(URI_KEY to uri)
-                ),
-                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                DeleteSongWorker::class
-            )
-        }
-
         companion object {
             private const val PLAY_MEDIA_ID_KEY = "PLAY_MEDIA_ID_KEY"
-            private const val URI_KEY = "URI_KEY"
+            private const val SONG_ID_KEY = "SONG_ID_KEY"
         }
     }
 }
 
+@UnstableApi
 class MediaWorker(
     context: Context,
     workerParameters: WorkerParameters
@@ -95,18 +79,6 @@ class MediaWorker(
     override suspend fun doWork(): Result = try {
         (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler()
             .scan(applicationContext)
-        Result.success()
-    } catch (e: Exception) {
-        Result.failure()
-    }
-}
-
-class ListenMediaWorker(
-    context: Context,
-    workerParameters: WorkerParameters
-) : CoroutineWorker(context, workerParameters) {
-    override suspend fun doWork(): Result = try {
-        //(applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().checkNewFiles()
         Result.success()
     } catch (e: Exception) {
         Result.failure()
@@ -125,6 +97,7 @@ class PlaySongWorker(
     }
 }
 
+@UnstableApi
 class FetchSongWorker(
     context: Context,
     workerParameters: WorkerParameters
@@ -134,22 +107,6 @@ class FetchSongWorker(
             val uri: Uri = inputData.getString(inputData.keyValueMap.keys.first())?.toUri()
                 ?: return Result.failure()
             (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().scanNewFile(uri)
-            Result.success()
-        } catch (e: Exception) {
-            Result.failure()
-        }
-    }
-}
-
-class DeleteSongWorker(
-    context: Context,
-    workerParameters: WorkerParameters
-) : CoroutineWorker(context, workerParameters) {
-    override suspend fun doWork(): Result {
-        return try {
-            val uri: Uri = inputData.getString(inputData.keyValueMap.keys.first())?.toUri()
-                ?: return Result.failure()
-            (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().deleteSong(uri)
             Result.success()
         } catch (e: Exception) {
             Result.failure()

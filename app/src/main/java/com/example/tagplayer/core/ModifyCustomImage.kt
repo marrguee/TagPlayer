@@ -10,5 +10,10 @@ interface ModifyCustomImage {
         fun src(resourceId: Int)
     }
 
-    interface Mutable : Background, Src
+    interface Enabled {
+        fun enabled(enabled: Boolean)
+    }
+
+    interface Mutable : Background, Src, Enabled
+    interface All: Mutable, HandleAnimationCycle
 }

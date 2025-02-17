@@ -13,5 +13,5 @@
     <string name="tags_do_not_exist">Tags are out</string>
     <string name="empty_string"> </string>
     <string name="restart_current_song">Restart current song</string>
-    <string name="nothing_is_playing">Nothing is playing...</string>
+    <string name="placeholder_song_title">Nothing is playing...</string>
 </resources>
