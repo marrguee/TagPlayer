@@ -13,10 +13,8 @@ import com.example.tagplayer.main.presentation.ComebackViewModel
 import com.example.tagplayer.main.presentation.HandleSaveAndRestoreState
 import com.example.tagplayer.main.presentation.Navigation
 import com.example.tagplayer.main.presentation.Screen
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.concurrent.atomic.AtomicLong
 
 class EditSongTagsViewModel(
     clear: ClearViewModel,
@@ -36,18 +34,43 @@ class EditSongTagsViewModel(
         this.songId = songId
     }
 
+    override fun init(bundle: HandleSaveRestoreState.Restore<EditSongTagState>) {
+        if (bundle.empty()){
+            viewModelScope.launch(dispatcherList.io()) {
+                ownedTagList.addAll(interactor.ownedTags(songId))
+                allTagList.addAll(interactor.allTags(
+                    ownedTagList.map { it.map(tagUiMapper) }
+                ))
+
+                withContext(dispatcherList.ui()) {
+                    observable.update(EditSongTagState.ChangeAllSplash(allTagList.isEmpty()))
+                    observable.update(EditSongTagState.ChangeOwnedSplash(ownedTagList.isEmpty()))
+                    observable.update(
+                        EditSongTagState.DragAndDrop(
+                            allTagList.toList(),
+                            ownedTagList.toList()
+                        )
+                    )
+                }
+            }
+            handleDeath.handleFirstStart()
+        } else if (handleDeath.deathHappened()) {
+            observable.restore(bundle)
+            handleDeath.handleDeath()
+        }
+    }
+
     fun dragAndDrop(fromAllToOwned: Boolean, tagId: Long) {
         val (sourceList, destinationList) =
             if (fromAllToOwned) allTagList to ownedTagList else ownedTagList to allTagList
 
         val item: TagUi? = sourceList.find { it.compare(tagId) }
         item?.let {
-            val index = sourceList.indexOf(item)
-            sourceList.removeAt(index)
-            destinationList.add(item)
+            sourceList.remove(it)
+            destinationList.add(it)
 
-            observable.update(EditSongTagState.ChangeAllTagsSplashState(allTagList.isEmpty()))
-            observable.update(EditSongTagState.ChangeOwnedTagsSplashState(ownedTagList.isEmpty()))
+            observable.update(EditSongTagState.ChangeAllSplash(allTagList.isEmpty()))
+            observable.update(EditSongTagState.ChangeOwnedSplash(ownedTagList.isEmpty()))
             observable.update(
                 EditSongTagState.DragAndDrop(
                     allTagList.toList(),
@@ -58,9 +81,12 @@ class EditSongTagsViewModel(
     }
 
     fun confirm() {
+        if (songId == DEFAULT_SONG_ID) {
+            observable.update(EditSongTagState.Error("Invalid song's id"))
+            return
+        }
         viewModelScope.launch(dispatcherList.io()) {
-            if (songId != DEFAULT_SONG_ID)
-                interactor.saveOwnedTags(songId, ownedTagList)
+            interactor.saveOwnedTags(songId, ownedTagList)
             withContext(dispatcherList.ui()) {
                 navigation.update(Screen.Pop)
             }
@@ -84,39 +110,11 @@ class EditSongTagsViewModel(
         navigation.update(Screen.Pop)
     }
 
-    companion object {
-        private const val DEFAULT_SONG_ID = Long.MIN_VALUE
-    }
-
-    override fun init(bundle: HandleSaveRestoreState.Restore<EditSongTagState>) {
-        if (bundle.empty()){
-            viewModelScope.launch(dispatcherList.io()) {
-                ownedTagList = interactor.ownedTags(songId).toMutableList()
-                allTagList = interactor.allTags(
-                    ownedTagList.map { it.map(tagUiMapper) }
-                ).toMutableList()
-
-                withContext(dispatcherList.ui()) {
-                    if (allTagList.isEmpty())
-                        observable.update(EditSongTagState.ChangeAllTagsSplashState(true))
-                    if (ownedTagList.isEmpty())
-                        observable.update(EditSongTagState.ChangeOwnedTagsSplashState(true))
-                    observable.update(
-                        EditSongTagState.DragAndDrop(
-                            allTagList.toList(),
-                            ownedTagList.toList()
-                        )
-                    )
-                }
-            }
-            handleDeath.handleFirstStart()
-        } else if (handleDeath.deathHappened()) {
-            observable.restore(bundle)
-            handleDeath.handleDeath()
-        }
-    }
-
     override fun save(bundle: HandleSaveRestoreState.Save<EditSongTagState>) {
         observable.save(bundle)
+    }
+
+    companion object {
+        private const val DEFAULT_SONG_ID = Long.MIN_VALUE
     }
 }

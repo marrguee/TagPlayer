@@ -16,7 +16,7 @@ interface EditSongTagState : Parcelable {
     fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
 
     @Parcelize
-    class DragAndDrop(
+    data class DragAndDrop(
         private val allTags: List<TagUi>,
         private val ownedTags: List<TagUi>,
     ) : EditSongTagState {
@@ -34,7 +34,7 @@ interface EditSongTagState : Parcelable {
     }
 
     @Parcelize
-    class ChangeAllTagsSplashState(
+    data class ChangeAllSplash(
         private val show: Boolean
     ) : EditSongTagState {
         override fun dispatch(
@@ -53,7 +53,7 @@ interface EditSongTagState : Parcelable {
     }
 
     @Parcelize
-    class ChangeOwnedTagsSplashState(
+    data class ChangeOwnedSplash(
         private val show: Boolean
     ) : EditSongTagState {
         override fun dispatch(
@@ -72,7 +72,7 @@ interface EditSongTagState : Parcelable {
     }
 
     @Parcelize
-    class Error(private val error: String) : EditSongTagState {
+    data class Error(private val error: String) : EditSongTagState {
         override fun dispatch(
             allAdapter: EditSongTagListenerAdapter,
             ownedAdapter: EditSongTagListenerAdapter,

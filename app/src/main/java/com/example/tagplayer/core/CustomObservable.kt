@@ -33,12 +33,12 @@ interface CustomObservable {
         protected var observer: CustomObserver<T> = CustomObserver.Empty()
         protected var cache: T = empty
 
-        override fun updateObserver(newObserver: CustomObserver<T>) = synchronized(ManualClear::class) {
+        override fun updateObserver(newObserver: CustomObserver<T>) = synchronized(this::class) {
             observer = newObserver
             observer.update(cache)
         }
 
-        override fun update(data: T) = synchronized(ManualClear::class) {
+        override fun update(data: T) = synchronized(this::class) {
             if (cache != data) {
                 cache = data
                 observer.update(cache)

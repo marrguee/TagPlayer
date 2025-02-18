@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
