@@ -1,6 +1,6 @@
 package com.example.tagplayer.core.domain
 
-import com.example.tagplayer.core.CustomObserver
+import com.example.tagplayer.core.presentation.observable.CustomObserver
 
 interface HandleUiStateUpdates<T> {
 

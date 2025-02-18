@@ -9,12 +9,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/applyFiltersButton">
+        app:layout_constraintBottom_toTopOf="@id/clearFiltersButton">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,26 +45,14 @@
             tools:listitem="@layout/item_tag"/>
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/applyFiltersButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp"
-        android:text="@string/apply"
-        android:backgroundTint="@null"
-        style="@style/ButtonStyle"/>
-
     <ImageButton
         android:id="@+id/clearFiltersButton"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:contentDescription="@string/clear_filters"
-        app:layout_constraintTop_toTopOf="@id/applyFiltersButton"
-        app:layout_constraintBottom_toBottomOf="@id/applyFiltersButton"
-        app:layout_constraintEnd_toStartOf="@id/applyFiltersButton"
-        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginVertical="16dp"
         android:src="@drawable/ic_eraser"
         android:scaleType="centerCrop"
         android:backgroundTint="@null"

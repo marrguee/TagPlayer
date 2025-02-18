@@ -1,9 +1,10 @@
-<resources>
-    <!-- Base application theme. -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="Base.Theme.TagPlayer" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="popupMenuStyle">@style/CustomPopupMenu</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="Theme.TagPlayer" parent="Base.Theme.TagPlayer" />
@@ -58,6 +59,14 @@
         <item name="strokeWidth">0.75dp</item>
     </style>
 
+    <style name="PickedColor" parent="PickerRoundedSquare">
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="shapeAppearanceOverlay">@style/RoundedSquare</item>
+    </style>
+
     <style name="RecyclerItemSongH2" parent="TextAppearance.AppCompat">
         <item name="android:textSize">12sp</item>
         <item name="fontFamily">@font/raleway_medium_500</item>
@@ -84,11 +93,6 @@
 
     <style name="TagTextViewPlayback" parent="TagTextView">
         <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="CustomScrollBar">
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scroller_thumb</item>
     </style>
 
     <style name="ShapeAppearanceOverlay_card_custom_corners" parent="">
@@ -147,7 +151,7 @@
     </style>
 
     <drawable name="media3_notification_seek_to_previous">@drawable/ic_restart</drawable>
-    <drawable name="media3_notification_play">@drawable/ic_play</drawable>
-    <drawable name="media3_notification_pause">@drawable/ic_pause</drawable>
+    <drawable name="media3_notification_play">@drawable/ic_play_notification</drawable>
+    <drawable name="media3_notification_pause">@drawable/ic_pause_notification</drawable>
 
 </resources>

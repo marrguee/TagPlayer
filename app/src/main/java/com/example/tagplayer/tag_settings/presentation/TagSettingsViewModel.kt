@@ -1,57 +1,40 @@
 package com.example.tagplayer.tag_settings.presentation
 
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.viewModelScope
-import com.example.tagplayer.core.CustomObservable
-import com.example.tagplayer.core.CustomObserver
-import com.example.tagplayer.core.domain.DispatcherList
+import com.example.tagplayer.core.domain.ClearViewModel
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
-import com.example.tagplayer.main.presentation.ComebackViewModelsModule
-import com.example.tagplayer.main.presentation.Navigation
-import com.example.tagplayer.main.presentation.Screen
-import com.example.tagplayer.tag_settings.add_tag.presentation.AddTagDialogFragment
+import com.example.tagplayer.core.presentation.observable.CustomObservable
+import com.example.tagplayer.core.presentation.observable.CustomObserver
+import com.example.tagplayer.core.presentation.viewmodel.ComebackViewModel
+import com.example.tagplayer.core.presentation.viewmodel.RunAsync
+import com.example.tagplayer.main.presentation.navigation.Navigation
+import com.example.tagplayer.main.presentation.navigation.Screen
 import com.example.tagplayer.tag_settings.domain.TagSettingsInteractor
-import kotlinx.coroutines.launch
+import com.example.tagplayer.tag_details.presentation.TagDetailsScreen
 
 class TagSettingsViewModel(
-    private val dispatcherList: DispatcherList,
+    clear: ClearViewModel,
+    private val runAsync: RunAsync,
     private val interactor: TagSettingsInteractor,
     private val observable: CustomObservable.All<TagSettingsState>,
-    private val selectedTag: Selected<TagSettingsUi>,
-    private val mapper: TagSettingsResponse.TagSettingsResponseMapper,
+    private val mapper: TagSettingsResponse.Mapper,
     private val navigation: Navigation.Navigate,
-    clear: () -> Unit
-) : ComebackViewModelsModule(clear), HandleUiStateUpdates.All<TagSettingsState> {
+) : ComebackViewModel(clear), HandleUiStateUpdates.All<TagSettingsState> {
 
-    fun loadTags() {
-        interactor.tags().map(mapper, viewModelScope)
+    fun loadTags() = interactor.tags().map(mapper, viewModelScope)
+
+    fun showTagDialog(tagId: Long? = null) = navigation.update(TagDetailsScreen(tagId))
+
+    fun deleteTag(id: Long) = runAsync.handle(viewModelScope, { it.map(mapper, viewModelScope) }) {
+        interactor.remove(id)
     }
 
-    fun showTagDialog(fragmentManager: FragmentManager) {
-        AddTagDialogFragment().show(fragmentManager, AddTagDialogFragment::class.simpleName)
-    }
-
-    fun editTag(tagSettingsUi: TagSettingsUi) {
-        selectedTag.set(tagSettingsUi)
-    }
-
-    fun deleteTag(id: Long) {
-        viewModelScope.launch(dispatcherList.io()) {
-            interactor.removeTag(id)
-        }
-    }
-
-    override fun startGettingUpdates(observer: CustomObserver<TagSettingsState>) {
+    override fun startGettingUpdates(observer: CustomObserver<TagSettingsState>) =
         observable.updateObserver(observer)
-    }
 
-    override fun stopGettingUpdates() {
-        observable.updateObserver(TagSettingsObserver.Empty)
-    }
+    override fun stopGettingUpdates() = observable.updateObserver(TagSettingsObserver.Empty)
 
-    override fun clear() {
-        observable.clear()
-    }
+    override fun clear() = observable.clear()
 
     override fun comeback() {
         super.comeback()

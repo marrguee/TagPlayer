@@ -1,70 +1,78 @@
 package com.example.tagplayer.home.presentation
 
-import android.content.Context
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.constraintlayout.motion.widget.MotionLayout
+import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
-import com.example.tagplayer.main.presentation.SongUi
+import com.example.tagplayer.core.presentation.custom_views.interfaces.HideAndShow
+import com.example.tagplayer.core.presentation.custom_views.interfaces.UpdateList
+import com.example.tagplayer.core.presentation.custom_views.interfaces.UpdateListAndScroll
 
 interface HomeState {
-
     fun dispatch(
-        context: Context,
-        recentlyAdapter: LibraryRecyclerAdapter,
-        libraryRecyclerView: RecyclerView
+        libraryPlaceholder: HideAndShow,
+        submitRecently: UpdateList<SongUi>,
+        libraryRecycler: UpdateListAndScroll<SongUi>,
+        motionLayout: MotionLayout,
     )
     fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = viewModel.clear()
 
-    class LibraryUpdated(
-        private val list: List<SongUi>,
-        ) : HomeState {
-        override fun dispatch(
-            context: Context,
-            recentlyAdapter: LibraryRecyclerAdapter,
-            libraryRecyclerView: RecyclerView
-        ) {
-            val layoutManager = (libraryRecyclerView.layoutManager as LinearLayoutManager)
-            val scrollPosition = layoutManager.findFirstVisibleItemPosition()
-            (libraryRecyclerView.adapter as LibraryRecyclerAdapter).submitList(list) {
-                if (scrollPosition != RecyclerView.NO_POSITION) {
-                    layoutManager.scrollToPosition(scrollPosition)
-                }
-            }
-        }
-
-        override fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = Unit
-    }
-
-    class RecentlyUpdated(
+    data class LibraryUpdated(
         private val list: List<SongUi>,
     ) : HomeState {
         override fun dispatch(
-            context: Context,
-            recentlyAdapter: LibraryRecyclerAdapter,
-            libraryRecyclerView: RecyclerView
+            libraryPlaceholder: HideAndShow,
+            submitRecently: UpdateList<SongUi>,
+            libraryRecycler: UpdateListAndScroll<SongUi>,
+            motionLayout: MotionLayout,
         ) {
-            recentlyAdapter.submitList(list)
+            libraryRecycler.updateAndScrollToFirst(list)
+            libraryPlaceholder.run {
+                if (list.isEmpty()) show() else hide()
+            }
         }
-
-        override fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = Unit
     }
 
-    class Error(private val msg: String) : HomeState {
+    data class RecentlyUpdated(
+        private val list: List<SongUi>,
+    ) : HomeState {
         override fun dispatch(
-            context: Context,
-            recentlyAdapter: LibraryRecyclerAdapter,
-            libraryRecyclerView: RecyclerView
+            libraryPlaceholder: HideAndShow,
+            submitRecently: UpdateList<SongUi>,
+            libraryRecycler: UpdateListAndScroll<SongUi>,
+            motionLayout: MotionLayout,
         ) {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            submitRecently.update(list) {
+                motionLayout.enableTransition(R.id.recentlySwipeTransition,
+                    if (list.isEmpty()) {
+                        if (motionLayout.getTransition(R.id.recentlySwipeTransition).isEnabled)
+                            motionLayout.transitionToStart()
+                        false
+                    } else {
+                        if (libraryRecycler.firstItemVisible())
+                            motionLayout.transitionToEnd()
+                        true
+                    }
+                )
+            }
         }
+    }
+
+    data class Error(private val error: String) : HomeState {
+        override fun dispatch(
+            libraryPlaceholder: HideAndShow,
+            submitRecently: UpdateList<SongUi>,
+            libraryRecycler: UpdateListAndScroll<SongUi>,
+            motionLayout: MotionLayout,
+        ) = Toast.makeText(motionLayout.context, error, Toast.LENGTH_SHORT).show()
     }
 
     object Empty : HomeState {
         override fun dispatch(
-            context: Context,
-            recentlyAdapter: LibraryRecyclerAdapter,
-            libraryRecyclerView: RecyclerView
+            libraryPlaceholder: HideAndShow,
+            submitRecently: UpdateList<SongUi>,
+            libraryRecycler: UpdateListAndScroll<SongUi>,
+            motionLayout: MotionLayout,
         ) = Unit
 
         override fun consumed(viewModel: HandleUiStateUpdates.ClearObservable) = Unit

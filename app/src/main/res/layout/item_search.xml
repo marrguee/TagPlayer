@@ -5,6 +5,4 @@
     android:layout_height="wrap_content"
     android:padding="8dp"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:text="Some text">
-
-</TextView>
+    tools:text="Some text"/>

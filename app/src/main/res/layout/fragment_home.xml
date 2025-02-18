@@ -8,51 +8,51 @@
     style="@style/RootViewStyle"
     app:layoutDescription="@xml/fragment_home_scene">
 
-        <LinearLayout
-            android:id="@+id/menuLayout"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingBottom="8dp"
+        android:background="?android:attr/colorPrimary">
+
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="?android:attr/colorPrimary">
+            android:contentDescription="@string/logo_content_description"
+            android:src="@drawable/logo" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/logo_content_description"
-                android:src="@drawable/logo" />
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            style="@style/SearchViewStyle" />
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                style="@style/SearchViewStyle" />
-
-            <ImageButton
-                android:id="@+id/tagFilterButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:contentDescription="@string/filter_by_tags_content_description"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_tags"
-                android:background="@null" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/tagFilterButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/filter_by_tags_content_description"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_tags"
+            android:background="@null" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/recentlyTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/recently_played"
         android:textAppearance="@style/H1Text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menuLayout" />
+        app:layout_constraintBottom_toTopOf="@id/menuLayout"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recentlyRecycler"
@@ -61,12 +61,12 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recentlyTextView"
+        app:layout_constraintBottom_toTopOf="@id/menuLayout"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         android:minHeight="132dp"
-        tools:listitem="@layout/item_song" />
+        tools:listitem="@layout/item_song"/>
 
     <LinearLayout
         android:id="@+id/libraryBlock"
@@ -74,7 +74,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recentlyRecycler"
+        app:layout_constraintTop_toBottomOf="@id/menuLayout"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal">
 
         <TextView
@@ -94,17 +95,30 @@
             android:gravity="end"/>
     </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/libraryRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/libraryBlock"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_song" />
+    <com.example.tagplayer.core.presentation.custom_views.UpdateAndScrollRecycler
+        android:id="@+id/libraryRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/libraryBlock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_song" />
+
+    <com.example.tagplayer.core.presentation.custom_views.AlphaTextView
+        android:id="@+id/libraryPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/libraryBlock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:alpha="0"
+        android:textAppearance="@style/H1Text"
+        android:text="@string/list_is_empty"/>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

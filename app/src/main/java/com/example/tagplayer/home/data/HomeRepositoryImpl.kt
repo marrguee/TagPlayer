@@ -2,51 +2,33 @@ package com.example.tagplayer.home.data
 
 import com.example.tagplayer.core.data.AbstractSongBasedRepository
 import com.example.tagplayer.core.data.ForegroundWrapper
+import com.example.tagplayer.core.data.HandleTry
 import com.example.tagplayer.core.data.database.models.Song
 import com.example.tagplayer.core.data.database.models.SongLastPlayedCrossRef
-import com.example.tagplayer.home.domain.DomainError
-import com.example.tagplayer.home.domain.HandleError
 import com.example.tagplayer.home.domain.HomeRepository
+import com.example.tagplayer.home.domain.OrderType
 import com.example.tagplayer.home.domain.SongDomain
-import com.example.tagplayer.home.domain.SortingType
+import com.example.tagplayer.home.domain.errors.HomeException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
-    foregroundWrapper: ForegroundWrapper,
-    private val handleError: HandleError<Exception, DomainError>,
+    private val foregroundWrapper: ForegroundWrapper,
+    private val handleTry: HandleTry<HomeException>,
     private val cacheDatasource: HomeCacheDatasource,
-    private val songModelMapper: Song.Mapper<SongDomain>,
+    private val mapper: Song.Mapper<SongDomain>,
     private val recentlyModelMapper: SongLastPlayedCrossRef.Mapper<SongDomain>,
-) : AbstractSongBasedRepository(foregroundWrapper),
-    HomeRepository<SongDomain>
-{
-    override fun library(sortingType: SortingType): Flow<List<SongDomain>> = try {
-        cacheDatasource.library(sortingType.map()).map { list -> list.map { it.map(songModelMapper) } }
-    } catch (e: Exception) {
-        throw handleError.handle(e)
-    }
+) : AbstractSongBasedRepository(foregroundWrapper), HomeRepository<SongDomain> {
 
-    override suspend fun filters(): List<Long> = try {
-        cacheDatasource.filters()
-    } catch (e: Exception) {
-        throw handleError.handle(e)
-    }
-
-    override fun filtered(tags: List<Long>, sortingType: SortingType): Flow<List<SongDomain>> = try {
-        cacheDatasource.filtered(sortingType.map(tags)).map {
-                flow -> flow.map { list -> list.map(songModelMapper)}
+    override suspend fun croppedRecently(): List<SongDomain> = handleTry
+        .handleAsync(HomeException.Recently()) {
+            recentlyModelMapper.map(cacheDatasource.croppedRecently())
         }
-    } catch (e: Exception) {
-        throw handleError.handle(e)
-    }
 
-    override suspend fun croppedRecently(): List<SongDomain> {
-        return recentlyModelMapper.map(cacheDatasource.croppedRecently())
-    }
+    override fun sorted(field: ObtainFieldName, order: OrderType): Flow<List<SongDomain>> =
+        handleTry.handle(HomeException.Library()) {
+            cacheDatasource.sorted(field, order).map { list -> list.map { it.map(mapper)} }
+        }
 
-    override fun scan() {
-        cacheDatasource.scan()
-    }
-
+    override fun scan() = foregroundWrapper.scanMedia()
 }

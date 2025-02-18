@@ -1,7 +1,6 @@
 package com.example.tagplayer.search.presentation
 
-import com.example.tagplayer.core.CustomObserver
-import com.example.tagplayer.search.domain.SearchState
+import com.example.tagplayer.core.presentation.observable.CustomObserver
 
 interface SearchObserver : CustomObserver<SearchState> {
     object Empty : SearchObserver {

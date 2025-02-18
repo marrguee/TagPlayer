@@ -1,0 +1,18 @@
+package com.example.tagplayer.core.media_service
+
+import android.content.ContentResolver
+import android.database.ContentObserver
+import android.net.Uri
+import android.os.Handler
+import com.example.tagplayer.core.data.ForegroundWrapper
+
+class MediaObserver(
+    handler: Handler,
+    private val foregroundWrapper: ForegroundWrapper
+) : ContentObserver(handler) {
+    override fun onChange(selfChange: Boolean, uri: Uri?, flags: Int) {
+        if (uri == null) return
+        if ((flags and ContentResolver.NOTIFY_UPDATE) == ContentResolver.NOTIFY_UPDATE)
+            foregroundWrapper.fetchNewSong(uri.toString())
+    }
+}

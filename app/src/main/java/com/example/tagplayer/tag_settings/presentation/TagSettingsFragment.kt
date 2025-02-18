@@ -4,8 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import com.example.tagplayer.R
+import com.example.tagplayer.core.presentation.generic_adapter.item_interfaces.MenuAction
 import com.example.tagplayer.databinding.FragmentTagsSettingsBinding
-import com.example.tagplayer.main.presentation.ComebackFragment
+import com.example.tagplayer.core.presentation.fragments.ComebackFragment
 
 class TagSettingsFragment : ComebackFragment<FragmentTagsSettingsBinding, TagSettingsViewModel>() {
     private lateinit var adapter: TagsAdapter
@@ -16,15 +17,14 @@ class TagSettingsFragment : ComebackFragment<FragmentTagsSettingsBinding, TagSet
         view.setOnTouchListener { _, _ -> true }
 
         binding.addTagButton.setOnClickListener {
-            viewModel.showTagDialog(requireActivity().supportFragmentManager)
+            viewModel.showTagDialog()
         }
 
         adapter = TagsAdapter(
             listOf(
                 R.id.editTagMenu to object : MenuAction {
                     override fun action(vararg args: Any) {
-                        viewModel.editTag(args[0] as TagSettingsUi)
-                        viewModel.showTagDialog(requireActivity().supportFragmentManager)
+                        viewModel.showTagDialog(args[0] as Long)
                     }
                 },
                 R.id.removeTagMenu to object : MenuAction {
@@ -44,7 +44,7 @@ class TagSettingsFragment : ComebackFragment<FragmentTagsSettingsBinding, TagSet
         super.onResume()
         viewModel.startGettingUpdates(object : TagSettingsObserver {
             override fun update(data: TagSettingsState) {
-                data.dispatch(adapter)
+                data.dispatch(requireContext(), adapter)
                 data.consumed(viewModel)
             }
         })
