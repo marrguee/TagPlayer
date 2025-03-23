@@ -19,7 +19,7 @@
         android:background="@android:color/transparent"/>
 
     <androidx.fragment.app.FragmentContainerView
-        android:name="com.example.tagplayer.playback.presentation.PlaybackControlFragment"
+        android:name="com.example.tagplayer.playback.presentation.PlaybackFragment"
         android:id="@+id/playbackControlContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

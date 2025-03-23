@@ -2,8 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        app:constraintSetStart="@id/start"
-        app:constraintSetEnd="@id/end"
+        android:id="@+id/recentlySwipeTransition"
+        app:constraintSetStart="@id/homeStart"
+        app:constraintSetEnd="@id/homeEnd"
         app:duration="200">
 
         <OnSwipe
@@ -14,40 +15,60 @@
             app:onTouchUp="autoComplete"
             app:moveWhenScrollAtTop="true"/>
 
+        <KeyFrameSet>
+            <KeyAttribute app:motionTarget="@id/recentlyTextView"
+                app:keyPositionType="parentRelative"
+                android:alpha="0.1"
+                app:framePosition="5"/>
+            <KeyPosition app:motionTarget="@id/recentlyTextView"
+                app:framePosition="5"
+                app:percentX="10"/>
+            <KeyAttribute app:motionTarget="@id/recentlyRecycler"
+                app:keyPositionType="parentRelative"
+                android:alpha="0.1"
+                app:framePosition="5"/>
+            <KeyPosition app:motionTarget="@id/recentlyRecycler"
+                app:framePosition="5"
+                app:percentX="10"/>
+        </KeyFrameSet>
+
     </Transition>
 
-    <ConstraintSet android:id="@+id/start"/>
+    <ConstraintSet android:id="@+id/homeStart"/>
 
-    <ConstraintSet android:id="@+id/end">
+    <ConstraintSet android:id="@+id/homeEnd">
         <Constraint android:id="@id/recentlyTextView">
-            <PropertySet android:alpha="0.0" />
+            <PropertySet android:alpha="1"/>
             <Transform android:elevation="-1dp"/>
             <Layout
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/menuLayout"
-                app:layout_constraintStart_toStartOf="parent"/>
-        </Constraint>
-        <Constraint android:id="@id/recentlyRecycler">
-            <PropertySet android:alpha="0.0"/>
-            <Transform android:elevation="-1dp"/>
-            <Layout
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/menuLayout"
+                app:layout_constraintTop_toBottomOf="@id/menuLayout"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </Constraint>
+
+        <Constraint android:id="@id/recentlyRecycler">
+            <PropertySet android:alpha="1"/>
+            <Transform android:elevation="-1dp"/>
+            <Layout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recentlyTextView"
+                android:layout_marginTop="8dp"
                 android:minHeight="132dp"/>
         </Constraint>
+
         <Constraint android:id="@id/libraryBlock">
             <Layout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/menuLayout"
-                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/recentlyRecycler"
+                android:layout_marginTop="-2dp"
                 android:layout_marginBottom="8dp"/>
         </Constraint>
     </ConstraintSet>

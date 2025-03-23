@@ -2,7 +2,8 @@ package com.example.tagplayer
 
 import androidx.lifecycle.ViewModel
 import com.example.tagplayer.core.domain.ClearViewModel
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+
 
 interface FakeClearViewModel: ClearViewModel {
     fun checkClearCalledWithClass(expected: Class<out ViewModel>)
@@ -13,11 +14,11 @@ interface FakeClearViewModel: ClearViewModel {
         private var times: Int = 0
 
         override fun checkClearCalledWithClass(expected: Class<out ViewModel>) {
-            Assert.assertEquals(expected, clazz)
+            assertEquals(expected, clazz)
         }
 
         override fun checkClearCalledTimes(expected: Int) {
-            Assert.assertEquals(expected, times)
+            assertEquals(expected, times)
         }
 
         override fun clear(clazz: Class<out ViewModel>) {

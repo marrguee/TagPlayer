@@ -1,8 +1,9 @@
 package com.example.tagplayer.tag_settings.presentation
 
-import com.example.tagplayer.main.presentation.generic_adapter.adapter.GenericAdapterMenu
-import com.example.tagplayer.main.presentation.generic_adapter.diffutils.GenericDiffUtil
-import com.example.tagplayer.main.presentation.generic_adapter.types.ItemUiMenuType
+import com.example.tagplayer.core.presentation.generic_adapter.adapter.GenericAdapterMenu
+import com.example.tagplayer.core.presentation.generic_adapter.diffutils.GenericDiffUtil
+import com.example.tagplayer.core.presentation.generic_adapter.item_interfaces.MenuAction
+import com.example.tagplayer.core.presentation.generic_adapter.types.ItemUiMenuType
 
 class TagsAdapter(
     menuOptions: List<Pair<Int, MenuAction>>

@@ -1,8 +1,5 @@
 package com.example.tagplayer.search.domain
 
-import com.example.tagplayer.core.domain.PlaySongForeground
+import com.example.tagplayer.core.domain.PlayForeground
 
-interface SearchRepository<T> :
-    PlaySongForeground {
-        suspend fun findSongsByTitle(songTitle: String) : List<T>
-    }
+interface SearchRepository<T> : SearchSongs<T>, PlayForeground

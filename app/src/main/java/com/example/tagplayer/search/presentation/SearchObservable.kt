@@ -1,6 +1,5 @@
 package com.example.tagplayer.search.presentation
 
-import com.example.tagplayer.core.CustomObservable
-import com.example.tagplayer.search.domain.SearchState
+import com.example.tagplayer.core.presentation.observable.CustomObservable
 
 class SearchObservable : CustomObservable.ManualClear<SearchState>(SearchState.Empty)

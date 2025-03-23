@@ -1,17 +1,12 @@
 package com.example.tagplayer.search.data
 
-import com.example.tagplayer.core.data.database.MediaDatabase
+import com.example.tagplayer.core.data.database.dao.SongsDao
 import com.example.tagplayer.core.data.database.models.Song
+import com.example.tagplayer.search.domain.SearchSongs
 
-interface SearchCacheDatasource<T>
-{
-    suspend fun findSongsByTitle(songTitle: String): List<T>
-    class Base(
-        private val database: MediaDatabase
-    ) : SearchCacheDatasource<Song> {
-        override suspend fun findSongsByTitle(songTitle: String): List<Song> =
-            database.songsDao.searchSongs(songTitle)
+interface SearchCacheDatasource : SearchSongs<Song> {
 
+    class Base(private val songsDao: SongsDao) : SearchCacheDatasource {
+        override suspend fun search(query: String): List<Song> = songsDao.search(query)
     }
-
 }

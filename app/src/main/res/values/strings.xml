@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Viri Player</string>
+    <string name="app_name">ViriPlayer</string>
     <string name="first_tab_name">All</string>
     <string name="second_tab_name">History</string>
     <string name="notification_channel_name">Tag_playback</string>
@@ -18,13 +18,13 @@
     <string name="tags_do_not_exist">Tags are out</string>
     <string name="empty_string"> </string>
     <string name="restart_current_song">Restart current song</string>
-    <string name="placeholder_song_title">Nothing is playing…</string>
+    <string name="placeholder_song_title">Nothing is playing</string>
     <string name="placeholder_song_author">Unknown Artist</string>
     <string name="query_hint">Search</string>
     <string name="filter_by_tags_content_description">Filter by tags</string>
     <string name="recently_content_description">Recently</string>
     <string name="logo_content_description">Settings</string>
-    <string name="song_id_not_valid">Song id not valid</string>
+    <string name="song_id_not_valid">Song didn\'t selected</string>
     <string name="tag_s_filter">Tag\'s filter</string>
     <string name="accept_changes">Accept changes</string>
     <string name="share">Share</string>
@@ -46,4 +46,27 @@
     <string name="remove_tag">Remove</string>
     <string name="clear_filters">Clear filters</string>
     <string name="song_s_context_menu">Song\'s context menu</string>
+
+    <string name="song_id_error">Invalid song\'s id</string>
+    <string name="list_is_empty">Empty</string>
+    <!--Errors-->
+    <string name="failed_fetch_filters">Unable to retrieve filters</string>
+    <string name="failed_fetch_songs">Unable to retrieve songs</string>
+    <string name="failed_fetch_tags">Unable to retrieve tags</string>
+    <string name="failed_share">Unable to share</string>
+    <string name="failed_delete">Unable to delete</string>
+    <string name="failed_fetch_recently">Unable to retrieve recently songs</string>
+    <string name="failed_search">Unable to search songs</string>
+    <string name="failed_tag_details">Unable to get tag details</string>
+    <string name="failed_add_tag">Unable to add tag</string>
+    <string name="failed_remove_tag">Unable to remove tag</string>
+    <string name="failed_clear_filter">Unable to clear filter</string>
+    <string name="failed_save_filter">Unable to save filter</string>
+    <string name="failed_fetch_all_tags">Unable to retrieve all tags</string>
+    <string name="failed_fetch_owned_tags">Unable to retrieve owned tags</string>
+    <string name="failed_add_tag_to_song">Unable to attach tag</string>
+    <string name="failed_remove_tag_to_song">Unable to detach tag</string>
+    <string name="retrieve_id_error">Unable to get information about tag</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="color_description">Color</string>
 </resources>

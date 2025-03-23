@@ -5,10 +5,11 @@ import android.view.View
 import androidx.media3.common.util.UnstableApi
 import com.example.tagplayer.R
 import com.example.tagplayer.databinding.FragmentRecentlyBinding
-import com.example.tagplayer.main.presentation.ComebackFragment
-import com.example.tagplayer.tag_settings.presentation.MenuAction
+import com.example.tagplayer.core.presentation.fragments.ComebackFragment
+import com.example.tagplayer.core.presentation.generic_adapter.item_interfaces.MenuAction
 
 class RecentlyFragment : ComebackFragment<FragmentRecentlyBinding, RecentlyViewModel>() {
+    private lateinit var adapter: RecentlyAdapter
 
     @UnstableApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -18,24 +19,24 @@ class RecentlyFragment : ComebackFragment<FragmentRecentlyBinding, RecentlyViewM
                 R.id.editSongTagsMenu,
                 object : MenuAction {
                     override fun action(vararg args: Any) {
-                        viewModel.editSongTagsScreen(args[0] as Long)
+                        viewModel.attachTagsScreen(args[0] as Long)
                     }
                 }
             )
         )
-        val adapter = RecentlyListenerAdapter(menuOptions) {
+        adapter = RecentlyAdapter(menuOptions) {
             viewModel.play(it)
         }
         binding.recentlyRecycler.adapter = adapter
 
-        viewModel.init(SaveRestoreRecentlyState(savedInstanceState))
+        viewModel.init()
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.startGettingUpdates(object : RecentlyObserver {
             override fun update(data: RecentlyState) {
-                data.dispatch(binding.recentlyRecycler)
+                data.dispatch(requireContext(), adapter)
                 data.consumed(viewModel)
             }
         })
@@ -44,10 +45,5 @@ class RecentlyFragment : ComebackFragment<FragmentRecentlyBinding, RecentlyViewM
     override fun onPause() {
         super.onPause()
         viewModel.stopGettingUpdates()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        viewModel.save(SaveRestoreRecentlyState(outState))
     }
 }

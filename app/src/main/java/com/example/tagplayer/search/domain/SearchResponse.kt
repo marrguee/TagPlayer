@@ -1,23 +1,21 @@
 package com.example.tagplayer.search.domain
 
-import com.example.tagplayer.core.CustomObservable
-import com.example.tagplayer.core.domain.Communication
-import com.example.tagplayer.core.domain.DispatcherList
-import com.example.tagplayer.search.presentation.SongSearchUi
+import com.example.tagplayer.core.presentation.observable.CustomObservable
+import com.example.tagplayer.search.presentation.SearchState
+import com.example.tagplayer.search.presentation.SearchUi
 
 interface SearchResponse {
-    fun map(mapper: SearchResponseMapper)
+    fun map(mapper: Mapper)
 
-    interface SearchResponseMapper {
-        fun mapSongsSuccess(list: List<SongSearchUi>)
+    interface Mapper {
+        fun mapSongsSuccess(list: List<SearchUi>)
         fun mapError(cause: String)
 
         class Base(
-            private val observable: CustomObservable.UpdateUi<SearchState>,
-            private val dispatcherList: DispatcherList
-        ) : SearchResponseMapper {
+            private val observable: CustomObservable.UpdateUi<SearchState>
+        ) : Mapper {
 
-            override fun mapSongsSuccess(list: List<SongSearchUi>) {
+            override fun mapSongsSuccess(list: List<SearchUi>) {
                 observable.update(SearchState.SongsSuccess(list))
             }
 
@@ -27,14 +25,14 @@ interface SearchResponse {
         }
     }
 
-    class SongsSuccess(private val list: List<SongSearchUi>) : SearchResponse {
-        override fun map(mapper: SearchResponseMapper){
+    class SongsSuccess(private val list: List<SearchUi>) : SearchResponse {
+        override fun map(mapper: Mapper){
             mapper.mapSongsSuccess(list)
         }
     }
 
     class Error(private val cause: String) : SearchResponse {
-        override fun map(mapper: SearchResponseMapper) {
+        override fun map(mapper: Mapper) {
             mapper.mapError(cause)
         }
     }

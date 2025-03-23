@@ -1,6 +1,6 @@
 package com.example.tagplayer.recently.presentation
 
-import com.example.tagplayer.core.CustomObservable
+import com.example.tagplayer.core.presentation.observable.CustomObservable
 
 class RecentlyObservable :
-    CustomObservable.StateHandleManualClear<RecentlyState>(RecentlyState.Empty)
+    CustomObservable.ManualClear<RecentlyState>(RecentlyState.Empty)

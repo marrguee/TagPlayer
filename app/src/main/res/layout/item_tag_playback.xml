@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.tagplayer.core.CustomTextView
+<com.example.tagplayer.core.presentation.custom_views.CustomTextView
     android:id="@+id/tagTextView"
     xmlns:tools="http://schemas.android.com/tools"
     tools:text="tag tag tag"
