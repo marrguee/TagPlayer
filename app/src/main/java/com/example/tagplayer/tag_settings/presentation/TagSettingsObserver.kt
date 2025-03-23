@@ -1,6 +1,6 @@
 package com.example.tagplayer.tag_settings.presentation
 
-import com.example.tagplayer.core.CustomObserver
+import com.example.tagplayer.core.presentation.observable.CustomObserver
 
 interface TagSettingsObserver : CustomObserver<TagSettingsState> {
     object Empty : TagSettingsObserver {

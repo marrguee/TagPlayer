@@ -11,15 +11,21 @@ interface ManageResources {
         fun manageRecourses(): ManageResources
     }
 
-    fun notificationChannelName(): String
-    fun notificationChannelId(): String
+    fun notificationChannelName() : String
+    fun notificationChannelId() : String
+    fun songIdError() : String
+    fun retrieveIdError() : String
 
     class Base(private val context: Context) : ManageResources {
-        override fun notificationChannelName() =
-            context.getString(R.string.notification_channel_name)
 
-        override fun notificationChannelId() =
-            context.getString(R.string.notification_channel_name)
+        private val block: (Int) -> String = { ContextCompat.getString(context, it) }
 
+        override fun notificationChannelName() = block.invoke(R.string.notification_channel_name)
+
+        override fun notificationChannelId() = block.invoke(R.string.notification_channel_name)
+
+        override fun songIdError() = block.invoke(R.string.song_id_error)
+
+        override fun retrieveIdError() = block.invoke(R.string.retrieve_id_error)
     }
 }

@@ -4,9 +4,9 @@ import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.example.tagplayer.R
-import com.example.tagplayer.core.CustomObserver
 import com.example.tagplayer.core.domain.ProvideMediaObserver
 import com.example.tagplayer.core.domain.ProvideViewModel
+import com.example.tagplayer.main.presentation.navigation.Screen
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), ProvideViewModel {
     private val viewModel by lazy {
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), ProvideViewModel
 
     override fun onResume() {
         super.onResume()
-        viewModel.startGettingUpdates(object : MainActivityCallback {
+        viewModel.startGettingUpdates(object : MainCallback {
             override fun update(data: Screen) {
                 data.dispatch(supportFragmentManager, R.id.mainContainer)
                 data.consumed(viewModel)
@@ -42,8 +42,3 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), ProvideViewModel
         (application as ProvideViewModel).provide(clazz)
 }
 
-interface MainActivityCallback : CustomObserver<Screen> {
-    object Empty : MainActivityCallback {
-        override fun update(data: Screen) = Unit
-    }
-}

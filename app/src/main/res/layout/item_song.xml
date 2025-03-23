@@ -9,7 +9,7 @@
     android:orientation="horizontal"
     android:gravity="center_vertical">
 
-    <com.example.tagplayer.core.CustomShapeableImageView
+    <com.example.tagplayer.core.presentation.custom_views.CustomShapeableImageView
         android:id="@+id/thumbnailImageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -27,7 +27,7 @@
         android:orientation="vertical"
         android:layout_weight="8">
 
-        <com.example.tagplayer.core.CustomTextView
+        <com.example.tagplayer.core.presentation.custom_views.CustomTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
             android:ellipsize="end"
             tools:text="Track title Track title Track title"/>
 
-        <com.example.tagplayer.core.CustomTextView
+        <com.example.tagplayer.core.presentation.custom_views.CustomTextView
             android:id="@+id/authorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             tools:text="Track title"/>
     </LinearLayout>
 
-    <com.example.tagplayer.core.CustomTextView
+    <com.example.tagplayer.core.presentation.custom_views.CustomTextView
         android:id="@+id/durationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

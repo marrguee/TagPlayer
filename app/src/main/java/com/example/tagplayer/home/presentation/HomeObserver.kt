@@ -1,6 +1,6 @@
 package com.example.tagplayer.home.presentation
 
-import com.example.tagplayer.core.CustomObserver
+import com.example.tagplayer.core.presentation.observable.CustomObserver
 
 interface HomeObserver : CustomObserver<HomeState> {
 

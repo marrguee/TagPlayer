@@ -1,29 +1,20 @@
 package com.example.tagplayer.recently.domain
 
-import com.example.tagplayer.home.domain.DomainError
-import com.example.tagplayer.home.domain.HandleError
-import com.example.tagplayer.core.domain.PlaySongForeground
+import com.example.tagplayer.core.domain.HandleResponse
+import com.example.tagplayer.core.domain.PlayForeground
 
-interface RecentlyInteractor : PlaySongForeground {
+interface RecentlyInteractor : PlayForeground {
     suspend fun recently() : RecentlyResponse
 
     class Base(
         private val repository: RecentlyRepository<RecentlyDomain>,
-        private val handleError: HandleError<DomainError, String>,
+        private val handleResponse: HandleResponse.Handle<RecentlyResponse>,
     ) : RecentlyInteractor {
 
-        override suspend fun recently() : RecentlyResponse {
-            return try {
-                RecentlyResponse.RecentlyResponseSuccess(
-                    repository.recently().map { it.map() }
-                )
-            } catch (e: DomainError) {
-                RecentlyResponse.RecentlyResponseError(handleError.handle(e))
-            }
+        override suspend fun recently() : RecentlyResponse = handleResponse.handleAsync {
+            RecentlyResponse.RecentlyResponseSuccess(repository.recently().map { it.map() })
         }
 
-        override fun playSongForeground(id: Long) {
-            repository.playSongForeground(id)
-        }
+        override fun play(id: Long) = repository.play(id)
     }
 }

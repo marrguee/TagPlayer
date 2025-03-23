@@ -3,19 +3,22 @@ package com.example.tagplayer.core.data.database.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.tagplayer.core.data.database.SortField
 import com.example.tagplayer.home.domain.SongDomain
-import com.example.tagplayer.search.domain.SongSearchDomain
+import com.example.tagplayer.search.domain.SearchDomain
 
 @Entity("songs")
-data class Song(
+class Song(
     @PrimaryKey
     @ColumnInfo("id") val id: Long,
     @ColumnInfo("image") val image: String?,
+    @SortField("title")
     @ColumnInfo("title") val title: String,
     @ColumnInfo("author") val author: String?,
     @ColumnInfo("duration") val duration: Long,
     @ColumnInfo("uri") val uri: String,
-    @ColumnInfo("data_modified", defaultValue = 0.toString()) val dateModified: Long
+    @SortField("data_modified")
+    @ColumnInfo("data_modified", defaultValue = "0") val dateModified: Long
 ) {
 
     interface Mapper<T> {
@@ -39,7 +42,7 @@ data class Song(
             ) = SongDomain(id, image, title, author, duration)
         }
 
-        object ToDomainSearch : Mapper<SongSearchDomain> {
+        object ToDomainSearch : Mapper<SearchDomain> {
             override fun map(
                 id: Long,
                 image: String?,
@@ -47,7 +50,7 @@ data class Song(
                 author: String?,
                 duration: Long,
                 dateModified: Long
-            ) = SongSearchDomain(id, image, title, author, duration)
+            ) = SearchDomain(id, image, title, author, duration)
         }
     }
 

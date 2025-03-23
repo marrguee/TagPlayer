@@ -2,20 +2,19 @@ package com.example.tagplayer.home.presentation
 
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.databinding.FragmentHomeBinding
-import com.example.tagplayer.main.presentation.BindingFragment
-import com.example.tagplayer.tag_settings.presentation.MenuAction
+import com.example.tagplayer.core.presentation.fragments.BindingFragment
+import com.example.tagplayer.core.presentation.generic_adapter.item_interfaces.MenuAction
 
 class HomeFragment : BindingFragment<FragmentHomeBinding>() {
     private val viewModel by lazy {
         (activity as ProvideViewModel).provide(HomeViewModel::class.java)
     }
-    private lateinit var recentlyAdapter: LibraryRecyclerAdapter
+    private lateinit var recentlyAdapter: HomeAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,18 +24,18 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
                 R.id.editSongTagsMenu,
                 object : MenuAction {
                     override fun action(vararg args: Any) {
-                        viewModel.editSongTagsScreen(args[0] as Long)
+                        viewModel.attachTagsScreen(args[0] as Long)
                     }
                 }
             )
         )
-        recentlyAdapter = LibraryRecyclerAdapter(menuOptions) { id -> viewModel.play(id) }
+        recentlyAdapter = HomeAdapter(menuOptions) { viewModel.play(it) }
 
         with(binding) {
             recentlyRecycler.adapter = recentlyAdapter
             PagerSnapHelper().attachToRecyclerView(recentlyRecycler)
-            libraryRecycler.adapter = LibraryRecyclerAdapter(menuOptions) {
-                id -> viewModel.play(id)
+            libraryRecycler.adapter = HomeAdapter(menuOptions) { id ->
+                viewModel.play(id)
             }
 
             tagFilterButton.apply {
@@ -69,24 +68,14 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
                 setDropDownViewResource(R.layout.item_spinner_sort_drop_down)
             }
 
-            sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    viewModel.sortSongs(position)
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {}
-            }
+            sortSpinner.onItemSelectedListener = SortingTypeListener.Base(viewModel)
         }
+
+        viewModel.loadRecently()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        viewModel.init(SaveRestoreTagFilter(savedInstanceState))
         if (savedInstanceState != null) binding.motionLayout.transitionState = savedInstanceState
     }
 
@@ -94,7 +83,12 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
         super.onResume()
         viewModel.startGettingUpdates(object : HomeObserver {
             override fun update(data: HomeState) {
-                data.dispatch(requireContext(), recentlyAdapter, binding.libraryRecycler)
+                data.dispatch(
+                    binding.libraryPlaceholder,
+                    recentlyAdapter,
+                    binding.libraryRecycler,
+                    binding.motionLayout
+                )
                 data.consumed(viewModel)
             }
         })
@@ -107,7 +101,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.save(SaveRestoreTagFilter(outState))
         outState.putAll(binding.motionLayout.transitionState)
     }
 }

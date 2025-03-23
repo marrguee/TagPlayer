@@ -1,7 +1,6 @@
 package com.example.tagplayer.recently.domain
 
 import com.example.tagplayer.recently.presentation.RecentlyUi
-import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -25,7 +24,7 @@ interface RecentlyDomain {
                 duration: Long
             ): T
 
-            object ToUi : Mapper<RecentlyUi> {
+            object Ui : Mapper<RecentlyUi> {
                 override fun map(
                     id: Long,
                     thumbnail: String?,
@@ -48,6 +47,6 @@ interface RecentlyDomain {
             }
         }
 
-        override fun map(): RecentlyUi = Mapper.ToUi.map(id, thumbnail, title, author, duration)
+        override fun map(): RecentlyUi = Mapper.Ui.map(id, thumbnail, title, author, duration)
     }
 }

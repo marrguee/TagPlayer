@@ -1,29 +1,24 @@
 package com.example.tagplayer.search.domain
 
-import com.example.tagplayer.core.domain.PlaySongForeground
-import com.example.tagplayer.home.domain.DomainError
-import com.example.tagplayer.home.domain.HandleError
-import com.example.tagplayer.search.presentation.SongSearchUi
+import com.example.tagplayer.core.domain.PlayForeground
+import com.example.tagplayer.core.domain.DomainError
+import com.example.tagplayer.core.domain.HandleError
+import com.example.tagplayer.core.domain.HandleResponse
+import com.example.tagplayer.search.presentation.SearchUi
 
-interface SearchInteractor : PlaySongForeground {
-    suspend fun findSongsByTitle(title: String) : SearchResponse
+interface SearchInteractor : PlayForeground {
+    suspend fun search(query: String) : SearchResponse
 
     class Base(
-        private val repository: SearchRepository<SongSearchDomain>,
-        private val handleError: HandleError.Presentation,
-        private val songsModelMapper: SongSearchDomain.Mapper<SongSearchUi>
+        private val repository: SearchRepository<SearchDomain>,
+        private val handleResponse: HandleResponse.Handle<SearchResponse>,
+        private val mapper: SearchDomain.Mapper<SearchUi>
     ) : SearchInteractor {
 
-        override suspend fun findSongsByTitle(title: String) = try {
-            SearchResponse.SongsSuccess(repository.findSongsByTitle(title).map {
-                it.map(songsModelMapper)
-            })
-        } catch (e: DomainError) {
-            SearchResponse.Error(handleError.handle(e))
+        override suspend fun search(query: String) = handleResponse.handleAsync {
+            SearchResponse.SongsSuccess(repository.search(query).map { it.map(mapper) })
         }
 
-        override fun playSongForeground(id: Long) {
-            repository.playSongForeground(id)
-        }
+        override fun play(id: Long) = repository.play(id)
     }
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     style="@style/RootViewStyle">
 
-    <com.example.tagplayer.core.CustomTextView
+    <com.example.tagplayer.core.presentation.custom_views.CustomTextView
         android:id="@+id/recentlyPlayedTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

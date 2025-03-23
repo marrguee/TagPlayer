@@ -1,6 +1,6 @@
 package com.example.tagplayer.home.domain
 
-import com.example.tagplayer.main.presentation.SongUi
+import com.example.tagplayer.home.presentation.SongUi
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +21,7 @@ data class SongDomain(
             duration: Long
         ): T
 
-        class ToPresentation: Mapper<SongUi> {
+        object Presentation : Mapper<SongUi> {
             override suspend fun map(
                 id: Long,
                 thumbnail: String?,
