@@ -50,14 +50,8 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
 
             recentlyTextView.setOnClickListener { viewModel.recentlyPlayedScreen() }
 
-            with(searchView) {
-                setOnClickListener { viewModel.searchScreen() }
-                setOnQueryTextFocusChangeListener { _, focus: Boolean ->
-                    if (focus) {
-                        clearFocus()
-                        performClick()
-                    }
-                }
+            searchEditText.setOnFocusChangeListener { _, hasFocus ->
+                if(hasFocus) viewModel.searchScreen()
             }
 
             sortSpinner.adapter = ArrayAdapter.createFromResource(

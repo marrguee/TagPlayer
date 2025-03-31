@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/colorPrimary"/>
+            <solid android:color="?attr/colorPrimary"/>
             <size android:height="12dp" android:width="12dp"/>
         </shape>
     </item>
@@ -12,7 +12,7 @@
         android:top="4dp"
         android:bottom="4dp">
         <shape android:shape="oval">
-            <solid android:color="@color/dark"/>
+            <solid android:color="@color/seekbar_filled"/>
             <size android:height="7dp" android:width="7dp"/>
         </shape>
     </item>

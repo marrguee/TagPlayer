@@ -12,7 +12,6 @@ import com.example.tagplayer.main.presentation.navigation.Screen
 abstract class TagViewModel(
     clear: ClearViewModel,
     private val observable: CustomObservable.All<TagDialogState>,
-    private val navigation: Navigation.Navigate,
     private val handleDeath: HandleDeath,
 ) : ComebackViewModel(clear), HandleUiStateUpdates.All<TagDialogState> {
     protected abstract val initBlock : (Long?) -> Unit
@@ -32,8 +31,4 @@ abstract class TagViewModel(
 
     override fun clear() = observable.clear()
 
-    override fun comeback() {
-        super.comeback()
-        navigation.update(Screen.Pop)
-    }
 }

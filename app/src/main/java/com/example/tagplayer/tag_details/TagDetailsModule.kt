@@ -45,7 +45,6 @@ class TagDetailsModule(
         AddTagViewModel::class.java -> AddTagViewModel(
             clear,
             HandleDeath.Base(),
-            Navigation.Base,
             RunAsync.Base(DispatcherList.Base),
             interactor,
             observable,
@@ -54,7 +53,6 @@ class TagDetailsModule(
         EditTagViewModel::class.java -> EditTagViewModel(
             clear,
             HandleDeath.Base(),
-            Navigation.Base,
             observable,
             RunAsync.Base(DispatcherList.Base),
             interactor,

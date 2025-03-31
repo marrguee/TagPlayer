@@ -1,8 +1,13 @@
 package com.example.tagplayer.core.presentation.generic_adapter.holder
 
 import android.view.ContextMenu
+import android.view.ContextThemeWrapper
+import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.PopupWindow
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tagplayer.R
@@ -18,9 +23,8 @@ abstract class GenericMenuViewHolder<T : ItemUiMenu>(
 ) : RecyclerView.ViewHolder(root), View.OnCreateContextMenuListener {
     protected val viewForPopup: View = itemView.findViewById(viewIdPopupMenu)
 
-    private val popupMenu = PopupMenu(viewForPopup.context, viewForPopup).apply {
-        inflate(menuLayoutRes)
-    }
+    private val popupContext = ContextThemeWrapper(viewForPopup.context, R.style.CustomPopupMenu)
+    private val popupMenu = PopupMenu(popupContext, viewForPopup).apply { inflate(menuLayoutRes) }
 
     open fun bind(item: T, menuOptions: List<Pair<Int, MenuAction>>) {
         viewForPopup.setOnClickListener {
@@ -58,8 +62,5 @@ abstract class GenericMenuViewHolder<T : ItemUiMenu>(
             super.bind(item, menuOptions)
             item.bind(tagTextView)
         }
-
     }
-
-
 }

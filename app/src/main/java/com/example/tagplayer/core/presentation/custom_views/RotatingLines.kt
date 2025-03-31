@@ -2,7 +2,6 @@ package com.example.tagplayer.core.presentation.custom_views
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.animation.LinearInterpolator
@@ -10,7 +9,11 @@ import androidx.core.graphics.toRectF
 import com.example.tagplayer.core.presentation.custom_views.interfaces.HandleAnimationCycle
 import com.example.tagplayer.core.presentation.custom_views.interfaces.HandleInternalDraw
 
-class RotatingLines(private val invalidateFun: () -> Unit): HandleInternalDraw,
+class RotatingLines(
+    private val firstColor: Int,
+    private val secondColor: Int,
+    private val invalidateFun: () -> Unit
+): HandleInternalDraw,
     HandleAnimationCycle {
     private val viewRect = Rect()
     private val smallerViewRect = Rect()
@@ -19,14 +22,14 @@ class RotatingLines(private val invalidateFun: () -> Unit): HandleInternalDraw,
     private val externalArcAngle = 60f
     private val internalArcAngle = 170f
 
-    private val paintBlack = Paint().apply {
-        color = Color.BLACK
+    private val firstPaint = Paint().apply {
+        color = firstColor
         strokeWidth = 1f
         style = Paint.Style.STROKE
     }
 
-    private val paintGray = Paint().apply {
-        color = Color.GRAY
+    private val secondPaint = Paint().apply {
+        color = secondColor
         strokeWidth = 1f
         style = Paint.Style.STROKE
     }
@@ -72,7 +75,7 @@ class RotatingLines(private val invalidateFun: () -> Unit): HandleInternalDraw,
             0f,
             internalArcAngle,
             false,
-            paintGray
+            firstPaint
         )
         canvas.restore()
 
@@ -83,7 +86,7 @@ class RotatingLines(private val invalidateFun: () -> Unit): HandleInternalDraw,
             0f,
             externalArcAngle,
             false,
-            paintBlack
+            secondPaint
         )
         canvas.restore()
     }

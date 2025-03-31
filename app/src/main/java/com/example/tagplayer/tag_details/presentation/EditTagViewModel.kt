@@ -13,13 +13,12 @@ import com.example.tagplayer.main.presentation.navigation.Navigation
 class EditTagViewModel(
     clear: ClearViewModel,
     handleDeath: HandleDeath,
-    navigation: Navigation.Navigate,
     private val observable: CustomObservable.All<TagDialogState>,
     private val runAsync: RunAsync,
     private val interactor: TagDetailsInteractor,
     private val mapper: TagDetailsResponse.Mapper,
     private val manageResources: ManageResources
-) : TagViewModel(clear, observable, navigation, handleDeath) {
+) : TagViewModel(clear, observable, handleDeath) {
 
     private var tagId: Long = DEFAULT_ID
 

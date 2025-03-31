@@ -14,7 +14,7 @@ data class TagPlaybackUi(
     override fun bind(vararg views: MyView) {
         views[0].let {
             it.title(title)
-            it.color(R.drawable.background_tag_oval, color)
+            it.color(R.drawable.background_tag, color)
         }
     }
 

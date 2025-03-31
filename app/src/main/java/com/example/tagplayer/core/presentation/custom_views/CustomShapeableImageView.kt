@@ -21,8 +21,7 @@ class CustomShapeableImageView@JvmOverloads constructor(
     override fun image(bitmap: String?) {
         GlideApp.with(context)
             .load(Uri.parse(bitmap))
-            .placeholder(R.drawable.placeholder_loading)
-            .error(R.drawable.placeholder_playback)
+            .error(R.drawable.placeholder_song)
             .into(this)
     }
 }

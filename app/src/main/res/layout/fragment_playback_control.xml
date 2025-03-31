@@ -13,8 +13,8 @@
         android:id="@+id/left_line"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="23dp"
-        android:background="@drawable/left_line_drawable"
+        android:layout_marginTop="@dimen/play_button_top"
+        android:background="@drawable/line_left_playback"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/playPause"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,8 +24,8 @@
         android:id="@+id/background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
-        android:background="@color/colorPrimary"
+        android:layout_marginTop="@dimen/play_button_top"
+        android:background="?attr/colorPrimary"
         app:layout_constraintStart_toEndOf="@id/left_line"
         app:layout_constraintEnd_toStartOf="@id/right_line"
         app:layout_constraintTop_toTopOf="parent"
@@ -35,8 +35,8 @@
         android:id="@+id/right_line"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="23dp"
-        android:background="@drawable/right_line_drawable"
+        android:layout_marginTop="@dimen/play_button_top"
+        android:background="@drawable/line_right_playback"
         app:layout_constraintStart_toEndOf="@id/playPause"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,6 +51,8 @@
         android:adjustViewBounds="true"
         android:backgroundTintMode="src_in"
         android:src="@drawable/ic_play"
+        app:firstLineColor="?attr/colorSecond"
+        app:secondLineColor="?attr/textThemeColor"
         app:layout_constraintBottom_toTopOf="@id/seekBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -109,14 +111,14 @@
 
     <ImageButton
         android:id="@+id/rewindSong"
-        android:layout_width="wrap_content"
+        android:layout_width="26dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="-2dp"
-        android:layout_marginHorizontal="18dp"
+        android:layout_marginHorizontal="24dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/restart_current_song"
-        android:src="@drawable/ic_reset"
+        android:src="@drawable/ic_refresh"
         app:layout_constraintBottom_toTopOf="@id/seekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -155,11 +157,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/songTagsRecycler"
         android:layout_marginVertical="8dp"
-        android:background="@android:color/transparent"
         android:text="@string/share"
-        android:textColor="@color/dark"
         app:icon="@drawable/ic_share"
-        app:iconTint="@color/dark"/>
+        style="@style/IconButton"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/tagsButton"
@@ -167,11 +167,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/shareButton"
-        android:background="@android:color/transparent"
         android:text="@string/edit_tag_s"
-        android:textColor="@color/dark"
         app:icon="@drawable/ic_edit_tags"
-        app:iconTint="@color/dark"/>
+        style="@style/IconButton"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/trashButton"
@@ -179,10 +177,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tagsButton"
-        android:background="@android:color/transparent"
         android:text="@string/trash"
-        android:textColor="@color/dark"
         app:icon="@drawable/ic_trash"
-        app:iconTint="@color/dark"/>
+        style="@style/IconButton"/>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

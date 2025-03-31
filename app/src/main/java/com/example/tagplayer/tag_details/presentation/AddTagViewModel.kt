@@ -11,11 +11,10 @@ import com.example.tagplayer.main.presentation.navigation.Navigation
 class AddTagViewModel(
     clear: ClearViewModel,
     handleDeath: HandleDeath,
-    navigation: Navigation.Navigate,
     private val runAsync: RunAsync,
     private val interactor: TagDetailsInteractor,
     private val observable: CustomObservable.All<TagDialogState>,
-) : TagViewModel(clear, observable, navigation, handleDeath) {
+) : TagViewModel(clear, observable, handleDeath) {
 
     override val initBlock: (Long?) -> Unit = {
         observable.update(TagDialogState.AddMode)

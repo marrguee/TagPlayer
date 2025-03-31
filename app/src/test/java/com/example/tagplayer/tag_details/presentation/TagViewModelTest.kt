@@ -27,7 +27,6 @@ class TagViewModelTest {
 
         private lateinit var clear: FakeClearViewModel
         private lateinit var handleDeath: FakeHandleDeath
-        private lateinit var navigation: FakeNavigation
         private lateinit var runAsync: FakeRunAsync
         private lateinit var interactor: FakeInteractor
         private lateinit var observable: FakeObservable
@@ -36,7 +35,6 @@ class TagViewModelTest {
         fun setup() {
             clear = FakeClearViewModel.Base()
             handleDeath = FakeHandleDeath.Base()
-            navigation = FakeNavigation.Base()
             runAsync = FakeRunAsync.Base()
             interactor = FakeInteractor.Base(TagDetailsResponse.Success(String(), String()))
             observable = FakeObservable.Base()
@@ -44,7 +42,6 @@ class TagViewModelTest {
             viewModel = AddTagViewModel(
                 clear,
                 handleDeath,
-                navigation,
                 runAsync,
                 interactor,
                 observable
@@ -77,7 +74,6 @@ class TagViewModelTest {
             runAsync.checkHandleCalled(1)
             interactor.checkAddCalled(1)
             dismiss.checkDismissCalled(1)
-            navigation.checkScreen(Screen.Pop)
         }
 
         @Test
@@ -150,7 +146,6 @@ class TagViewModelTest {
             viewModel = EditTagViewModel(
                 clear,
                 handleDeath,
-                navigation,
                 observable,
                 runAsync,
                 interactor,

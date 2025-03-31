@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="H1Text" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/raleway_semibold_600</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+
+    <style name="H2Text" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/raleway_regular_400</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+
+    <style name="H3Text" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/raleway_regular_400</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+
+    <style name="H4Text" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">8sp</item>
+        <item name="android:fontFamily">@font/raleway_regular_400</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+
+    <style name="HintText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">8sp</item>
+        <item name="android:fontFamily">@font/raleway_regular_400</item>
+        <item name="android:textColor">?attr/hintTextColor</item>
+    </style>
+
+    <style name="ButtonText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/raleway_medium_500</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+
+    <style name="PlaybackControlSongTitleText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/raleway_semibold_600</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+
+    <style name="PlaybackControlSongAuthorText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/raleway_regular_400</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+
+    <style name="RecyclerItemSongH1" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/raleway_medium_500</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+
+    <style name="RecyclerItemSongH2" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/raleway_medium_500</item>
+        <item name="android:textColor">?attr/textThemeColor</item>
+    </style>
+</resources>

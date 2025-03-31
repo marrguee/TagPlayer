@@ -25,7 +25,7 @@ class PickerImageView @JvmOverloads constructor(
     }
 
     override fun select() {
-        setImageResource(R.drawable.ic_color_selected)
+        setImageResource(R.drawable.ic_check)
         selected = true
     }
 

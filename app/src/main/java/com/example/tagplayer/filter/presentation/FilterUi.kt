@@ -24,7 +24,7 @@ data class FilterUi(
     override fun bind(vararg views: MyView) {
         views[0].apply {
             title(title)
-            color(R.drawable.background_tag_oval, if (selected) String() else color)
+            color(R.drawable.background_tag, if (selected) String() else color)
         }
     }
 

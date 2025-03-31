@@ -4,10 +4,10 @@
         <shape
             android:shape="rectangle">
             <corners android:radius="100dp"/>
-            <solid android:color="@color/soft_dark"/>
+            <solid android:color="@color/gray"/>
         </shape>
     </item>
     <item android:id="@android:id/progress">
-        <clip android:drawable="@drawable/seekbar_background"/>
+        <clip android:drawable="@drawable/seekbar_played_background"/>
     </item>
 </layer-list>

@@ -39,6 +39,7 @@ class TagDetailsFragment : DialogFragment(), NewInstance<Long, TagDetailsFragmen
             val comeback: () -> Unit = {
                 colorGrid.comeback()
                 viewModel.comeback()
+                dismiss()
             }
 
             addTagButton.setOnClickListener {

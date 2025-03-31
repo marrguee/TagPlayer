@@ -1,11 +1,14 @@
 package com.example.tagplayer.search.presentation
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tagplayer.R
+import com.example.tagplayer.core.presentation.CustomTextWatcher
 import com.example.tagplayer.databinding.FragmentSearchBinding
 import com.example.tagplayer.core.presentation.fragments.ComebackFragment
 import com.example.tagplayer.core.presentation.generic_adapter.item_interfaces.MenuAction
@@ -31,23 +34,15 @@ class SearchFragment : ComebackFragment<FragmentSearchBinding, SearchViewModel>(
         adapter = SearchAdapter(menuOptions) { viewModel.play(it) }
         binding.searchResultRecycler.adapter = adapter
 
-        with(binding.searchView) {
+        with(binding.searchEditText) {
             requestFocus()
             WindowCompat.getInsetsController(requireActivity().window, this)
                 .show(WindowInsetsCompat.Type.ime())
 
-            val block: (String?) -> Boolean = { query ->
-                if (query.isNullOrEmpty()) {
-                    false
-                } else {
-                    viewModel.search(query.trim())
-                    true
+            addTextChangedListener(object : CustomTextWatcher() {
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (!s.isNullOrBlank()) viewModel.search(s.toString().trim())
                 }
-            }
-
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = block.invoke(query)
-                override fun onQueryTextChange(newText: String?): Boolean = block.invoke(newText)
             })
         }
     }

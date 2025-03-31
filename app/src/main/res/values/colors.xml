@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="soft_black">#181818</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="red">#F44336</color>
-    <color name="track_item_bg">#E3DFFD</color>
-    <color name="light_gray">#F9F8F4</color>
-    <color name="dark_gray">#C1C1C1</color>
-    <color name="filter_tag_selected">#2196F3</color>
-    <color name="filter_tag_not_selected">#FFFFFF</color>
-    <color name="colorPrimary">#F8F4E9</color>
     <color name="dark">#191813</color>
-    <color name="soft_dark">#C1C1C1</color>
-    <color name="light">#F6F6F6</color>
+    <color name="gray">#C1C1C1</color>
 
+    <color name="tag_selected">#FFFFFF</color>
+    <color name="seekbar_filled">@color/dark</color>
+
+    <!-- picker colors -->
     <color name="picker_soft_blue">#A9B5DF</color>
     <color name="picker_soft_green">#A0C878</color>
     <color name="picker_mint">#A6F1E0</color>
@@ -34,6 +29,11 @@
     <color name="picker_aqua">#CDFCF6</color>
     <color name="picker_grayish_purple">#D3CEDF</color>
     <color name="picker_warm_beige">#F8E2CF</color>
-    <color name="default_tag_color">#EC00FF</color>
-    <color name="tag_selected">#FFFFFF</color>
+
+    <!-- light theme -->
+    <color name="accent">@color/gray</color>
+    <color name="colorPrimary">#F8F4E9</color>
+    <color name="colorSecondary">@color/black</color>
+    <color name="textThemeColor">@color/black</color>
+    <color name="hintColor">@color/gray</color>
 </resources>

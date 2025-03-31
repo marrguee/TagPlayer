@@ -3,7 +3,7 @@
     <item android:id="@+id/secondaryProgress">
         <shape>
             <corners android:radius="100dp"/>
-            <solid android:color="@color/dark"/>
+            <solid android:color="@color/seekbar_filled"/>
         </shape>
     </item>
 </selector>

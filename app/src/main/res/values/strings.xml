@@ -20,7 +20,7 @@
     <string name="restart_current_song">Restart current song</string>
     <string name="placeholder_song_title">Nothing is playing</string>
     <string name="placeholder_song_author">Unknown Artist</string>
-    <string name="query_hint">Search</string>
+    <string name="hint_search">Search</string>
     <string name="filter_by_tags_content_description">Filter by tags</string>
     <string name="recently_content_description">Recently</string>
     <string name="logo_content_description">Settings</string>

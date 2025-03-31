@@ -19,7 +19,7 @@ data class TagSettingsUi(
     override fun bind(vararg views: MyView) {
         views[0].apply {
             title(title)
-            color(R.drawable.background_tag_oval, color)
+            color(R.drawable.background_tag, color)
         }
     }
 

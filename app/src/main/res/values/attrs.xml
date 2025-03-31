@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="CustomImageButton">
+        <attr name="firstLineColor" format="color" />
+        <attr name="secondLineColor" format="color" />
+    </declare-styleable>
     <declare-styleable name="CustomEnabled">
         <attr name="enabled" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="PickerRadioButton">
         <attr name="pickedColor" format="color"/>
     </declare-styleable>
+    <attr name="textThemeColor" format="color" />
+    <attr name="hintTextColor" format="color" />
+    <attr name="mainAccent" format="color" />
+    <attr name="colorSecond" format="color" />
 </resources>

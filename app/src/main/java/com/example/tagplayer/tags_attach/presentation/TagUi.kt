@@ -32,7 +32,7 @@ data class TagUi(
     override fun bind(vararg views: MyView) {
         views[0].let {
             it.title(title)
-            it.color(R.drawable.background_tag_oval, color)
+            it.color(R.drawable.background_tag, color)
             (it as CustomTextView).setOnLongClickListener { view ->
                 val clipData = ClipData.newPlainText(id.toString(), id.toString())
                 val shadow = View.DragShadowBuilder(view)

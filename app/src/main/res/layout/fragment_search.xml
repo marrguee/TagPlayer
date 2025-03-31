@@ -5,15 +5,14 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    style="@style/RootViewStyle"
-    android:windowSoftInputMode="stateVisible|adjustResize">
+    style="@style/BaseFragmentViewStyle">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/searchEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginBottom="16dp"
-        style="@style/SearchViewStyle"/>
+        style="@style/SearchEditTextStyle"/>
     
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultRecycler"

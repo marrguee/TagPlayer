@@ -5,7 +5,7 @@
     android:id="@+id/motionLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/RootViewStyle"
+    style="@style/BaseFragmentViewStyle"
     app:layoutDescription="@xml/fragment_home_scene">
 
     <LinearLayout
@@ -24,24 +24,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/logo_content_description"
-            android:src="@drawable/logo" />
+            android:src="@drawable/ic_logo" />
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchEditText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
-            style="@style/SearchViewStyle" />
+            style="@style/SearchEditTextStyle" />
 
         <ImageButton
             android:id="@+id/tagFilterButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:contentDescription="@string/filter_by_tags_content_description"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_tags"
-            android:background="@null" />
+            android:src="@drawable/ic_tags" />
     </LinearLayout>
 
     <TextView
@@ -89,7 +87,7 @@
         <Spinner
             android:id="@+id/sortSpinner"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:textAlignment="viewEnd"
             android:layout_weight="1"
             android:gravity="end"/>

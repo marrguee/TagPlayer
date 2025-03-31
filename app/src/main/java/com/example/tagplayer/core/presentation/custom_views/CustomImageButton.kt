@@ -2,11 +2,13 @@ package com.example.tagplayer.core.presentation.custom_views
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColor
 import com.example.tagplayer.R
 import com.example.tagplayer.core.domain.CustomImage
 import com.example.tagplayer.core.domain.CustomImage.*
@@ -19,11 +21,36 @@ class CustomImageButton@JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : AppCompatImageButton(context, attrs, defStyleAttr), ModifyCustomImage.All {
     private val viewRect = Rect()
-    private val rotatingLines = RotatingLines { invalidate() }
+    private var rotatingLines: RotatingLines
     private var placeholder: CustomImage = DrawableImage(
-        ContextCompat.getDrawable(context, R.drawable.placeholder_playback)!!
+        ContextCompat.getDrawable(context, R.drawable.placeholder_song)!!
     )
     private val imageFacade: ImageFacade = ImageFacade.Base(placeholder)
+
+    init {
+        val typedArray = context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.CustomImageButton,
+            defStyleAttr,
+            0
+        )
+
+        try {
+            val firstLineColorStateList = typedArray.getColorStateList(
+                R.styleable.CustomImageButton_firstLineColor
+            )
+            val secondLineColorStateList = typedArray.getColorStateList(
+                R.styleable.CustomImageButton_secondLineColor
+            )
+
+            val firstLineColor: Int = firstLineColorStateList?.defaultColor ?: Color.GRAY
+            val secondLineColor: Int = secondLineColorStateList?.defaultColor ?: Color.BLACK
+
+            rotatingLines = RotatingLines(firstLineColor, secondLineColor) { invalidate() }
+        } finally {
+            typedArray.recycle()
+        }
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
