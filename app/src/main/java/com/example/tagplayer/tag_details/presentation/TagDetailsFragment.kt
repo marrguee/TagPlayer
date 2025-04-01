@@ -1,5 +1,6 @@
 package com.example.tagplayer.tag_details.presentation
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,22 +37,11 @@ class TagDetailsFragment : DialogFragment(), NewInstance<Long, TagDetailsFragmen
 
         with(binding) {
             colorGrid.init()
-            val comeback: () -> Unit = {
-                colorGrid.comeback()
-                viewModel.comeback()
-                dismiss()
-            }
 
             addTagButton.setOnClickListener {
                 val title = tagNameEditText.text?.trim().toString()
-                if (title.isNotBlank()) viewModel.accept(title, colorGrid.color(), comeback)
+                if (title.isNotBlank()) viewModel.accept(title, colorGrid.color()) { dismiss() }
             }
-
-            activity?.onBackPressedDispatcher?.addCallback(
-                object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() = comeback.invoke()
-                }
-            )
         }
     }
 
@@ -81,6 +71,17 @@ class TagDetailsFragment : DialogFragment(), NewInstance<Long, TagDetailsFragmen
 
     override fun instance(args: Long): TagDetailsFragment = TagDetailsFragment().apply {
         arguments = Bundle().apply { putLong(TAG_ID_KEY, args) }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        dialog.dismiss()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        binding.colorGrid.comeback()
+        viewModel.comeback()
     }
 
     companion object {

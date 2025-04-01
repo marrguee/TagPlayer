@@ -203,36 +203,6 @@ interface PlaybackState {
         ) = intentSenderLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
     }
 
-    object ResumeAnimation: PlaybackState {
-        override fun dispatch(
-            imageButton: ModifyCustomImage.All,
-            title: Mutable,
-            author: Update,
-            seekBar: HandleSeekChanges,
-            tagsAdapter: PlaybackAdapter,
-            intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>,
-            motionLayout: MotionLayout
-        ) {
-            title.scroll(true)
-            imageButton.startAnimation()
-        }
-    }
-
-    object PauseAnimation: PlaybackState {
-        override fun dispatch(
-            imageButton: ModifyCustomImage.All,
-            title: Mutable,
-            author: Update,
-            seekBar: HandleSeekChanges,
-            tagsAdapter: PlaybackAdapter,
-            intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>,
-            motionLayout: MotionLayout
-        ) {
-            title.scroll(false)
-            imageButton.pauseAnimation()
-        }
-    }
-
     class Error(private val error: String): PlaybackState {
         override fun dispatch(
             imageButton: ModifyCustomImage.All,

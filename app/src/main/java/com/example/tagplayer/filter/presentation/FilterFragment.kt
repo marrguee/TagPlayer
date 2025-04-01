@@ -17,14 +17,8 @@ class FilterFragment : ComebackFragment<FragmentTagsFilterBinding, FilterViewMod
 
         with(binding) {
             tagsRecyclerView.adapter = adapter
-
-            tagFilterButton.setOnClickListener {
-                viewModel.comeback()
-            }
-
-            clearFiltersButton.setOnClickListener {
-                viewModel.reset()
-            }
+            tagFilterButton.setOnClickListener { viewModel.comeback() }
+            clearFiltersButton.setOnClickListener { viewModel.reset() }
         }
 
         viewModel.init()

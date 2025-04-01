@@ -7,7 +7,6 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.Listener
 import androidx.media3.session.MediaController
-import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.core.media_service.HandleMediaExtras
 import com.example.tagplayer.core.presentation.observable.CustomObservable
@@ -18,13 +17,12 @@ import com.example.tagplayer.playback.domain.PlaybackInteractor
 import com.example.tagplayer.playback.domain.SongDetailsResponse
 import com.example.tagplayer.playback.presentation.PlaybackState.Connected
 import com.example.tagplayer.playback.presentation.PlaybackState.Disconnected
-import com.example.tagplayer.playback.presentation.PlaybackState.PauseAnimation
-import com.example.tagplayer.playback.presentation.PlaybackState.ResumeAnimation
 import com.example.tagplayer.playback.presentation.PlaybackState.StartPlay
 import com.example.tagplayer.playback.presentation.PlaybackState.StopPlay
 import com.example.tagplayer.playback.presentation.PlaybackState.UpdateMetadata
 import com.example.tagplayer.playback.presentation.PlaybackState.UpdatePlayPause
 import com.example.tagplayer.playback.presentation.PlaybackState.UpdatePosition
+import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 import kotlinx.coroutines.delay
 
 class PlaybackViewModel(

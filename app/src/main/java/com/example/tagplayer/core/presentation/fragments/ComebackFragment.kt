@@ -21,10 +21,10 @@ abstract class ComebackFragment<B : ViewBinding, V : ComebackViewModel> : Bindin
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.comeback()
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() = viewModel.comeback()
             }
-        })
+        )
     }
 }
