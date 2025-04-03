@@ -8,7 +8,7 @@ import com.example.tagplayer.home.domain.SongDomain
 import com.example.tagplayer.search.domain.SearchDomain
 
 @Entity("songs")
-class Song(
+data class Song(
     @PrimaryKey
     @ColumnInfo("id") val id: Long,
     @ColumnInfo("image") val image: String?,

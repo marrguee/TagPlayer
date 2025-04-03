@@ -3,7 +3,6 @@ package com.example.tagplayer.home.presentation
 import com.example.tagplayer.FakeAllObservable
 import com.example.tagplayer.FakeNavigation
 import com.example.tagplayer.FakeRunAsync
-import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.filter.presentation.FilterTagsScreen
 import com.example.tagplayer.home.domain.HomeInteractor
@@ -12,6 +11,7 @@ import com.example.tagplayer.home.domain.SortType
 import com.example.tagplayer.recently.presentation.RecentlyScreen
 import com.example.tagplayer.search.domain.SearchScreen
 import com.example.tagplayer.tag_settings.presentation.TagSettingsScreen
+import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -31,6 +31,7 @@ class HomeViewModelTest {
         private lateinit var observable: FakeObservable
         private lateinit var navigation: FakeNavigation
         private lateinit var mapper: FakeResponseMapper
+        private lateinit var providePermission: FakeProvideHandleDeclineText
 
         @Before
         fun setup() {
@@ -39,18 +40,23 @@ class HomeViewModelTest {
             observable = FakeObservable.Base()
             mapper = FakeResponseMapper.Base(observable)
             navigation = FakeNavigation.Base()
+            providePermission = FakeProvideHandleDeclineText.Base()
 
             viewModel = HomeViewModel(
                 runAsync,
                 interactor,
                 observable,
                 mapper,
-                navigation
+                navigation,
+                providePermission
             )
         }
 
         @Test
         fun `main scenario`() {
+            viewModel.scan()
+            interactor.checkScanCalled(1)
+
             val observer = object : HomeObserver {
                 override fun update(data: HomeState) = data.consumed(viewModel)
             }
@@ -65,7 +71,6 @@ class HomeViewModelTest {
             viewModel.startGettingUpdates(observer)
 
             observable.checkObserver(observer)
-            interactor.checkScanCalled(1)
             observable.checkClearTimes(1)
             observable.checkState(HomeState.Empty)
 
@@ -131,6 +136,14 @@ class HomeViewModelTest {
             viewModel.attachTagsScreen(0L)
             navigation.checkScreen(AttachTagsScreen(0L))
         }
+
+        @Test
+        fun `permission handling`() {
+            val permission = "permission"
+            viewModel.handlePermission(permission)
+            providePermission.checkProvideCalled(1)
+            observable.checkState(HomeState.ShowAlertPermissions(FakeHandleDeclineText.Empty))
+        }
     }
 
     class Error {
@@ -140,6 +153,7 @@ class HomeViewModelTest {
         private lateinit var observable: FakeObservable
         private lateinit var navigation: FakeNavigation
         private lateinit var mapper: FakeResponseMapper
+        private lateinit var providePermission: FakeProvideHandleDeclineText
 
         @Before
         fun setup() {
@@ -148,18 +162,23 @@ class HomeViewModelTest {
             observable = FakeObservable.Base()
             mapper = FakeResponseMapper.Base(observable)
             navigation = FakeNavigation.Base()
+            providePermission = FakeProvideHandleDeclineText.Base()
 
             viewModel = HomeViewModel(
                 runAsync,
                 interactor,
                 observable,
                 mapper,
-                navigation
+                navigation,
+                providePermission
             )
         }
 
         @Test
         fun `main scenario`() {
+            viewModel.scan()
+            interactor.checkScanCalled(1)
+
             val observer = object : HomeObserver {
                 override fun update(data: HomeState) {
                     data.consumed(viewModel)
@@ -168,7 +187,6 @@ class HomeViewModelTest {
             viewModel.startGettingUpdates(observer)
 
             observable.checkObserver(observer)
-            interactor.checkScanCalled(1)
 
             viewModel.stopGettingUpdates()
             viewModel.loadRecently()
@@ -243,7 +261,6 @@ class HomeViewModelTest {
                 sortCalled++
                 return SongsResponse.Error(String())
             }
-
         }
 
         class Base : Common() {
@@ -279,6 +296,27 @@ class HomeViewModelTest {
             override fun mapError(error: String) {
                 observable.update(HomeState.Error(String()))
             }
+        }
+    }
+
+    private interface FakeProvideHandleDeclineText : HandleDeclineText.ProvideHandleDeclineText {
+        fun checkProvideCalled(times: Int)
+
+        class Base : FakeProvideHandleDeclineText {
+            private var called = 0
+
+            override fun checkProvideCalled(times: Int) = assertEquals(times, called)
+
+            override fun permissionTextProvider(permission: String): HandleDeclineText =
+                FakeHandleDeclineText.Empty.also {
+                    called++
+                }
+        }
+    }
+
+    private interface FakeHandleDeclineText : HandleDeclineText {
+        object Empty : FakeHandleDeclineText {
+            override fun getDescription(): String = ""
         }
     }
 }

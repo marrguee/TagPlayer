@@ -23,23 +23,32 @@ class HomeViewModel(
     private val interactor: HomeInteractor,
     private val observable: CustomObservable.All<HomeState>,
     private val mapper: SongsResponse.Mapper,
-    private val navigation: Navigation.Navigate
+    private val navigation: Navigation.Navigate,
+    private val handleDecline: HandleDeclineText.ProvideHandleDeclineText
 ) : ViewModel(), StartPlayback, HandleUiStateUpdates.All<HomeState>,
     NavigateAttachTagsScreen, SortSongs {
     private val uiBlock: (SongsResponse) -> Unit = { it.map(mapper, viewModelScope) }
 
+    fun scan() = interactor.scan()
+
     fun loadRecently() = runAsync.handle(viewModelScope, uiBlock) {
         interactor.croppedRecently()
+    }
+
+    fun handlePermission(
+        permission: String
+    ) {
+        observable.update(
+            HomeState.ShowAlertPermissions(handleDecline.permissionTextProvider(permission))
+        )
     }
 
     override fun sort(type: SortType.Map) = runAsync.handle(viewModelScope, uiBlock) {
          interactor.sortedSongs(type)
     }
 
-    override fun startGettingUpdates(observer: CustomObserver<HomeState>) {
+    override fun startGettingUpdates(observer: CustomObserver<HomeState>) =
         observable.updateObserver(observer)
-        interactor.scan()
-    }
 
     override fun stopGettingUpdates() = observable.updateObserver(HomeObserver.Empty)
     override fun play(id: Long) = interactor.play(id)

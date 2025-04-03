@@ -1,4 +1,4 @@
-package com.example.tagplayer.home.data
+package com.example.tagplayer.playback.data
 
 import android.content.IntentSender
 import com.example.tagplayer.playback.domain.SongDetailsResponse

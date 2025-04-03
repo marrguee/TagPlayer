@@ -61,10 +61,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/menuLayout"
         android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        android:minHeight="132dp"
-        tools:listitem="@layout/item_song"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_song"
+        tools:itemCount="1"/>
 
     <LinearLayout
         android:id="@+id/libraryBlock"

@@ -1,8 +1,12 @@
 package com.example.tagplayer.core.data
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.media3.common.util.UnstableApi
 import androidx.work.CoroutineWorker
@@ -78,7 +82,7 @@ class MediaWorker(
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result = try {
         (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler()
-            .scan(applicationContext)
+                .scan(applicationContext)
         Result.success()
     } catch (e: Exception) {
         Result.failure()

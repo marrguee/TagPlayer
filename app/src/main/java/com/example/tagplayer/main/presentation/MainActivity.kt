@@ -40,5 +40,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), ProvideViewModel
 
     override fun <T : ViewModel> provide(clazz: Class<out T>) =
         (application as ProvideViewModel).provide(clazz)
+
 }
 

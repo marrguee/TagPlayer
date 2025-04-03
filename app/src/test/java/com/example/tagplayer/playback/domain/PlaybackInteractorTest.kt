@@ -2,7 +2,7 @@ package com.example.tagplayer.playback.domain
 
 import android.content.IntentSender
 import com.example.tagplayer.FakeHandleResponse
-import com.example.tagplayer.home.data.HandleMediaResult
+import com.example.tagplayer.playback.data.HandleMediaResult
 import com.example.tagplayer.playback.presentation.TagPlaybackUi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

@@ -19,6 +19,7 @@ import com.example.tagplayer.home.presentation.HomeObservable
 import com.example.tagplayer.home.presentation.HomeState
 import com.example.tagplayer.home.presentation.HomeViewModel
 import com.example.tagplayer.home.domain.SortType
+import com.example.tagplayer.home.presentation.HandleDeclineText
 import com.example.tagplayer.main.presentation.navigation.Navigation
 
 class HomeModule(core: Core) : Module<HomeViewModel> {
@@ -46,11 +47,13 @@ class HomeModule(core: Core) : Module<HomeViewModel> {
         observable,
         DispatcherList.Base
     )
+    private val factory = HandleDeclineText.Factory(core.manageRecourses())
     override fun create(): HomeViewModel = HomeViewModel(
         RunAsync.Base(DispatcherList.Base),
         homeInteractor,
         observable,
         songResponseMapper,
-        Navigation.Base
+        Navigation.Base,
+        factory
     )
 }

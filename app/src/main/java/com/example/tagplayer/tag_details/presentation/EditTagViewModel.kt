@@ -17,7 +17,7 @@ class EditTagViewModel(
     private val runAsync: RunAsync,
     private val interactor: TagDetailsInteractor,
     private val mapper: TagDetailsResponse.Mapper,
-    private val manageResources: ManageResources
+    private val manageResources: ManageResources.SongIdError
 ) : TagViewModel(clear, observable, handleDeath) {
 
     private var tagId: Long = DEFAULT_ID

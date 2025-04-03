@@ -1,7 +1,7 @@
 package com.example.tagplayer.playback.domain
 
 import com.example.tagplayer.core.domain.HandleResponse
-import com.example.tagplayer.home.data.HandleMediaResult
+import com.example.tagplayer.playback.data.HandleMediaResult
 import com.example.tagplayer.playback.presentation.TagPlaybackUi
 import kotlinx.coroutines.flow.map
 

@@ -49,6 +49,17 @@
 
     <string name="song_id_error">Invalid song\'s id</string>
     <string name="list_is_empty">Empty</string>
+    <string name="title_permission_dialog">Warning</string>
+    <string name="go_to_settings">Go to settings</string>
+    <string name="ok">Ok</string>
+    <string name="declined_notification">
+        It seems you permanently declined notification permission.
+        You can go to the app settings to grant it.
+    </string>
+    <string name="declined_storage">
+        It seems you permanently declined storage permission.
+        You can go to the app settings to grant it.
+    </string>
     <!--Errors-->
     <string name="failed_fetch_filters">Unable to retrieve filters</string>
     <string name="failed_fetch_songs">Unable to retrieve songs</string>

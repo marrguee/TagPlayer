@@ -14,4 +14,8 @@
     </style>
 
     <style name="Base.Theme.TagPlayer" parent="Base.V21.Dark.Theme.TagPlayer" />
+
+    <drawable name="media3_notification_seek_to_previous">@drawable/ic_refresh_notification</drawable>
+    <drawable name="media3_notification_play">@drawable/ic_play_notification</drawable>
+    <drawable name="media3_notification_pause">@drawable/ic_pause_notification</drawable>
 </resources>
