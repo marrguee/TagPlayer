@@ -6,7 +6,7 @@ import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.util.UnstableApi
-import com.example.tagplayer.GlideApp
+import com.bumptech.glide.Glide
 import com.example.tagplayer.core.data.database.dao.LastPlayedDao
 import com.example.tagplayer.core.data.database.dao.SongsDao
 import com.example.tagplayer.core.domain.ManageResources
@@ -36,7 +36,7 @@ class App : Application(),
         super.onCreate()
         core = Core.Base(this, contentResolver)
         factory = ProvideViewModel.Factory(core)
-        GlideApp.get(this)
+        Glide.get(this)
     }
 
     override fun start(id: Long) {

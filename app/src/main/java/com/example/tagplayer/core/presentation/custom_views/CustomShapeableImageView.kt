@@ -3,7 +3,7 @@ package com.example.tagplayer.core.presentation.custom_views
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
-import com.example.tagplayer.GlideApp
+import com.bumptech.glide.Glide
 import com.example.tagplayer.R
 import com.example.tagplayer.core.presentation.custom_views.interfaces.MyView
 import com.google.android.material.imageview.ShapeableImageView
@@ -19,7 +19,7 @@ class CustomShapeableImageView@JvmOverloads constructor(
     override fun color(resId: Int, color: String) = Unit
 
     override fun image(bitmap: String?) {
-        GlideApp.with(context)
+        Glide.with(context)
             .load(Uri.parse(bitmap))
             .error(R.drawable.placeholder_song)
             .into(this)
