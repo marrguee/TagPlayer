@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.android.application") version "9.2.1" apply false
-    id("com.google.devtools.ksp") version "2.3.8" apply false
-    id("androidx.room") version "2.8.4" apply false
-    id("org.jetbrains.kotlin.plugin.parcelize") version "2.3.21" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.room) apply false
+    alias(libs.plugins.kotlin.parcelize) apply false
 }
