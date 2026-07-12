@@ -2,15 +2,17 @@ package com.example.tagplayer
 
 import com.example.tagplayer.core.domain.DispatcherList
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Assert
 
 interface FakeDispatcherList: DispatcherList {
     fun checkIoTimesCalled(expected: Int)
     fun checkUiTimesCalled(expected: Int)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     class Base(
-        private val dispatcher: CoroutineDispatcher = TestCoroutineDispatcher()
+        private val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
     ): FakeDispatcherList {
         private var ioTimesCalled: Int = 0
         private var uiTimesCalled: Int = 0

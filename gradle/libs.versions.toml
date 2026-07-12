@@ -1,6 +1,6 @@
 [versions]
 agp = "9.2.1"
-ksp = "2.3.8"
+ksp = "2.3.10"
 kotlin = "2.4.0"
 room = "2.8.4"
 glide = "5.0.9"
@@ -20,6 +20,12 @@ androidxJunit = "1.3.0"
 espresso = "3.7.0"
 mockitoKotlin = "6.3.0"
 mockito = "5.23.0"
+
+nav3Core = "1.1.4"
+lifecycleViewmodelNav3 = "2.11.0"
+kotlinSerialization = "2.2.21"
+kotlinxSerializationCore = "1.11.0"
+material3AdaptiveNav3 = "1.3.0-rc01"
 
 [libraries]
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
@@ -48,9 +54,16 @@ espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref =
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
+androidx-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
