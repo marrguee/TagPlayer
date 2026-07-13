@@ -1,7 +1,6 @@
 package com.example.tagplayer.filter.presentation
 
 import com.example.tagplayer.FakeAllHandleStateObservable
-import com.example.tagplayer.FakeClearViewModel
 import com.example.tagplayer.FakeDispatcherList
 import com.example.tagplayer.FakeHandleDeath
 import com.example.tagplayer.FakeNavigation
@@ -26,7 +25,6 @@ class FilterViewModelTest {
     class Main {
         private lateinit var viewModel: FilterViewModel
 
-        private lateinit var clear: FakeClearViewModel
         private lateinit var runAsync: FakeRunAsync
         private lateinit var dispatcherList: FakeDispatcherList
         private lateinit var observable: FakeObservable
@@ -37,7 +35,6 @@ class FilterViewModelTest {
 
         @Before
         fun setup() = runBlocking {
-            clear = FakeClearViewModel.Base()
             runAsync = FakeRunAsync.Base()
             dispatcherList = FakeDispatcherList.Base()
             observable = FakeObservable.Base()
@@ -47,7 +44,6 @@ class FilterViewModelTest {
             handleDeath = FakeHandleDeath.Base()
 
             viewModel = FilterViewModel(
-                clear,
                 runAsync,
                 observable,
                 interactor,
@@ -107,8 +103,6 @@ class FilterViewModelTest {
         @Test
         fun `handle comeback`() = runBlocking {
             viewModel.comeback()
-            clear.checkClearCalledTimes(1)
-            clear.checkClearCalledWithClass(FilterViewModel::class.java)
             navigation.checkScreen(Screen.Pop)
         }
 
@@ -132,7 +126,6 @@ class FilterViewModelTest {
     class Error {
         private lateinit var viewModel: FilterViewModel
 
-        private lateinit var clear: FakeClearViewModel
         private lateinit var runAsync: FakeRunAsync
         private lateinit var dispatcherList: FakeDispatcherList
         private lateinit var observable: FakeObservable
@@ -143,7 +136,6 @@ class FilterViewModelTest {
 
         @Before
         fun setup() = runBlocking {
-            clear = FakeClearViewModel.Base()
             runAsync = FakeRunAsync.Base()
             dispatcherList = FakeDispatcherList.Base()
             observable = FakeObservable.Base()
@@ -153,7 +145,6 @@ class FilterViewModelTest {
             handleDeath = FakeHandleDeath.Base()
 
             viewModel = FilterViewModel(
-                clear,
                 runAsync,
                 observable,
                 interactor,

@@ -1,18 +1,14 @@
 package com.example.tagplayer.search.presentation
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tagplayer.R
 import com.example.tagplayer.core.presentation.CustomTextWatcher
-import com.example.tagplayer.databinding.FragmentSearchBinding
 import com.example.tagplayer.core.presentation.fragments.ComebackFragment
 import com.example.tagplayer.core.presentation.generic_adapter.item_interfaces.MenuAction
-
+import com.example.tagplayer.databinding.FragmentSearchBinding
 
 class SearchFragment : ComebackFragment<FragmentSearchBinding, SearchViewModel>() {
     private lateinit var adapter: SearchAdapter
@@ -62,4 +58,3 @@ class SearchFragment : ComebackFragment<FragmentSearchBinding, SearchViewModel>(
         viewModel.stopGettingUpdates()
     }
 }
-

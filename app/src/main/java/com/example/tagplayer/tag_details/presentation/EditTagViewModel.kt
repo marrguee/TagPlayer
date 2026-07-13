@@ -1,24 +1,21 @@
 package com.example.tagplayer.tag_details.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.tagplayer.tag_details.domain.TagDetailsInteractor
-import com.example.tagplayer.tag_details.domain.TagDetailsResponse
-import com.example.tagplayer.core.domain.ClearViewModel
 import com.example.tagplayer.core.domain.ManageResources
 import com.example.tagplayer.core.presentation.HandleDeath
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.core.presentation.viewmodel.RunAsync
-import com.example.tagplayer.main.presentation.navigation.Navigation
+import com.example.tagplayer.tag_details.domain.TagDetailsInteractor
+import com.example.tagplayer.tag_details.domain.TagDetailsResponse
 
 class EditTagViewModel(
-    clear: ClearViewModel,
     handleDeath: HandleDeath,
     private val observable: CustomObservable.All<TagDialogState>,
     private val runAsync: RunAsync,
     private val interactor: TagDetailsInteractor,
     private val mapper: TagDetailsResponse.Mapper,
     private val manageResources: ManageResources.SongIdError
-) : TagViewModel(clear, observable, handleDeath) {
+) : TagViewModel(observable, handleDeath) {
 
     private var tagId: Long = DEFAULT_ID
 

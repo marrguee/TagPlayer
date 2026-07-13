@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.GridLayout
 import androidx.core.view.children
 import com.example.tagplayer.core.presentation.custom_views.interfaces.SelectAndUnselect
-import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.core.presentation.save_restore.SelectState
 import com.example.tagplayer.core.presentation.viewmodel.HandleComeback
 
@@ -19,9 +18,10 @@ class RadioGridLayout @JvmOverloads constructor(
 ) : GridLayout(context, attrs, defStyleAttr), View.OnClickListener, ProvideColor,
     SelectColor, HandleComeback {
 
-    private val viewModel: RadioGridViewModel by lazy {
-        (this.context.applicationContext as ProvideViewModel)
-            .provide(RadioGridViewModel::class.java)
+    private lateinit var viewModel: RadioGridViewModel
+
+    fun bind(viewModel: RadioGridViewModel) {
+        this.viewModel = viewModel
     }
 
     fun init() = viewModel.init()

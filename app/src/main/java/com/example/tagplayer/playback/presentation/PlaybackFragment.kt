@@ -2,27 +2,23 @@ package com.example.tagplayer.playback.presentation
 
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
 import com.example.tagplayer.R
-import com.example.tagplayer.core.domain.ProvideViewModel
-import com.example.tagplayer.databinding.FragmentPlaybackControlBinding
 import com.example.tagplayer.core.presentation.fragments.BindingFragment
+import com.example.tagplayer.databinding.FragmentPlaybackControlBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @UnstableApi
 class PlaybackFragment : BindingFragment<FragmentPlaybackControlBinding>() {
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var tagsAdapter: PlaybackAdapter
-    private val viewModel by lazy {
-        (requireActivity() as ProvideViewModel).provide(PlaybackViewModel::class.java)
-    }
+    private val viewModel: PlaybackViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

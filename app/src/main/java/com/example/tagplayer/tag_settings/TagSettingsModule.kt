@@ -1,60 +1,50 @@
 package com.example.tagplayer.tag_settings
 
-import com.example.tagplayer.core.Core
-import com.example.tagplayer.core.Module
+import com.example.tagplayer.core.data.ForegroundWrapper
 import com.example.tagplayer.core.data.HandleTry
+import com.example.tagplayer.core.data.database.dao.TagsDao
 import com.example.tagplayer.core.data.database.models.SongTag
-import com.example.tagplayer.core.domain.ClearViewModel
 import com.example.tagplayer.core.domain.DispatcherList
+import com.example.tagplayer.core.domain.DomainError
+import com.example.tagplayer.core.domain.HandleError
 import com.example.tagplayer.core.domain.HandleResponse
 import com.example.tagplayer.core.presentation.viewmodel.RunAsync
 import com.example.tagplayer.main.presentation.navigation.Navigation
 import com.example.tagplayer.tag_settings.data.TagSettingsCacheDatasource
 import com.example.tagplayer.tag_settings.data.TagSettingsRepositoryImpl
 import com.example.tagplayer.tag_settings.domain.TagSettingsDomain
-import com.example.tagplayer.tag_settings.domain.errors.TagSettingsHandleDomainError
 import com.example.tagplayer.tag_settings.domain.TagSettingsInteractor
+import com.example.tagplayer.tag_settings.domain.errors.TagSettingsHandleDomainError
 import com.example.tagplayer.tag_settings.presentation.TagSettingsObservable
 import com.example.tagplayer.tag_settings.presentation.TagSettingsResponse
-import com.example.tagplayer.tag_settings.presentation.TagSettingsResponse.Mapper
 import com.example.tagplayer.tag_settings.presentation.TagSettingsViewModel
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
 
-interface TagSettingsModule : Module<TagSettingsViewModel> {
-    class Base(
-        core: Core,
-        private val clear: ClearViewModel
-    ) : TagSettingsModule {
-        private val observable = TagSettingsObservable()
-        private val tagSettingsCacheDatasource: TagSettingsCacheDatasource.Base =
-            TagSettingsCacheDatasource.Base(core.tagDao())
-        private val tagSettingsRepositoryImpl = TagSettingsRepositoryImpl(
-            core.foregroundWrapper(),
+val tagSettingsModule = module {
+    viewModel {
+        val observable = TagSettingsObservable()
+        val repository = TagSettingsRepositoryImpl(
+            get<ForegroundWrapper>(),
             HandleTry.Base(TagSettingsHandleDomainError.Base),
-            tagSettingsCacheDatasource,
+            TagSettingsCacheDatasource.Base(get<TagsDao>()),
             SongTag.Mapper.ToDomain
         )
-        private val tagSettingsInteractor: TagSettingsInteractor = TagSettingsInteractor.Base(
-            tagSettingsRepositoryImpl,
+        val interactor = TagSettingsInteractor.Base(
+            repository,
             TagSettingsDomain.Mapper.ToUi,
             HandleResponse.WithEmpty(
                 TagSettingsResponse.Empty,
-                core.handlePresentationError()
-            ) { e, handleError ->
-                TagSettingsResponse.Error(handleError.handle(e))
-            },
-        )
-        private val responseTagSettingsMapper = Mapper.Base(
-            observable,
-            DispatcherList.Base
+                get<HandleError<DomainError, String>>()
+            ) { error, mapper -> TagSettingsResponse.Error(mapper.handle(error)) }
         )
 
-        override fun create(): TagSettingsViewModel = TagSettingsViewModel(
-            clear,
-            RunAsync.Base(DispatcherList.Base),
-            tagSettingsInteractor,
+        TagSettingsViewModel(
+            get<RunAsync>(),
+            interactor,
             observable,
-            responseTagSettingsMapper,
-            Navigation.Base,
+            TagSettingsResponse.Mapper.Base(observable, DispatcherList.Base),
+            get<Navigation.Navigate>()
         )
     }
 }

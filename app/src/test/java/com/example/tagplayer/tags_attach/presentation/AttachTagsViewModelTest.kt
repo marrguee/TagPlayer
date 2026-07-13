@@ -1,16 +1,15 @@
 package com.example.tagplayer.tags_attach.presentation
 
 import com.example.tagplayer.FakeAllHandleStateObservable
-import com.example.tagplayer.FakeClearViewModel
 import com.example.tagplayer.FakeDispatcherList
 import com.example.tagplayer.FakeHandleDeath
 import com.example.tagplayer.FakeNavigation
 import com.example.tagplayer.FakeRunAsync
-import com.example.tagplayer.tags_attach.domain.AttachTagsInteractor
-import com.example.tagplayer.tags_attach.domain.TagsResponse
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.core.presentation.observable.CustomObserver
 import com.example.tagplayer.main.presentation.navigation.Screen
+import com.example.tagplayer.tags_attach.domain.AttachTagsInteractor
+import com.example.tagplayer.tags_attach.domain.TagsResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -26,7 +25,6 @@ class AttachTagsViewModelTest {
     class Main {
         private lateinit var viewModel: AttachTagsViewModel
 
-        private lateinit var clear: FakeClearViewModel
         private lateinit var interactor: FakeAttachTagsInteractor
         private lateinit var navigation: FakeNavigation
         private lateinit var observable: FakeObservable
@@ -38,7 +36,6 @@ class AttachTagsViewModelTest {
 
         @Before
         fun setup() {
-            clear = FakeClearViewModel.Base()
             interactor = FakeAttachTagsInteractor.Main()
             navigation = FakeNavigation.Base()
             observable = FakeObservable.Base()
@@ -48,7 +45,6 @@ class AttachTagsViewModelTest {
             runAsync = FakeRunAsync.Base()
 
             viewModel = AttachTagsViewModel(
-                clear,
                 runAsync,
                 interactor,
                 navigation,
@@ -140,15 +136,12 @@ class AttachTagsViewModelTest {
         fun `handle comeback`() {
             viewModel.comeback()
             navigation.checkScreen(Screen.Pop)
-            clear.checkClearCalledTimes(1)
-            clear.checkClearCalledWithClass(AttachTagsViewModel::class.java)
         }
     }
 
     class Error {
         private lateinit var viewModel: AttachTagsViewModel
 
-        private lateinit var clear: FakeClearViewModel
         private lateinit var interactor: FakeAttachTagsInteractor
         private lateinit var navigation: FakeNavigation
         private lateinit var observable: FakeObservable
@@ -160,7 +153,6 @@ class AttachTagsViewModelTest {
 
         @Before
         fun setup() {
-            clear = FakeClearViewModel.Base()
             interactor = FakeAttachTagsInteractor.Error()
             navigation = FakeNavigation.Base()
             observable = FakeObservable.Base()
@@ -170,7 +162,6 @@ class AttachTagsViewModelTest {
             runAsync = FakeRunAsync.Base()
 
             viewModel = AttachTagsViewModel(
-                clear,
                 runAsync,
                 interactor,
                 navigation,

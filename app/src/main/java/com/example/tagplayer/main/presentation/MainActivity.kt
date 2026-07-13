@@ -2,20 +2,15 @@ package com.example.tagplayer.main.presentation
 
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
 import com.example.tagplayer.R
-import com.example.tagplayer.core.domain.ProvideMediaObserver
-import com.example.tagplayer.core.domain.ProvideViewModel
+import com.example.tagplayer.core.media_service.MediaObserver
 import com.example.tagplayer.main.presentation.navigation.Screen
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity(R.layout.activity_main), ProvideViewModel {
-    private val viewModel by lazy {
-        (application as ProvideViewModel).provide(MainViewModel::class.java)
-    }
-
-    private val mediaObserver by lazy {
-        (application as ProvideMediaObserver).mediaObserver()
-    }
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+    private val viewModel: MainViewModel by viewModel()
+    private val mediaObserver: MediaObserver by inject()
 
     override fun onResume() {
         super.onResume()
@@ -37,9 +32,4 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), ProvideViewModel
         viewModel.stopGettingUpdates()
         contentResolver.unregisterContentObserver(mediaObserver)
     }
-
-    override fun <T : ViewModel> provide(clazz: Class<out T>) =
-        (application as ProvideViewModel).provide(clazz)
-
 }
-

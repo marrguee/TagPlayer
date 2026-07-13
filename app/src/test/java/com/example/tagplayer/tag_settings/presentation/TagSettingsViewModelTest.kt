@@ -1,12 +1,11 @@
 package com.example.tagplayer.tag_settings.presentation
 
 import com.example.tagplayer.FakeAllObservable
-import com.example.tagplayer.FakeClearViewModel
 import com.example.tagplayer.FakeNavigation
 import com.example.tagplayer.FakeRunAsync
-import com.example.tagplayer.tag_details.presentation.TagDetailsScreen
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.main.presentation.navigation.Screen
+import com.example.tagplayer.tag_details.presentation.TagDetailsScreen
 import com.example.tagplayer.tag_settings.domain.TagSettingsInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +17,6 @@ import org.junit.Test
 class TagSettingsViewModelTest {
     private lateinit var viewModel: TagSettingsViewModel
 
-    private lateinit var clear: FakeClearViewModel
     private lateinit var runAsync: FakeRunAsync
     private lateinit var interactor: FakeInteractor
     private lateinit var observable: FakeObservable
@@ -27,7 +25,6 @@ class TagSettingsViewModelTest {
 
     @Before
     fun setup() {
-        clear = FakeClearViewModel.Base()
         runAsync = FakeRunAsync.Base()
         interactor = FakeInteractor.Base()
         observable = FakeObservable.Base()
@@ -35,7 +32,6 @@ class TagSettingsViewModelTest {
         navigation = FakeNavigation.Base()
 
         viewModel = TagSettingsViewModel(
-            clear,
             runAsync,
             interactor,
             observable,

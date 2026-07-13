@@ -1,14 +1,9 @@
 package com.example.tagplayer.core.data
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.media3.common.util.UnstableApi
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -17,8 +12,8 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.example.tagplayer.core.domain.ProvideMediaStoreHandler
-import com.example.tagplayer.core.domain.ProvidePlayerService
+import com.example.tagplayer.core.media_service.MediaService
+import com.example.tagplayer.home.data.HandleMediaStore
 import kotlin.reflect.KClass
 
 
@@ -39,7 +34,6 @@ interface ForegroundWrapper {
                     request.build()
                 ).enqueue()
             }
-        @UnstableApi
         override fun scanMedia() {
             startWorker.invoke(
                 OneTimeWorkRequestBuilder<MediaWorker>(),
@@ -57,7 +51,6 @@ interface ForegroundWrapper {
                 PlaySongWorker::class
             )
         }
-        @UnstableApi
         override fun fetchNewSong(uri: String) {
             startWorker.invoke(
                 OneTimeWorkRequestBuilder<FetchSongWorker>().setInputData(
@@ -75,16 +68,15 @@ interface ForegroundWrapper {
     }
 }
 
-@UnstableApi
 class MediaWorker(
     context: Context,
-    workerParameters: WorkerParameters
+    workerParameters: WorkerParameters,
+    private val mediaStoreHandler: HandleMediaStore
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result = try {
-        (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler()
-                .scan(applicationContext)
+        mediaStoreHandler.scan(applicationContext)
         Result.success()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         Result.failure()
     }
 }
@@ -96,23 +88,26 @@ class PlaySongWorker(
     override suspend fun doWork(): Result {
         val songId: Long = inputData.getLong(inputData.keyValueMap.keys.first(), -1)
         if (songId == -1L) return Result.failure()
-        (applicationContext as ProvidePlayerService).start(songId)
+        ContextCompat.startForegroundService(
+            applicationContext,
+            MediaService.startIntent(applicationContext, songId)
+        )
         return Result.success()
     }
 }
 
-@UnstableApi
 class FetchSongWorker(
     context: Context,
-    workerParameters: WorkerParameters
+    workerParameters: WorkerParameters,
+    private val mediaStoreHandler: HandleMediaStore
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
         return try {
             val uri: Uri = inputData.getString(inputData.keyValueMap.keys.first())?.toUri()
                 ?: return Result.failure()
-            (applicationContext as ProvideMediaStoreHandler).mediaStoreHandler().scanNewFile(uri)
+            mediaStoreHandler.scanNewFile(uri)
             Result.success()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Result.failure()
         }
     }

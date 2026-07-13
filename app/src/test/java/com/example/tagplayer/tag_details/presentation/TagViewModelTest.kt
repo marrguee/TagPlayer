@@ -1,15 +1,12 @@
 package com.example.tagplayer.tag_details.presentation
 
 import com.example.tagplayer.FakeAllObservable
-import com.example.tagplayer.FakeClearViewModel
 import com.example.tagplayer.FakeHandleDeath
 import com.example.tagplayer.FakeManageResources
-import com.example.tagplayer.FakeNavigation
 import com.example.tagplayer.FakeRunAsync
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.core.presentation.observable.CustomObserver
 import com.example.tagplayer.core.presentation.viewmodel.HandleComeback
-import com.example.tagplayer.main.presentation.navigation.Screen
 import com.example.tagplayer.tag_details.domain.TagDetailsInteractor
 import com.example.tagplayer.tag_details.domain.TagDetailsResponse
 import org.junit.Assert.assertEquals
@@ -25,7 +22,6 @@ class TagViewModelTest {
     class AddTagViewModelTest {
         private lateinit var viewModel: AddTagViewModel
 
-        private lateinit var clear: FakeClearViewModel
         private lateinit var handleDeath: FakeHandleDeath
         private lateinit var runAsync: FakeRunAsync
         private lateinit var interactor: FakeInteractor
@@ -33,14 +29,12 @@ class TagViewModelTest {
 
         @Before
         fun setup() {
-            clear = FakeClearViewModel.Base()
             handleDeath = FakeHandleDeath.Base()
             runAsync = FakeRunAsync.Base()
             interactor = FakeInteractor.Base(TagDetailsResponse.Success(String(), String()))
             observable = FakeObservable.Base()
 
             viewModel = AddTagViewModel(
-                clear,
                 handleDeath,
                 runAsync,
                 interactor,
@@ -118,9 +112,7 @@ class TagViewModelTest {
     class EditTagViewModelTest {
         private lateinit var viewModel: EditTagViewModel
 
-        private lateinit var clear: FakeClearViewModel
         private lateinit var handleDeath: FakeHandleDeath
-        private lateinit var navigation: FakeNavigation
         private lateinit var runAsync: FakeRunAsync
         private lateinit var interactor: FakeInteractor
         private lateinit var observable: FakeObservable
@@ -132,9 +124,7 @@ class TagViewModelTest {
 
         @Before
         fun setup() {
-            clear = FakeClearViewModel.Base()
             handleDeath = FakeHandleDeath.Base()
-            navigation = FakeNavigation.Base()
             runAsync = FakeRunAsync.Base()
             interactor = FakeInteractor.Base(
                 TagDetailsResponse.Success(tagData.first, tagData.second)
@@ -144,7 +134,6 @@ class TagViewModelTest {
             manageResources = FakeManageResources.Base()
 
             viewModel = EditTagViewModel(
-                clear,
                 handleDeath,
                 observable,
                 runAsync,
@@ -182,7 +171,6 @@ class TagViewModelTest {
             runAsync.checkHandleCalled(2)
             interactor.checkAddCalled(1)
             dismiss.checkDismissCalled(1)
-            navigation.checkScreen(Screen.Pop)
         }
 
         @Test
@@ -231,8 +219,6 @@ class TagViewModelTest {
         fun `tag id don't passed`() {
             viewModel.init()
             observable.checkState(TagDialogState.Error(manageResources.retrieveIdError()))
-            clear.checkClearCalledTimes(1)
-            navigation.checkScreen(Screen.Pop)
         }
     }
 

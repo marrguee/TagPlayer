@@ -5,21 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
-import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.core.presentation.fragments.NewInstance
 import com.example.tagplayer.databinding.FragmentDetailsDialogBinding
+import com.example.tagplayer.tag_details.presentation.radio_grid.RadioGridViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TagDetailsFragment : DialogFragment(), NewInstance<Long, TagDetailsFragment> {
     private lateinit var binding: FragmentDetailsDialogBinding
     private var tagId: Long? = null
 
-    private val viewModel: TagViewModel by lazy {
-        (requireActivity().application as ProvideViewModel).provide(
-            if (tagId == null) AddTagViewModel::class.java else EditTagViewModel::class.java
-        )
-    }
+    private val addViewModel: AddTagViewModel by viewModel()
+    private val editViewModel: EditTagViewModel by viewModel()
+    private val radioGridViewModel: RadioGridViewModel by viewModel()
+    private val viewModel: TagViewModel
+        get() = if (tagId == null) addViewModel else editViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +36,7 @@ class TagDetailsFragment : DialogFragment(), NewInstance<Long, TagDetailsFragmen
         viewModel.init(tagId)
 
         with(binding) {
+            colorGrid.bind(radioGridViewModel)
             colorGrid.init()
 
             addTagButton.setOnClickListener {

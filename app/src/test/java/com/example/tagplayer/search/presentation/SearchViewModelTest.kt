@@ -1,15 +1,14 @@
 package com.example.tagplayer.search.presentation
 
 import com.example.tagplayer.FakeAllObservable
-import com.example.tagplayer.FakeClearViewModel
 import com.example.tagplayer.FakeNavigation
 import com.example.tagplayer.FakeRunAsync
-import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.core.presentation.observable.CustomObserver
 import com.example.tagplayer.main.presentation.navigation.Screen
 import com.example.tagplayer.search.domain.SearchInteractor
 import com.example.tagplayer.search.domain.SearchResponse
+import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +16,6 @@ import org.junit.Test
 class SearchViewModelTest {
     private lateinit var viewModel: SearchViewModel
 
-    private lateinit var clear: FakeClearViewModel
     private lateinit var runAsync: FakeRunAsync
     private lateinit var interactor: FakeInteractor
     private lateinit var observable: FakeObservable
@@ -26,7 +24,6 @@ class SearchViewModelTest {
 
     @Before
     fun setup() {
-        clear = FakeClearViewModel.Base()
         runAsync = FakeRunAsync.Base()
         interactor = FakeInteractor.Base()
         observable = FakeObservable.Base()
@@ -34,7 +31,6 @@ class SearchViewModelTest {
         navigation = FakeNavigation.Base()
 
         viewModel = SearchViewModel(
-            clear,
             runAsync,
             interactor,
             observable,

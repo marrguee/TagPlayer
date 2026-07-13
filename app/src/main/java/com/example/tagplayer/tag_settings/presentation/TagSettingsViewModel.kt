@@ -1,7 +1,6 @@
 package com.example.tagplayer.tag_settings.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.tagplayer.core.domain.ClearViewModel
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.core.presentation.observable.CustomObserver
@@ -9,17 +8,16 @@ import com.example.tagplayer.core.presentation.viewmodel.ComebackViewModel
 import com.example.tagplayer.core.presentation.viewmodel.RunAsync
 import com.example.tagplayer.main.presentation.navigation.Navigation
 import com.example.tagplayer.main.presentation.navigation.Screen
-import com.example.tagplayer.tag_settings.domain.TagSettingsInteractor
 import com.example.tagplayer.tag_details.presentation.TagDetailsScreen
+import com.example.tagplayer.tag_settings.domain.TagSettingsInteractor
 
 class TagSettingsViewModel(
-    clear: ClearViewModel,
     private val runAsync: RunAsync,
     private val interactor: TagSettingsInteractor,
     private val observable: CustomObservable.All<TagSettingsState>,
     private val mapper: TagSettingsResponse.Mapper,
     private val navigation: Navigation.Navigate,
-) : ComebackViewModel(clear), HandleUiStateUpdates.All<TagSettingsState> {
+) : ComebackViewModel(), HandleUiStateUpdates.All<TagSettingsState> {
 
     fun loadTags() = interactor.tags().map(mapper, viewModelScope)
 

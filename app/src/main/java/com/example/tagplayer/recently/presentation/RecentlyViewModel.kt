@@ -1,13 +1,11 @@
 package com.example.tagplayer.recently.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.tagplayer.core.presentation.observable.CustomObservable
-import com.example.tagplayer.core.presentation.observable.CustomObserver
-import com.example.tagplayer.core.domain.ClearViewModel
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.core.domain.StartPlayback
 import com.example.tagplayer.core.presentation.HandleDeath
-import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
+import com.example.tagplayer.core.presentation.observable.CustomObservable
+import com.example.tagplayer.core.presentation.observable.CustomObserver
 import com.example.tagplayer.core.presentation.viewmodel.ComebackViewModel
 import com.example.tagplayer.core.presentation.viewmodel.NavigateAttachTagsScreen
 import com.example.tagplayer.core.presentation.viewmodel.RunAsync
@@ -15,6 +13,7 @@ import com.example.tagplayer.main.presentation.navigation.Navigation
 import com.example.tagplayer.main.presentation.navigation.Screen
 import com.example.tagplayer.recently.domain.RecentlyInteractor
 import com.example.tagplayer.recently.domain.RecentlyResponse
+import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 
 class RecentlyViewModel(
     private val runAsync: RunAsync,
@@ -23,8 +22,7 @@ class RecentlyViewModel(
     private val mapper: RecentlyResponse.HistoryResponseMapper,
     private val navigation: Navigation.Navigate,
     private val handleDeath: HandleDeath,
-    clear: ClearViewModel
-) : ComebackViewModel(clear), HandleUiStateUpdates.All<RecentlyState>, StartPlayback,
+) : ComebackViewModel(), HandleUiStateUpdates.All<RecentlyState>, StartPlayback,
     NavigateAttachTagsScreen {
 
     fun init() {
@@ -50,4 +48,3 @@ class RecentlyViewModel(
         navigation.update(Screen.Pop)
     }
 }
-

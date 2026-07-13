@@ -5,10 +5,6 @@ import androidx.core.content.ContextCompat
 import com.example.tagplayer.R
 
 interface ManageResources {
-    interface Provide {
-        fun manageRecourses(): All
-    }
-
     interface Strings {
         fun string(id: Int) : String
     }

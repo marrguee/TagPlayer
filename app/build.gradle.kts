@@ -61,7 +61,6 @@ room {
 
 dependencies {
     implementation(libs.room.runtime)
-    annotationProcessor(libs.room.compiler)
     implementation(libs.kotlin.reflect)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
@@ -87,6 +86,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.workmanager)
 
     //tests
     testImplementation(libs.junit)

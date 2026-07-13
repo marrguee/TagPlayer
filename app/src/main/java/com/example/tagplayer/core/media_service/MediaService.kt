@@ -17,9 +17,9 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSession.ConnectionResult
 import androidx.media3.session.MediaSession.ControllerInfo
 import androidx.media3.session.MediaSessionService
+import com.example.tagplayer.core.data.database.dao.LastPlayedDao
+import com.example.tagplayer.core.data.database.dao.SongsDao
 import com.example.tagplayer.core.data.database.models.LastPlayed
-import com.example.tagplayer.core.domain.ProvideLastPlayedDao
-import com.example.tagplayer.core.domain.ProvideSongsDao
 import com.example.tagplayer.main.presentation.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,10 +27,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import java.util.Date
 
-
 class MediaService : MediaSessionService() {
+    private val songsDao: SongsDao by inject()
+    private val lastPlayedDao: LastPlayedDao by inject()
+
     private val coroutineScope: CoroutineScope =
         CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -71,11 +74,6 @@ class MediaService : MediaSessionService() {
             if (it.action == START_PLAYBACK) {
                 coroutineScope.launch {
                     val songId = it.getLongExtra(MEDIA_ID_KEY, -1)
-
-                    val songsDao =
-                        (application as ProvideSongsDao).songsDao()
-                    val lastPlayedDao =
-                        (application as ProvideLastPlayedDao).lastPlayedDao()
 
                     val uri = songsDao.uriById(songId)
                     val title = songsDao.titleById(songId)
@@ -163,4 +161,3 @@ class MediaService : MediaSessionService() {
         }
     }
 }
-

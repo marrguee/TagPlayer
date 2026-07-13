@@ -1,6 +1,5 @@
 package com.example.tagplayer.tag_details.presentation.radio_grid
 
-import com.example.tagplayer.core.domain.ClearViewModel
 import com.example.tagplayer.core.domain.HandleUiStateUpdates
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.core.presentation.observable.CustomObserver
@@ -8,9 +7,8 @@ import com.example.tagplayer.core.presentation.save_restore.SaveAndRestoreParcel
 import com.example.tagplayer.core.presentation.viewmodel.ComebackViewModel
 
 class RadioGridViewModel(
-    clear: ClearViewModel,
     private val observable: CustomObservable.ParcelableStateHandleManualClear<RadioGridState>
-) : ComebackViewModel(clear),
+) : ComebackViewModel(),
     HandleUiStateUpdates.StartAndStopUpdates<RadioGridState>,
     SaveAndRestoreParcelable<RadioGridState>
 {

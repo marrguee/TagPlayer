@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.media3.common.util.UnstableApi
 import com.example.tagplayer.R
-import com.example.tagplayer.databinding.FragmentRecentlyBinding
 import com.example.tagplayer.core.presentation.fragments.ComebackFragment
 import com.example.tagplayer.core.presentation.generic_adapter.item_interfaces.MenuAction
+import com.example.tagplayer.databinding.FragmentRecentlyBinding
 
 class RecentlyFragment : ComebackFragment<FragmentRecentlyBinding, RecentlyViewModel>() {
     private lateinit var adapter: RecentlyAdapter

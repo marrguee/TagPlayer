@@ -1,27 +1,25 @@
 package com.example.tagplayer.filter.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.example.tagplayer.core.domain.HandleUiStateUpdates
+import com.example.tagplayer.core.presentation.HandleDeath
 import com.example.tagplayer.core.presentation.observable.CustomObservable
 import com.example.tagplayer.core.presentation.observable.CustomObserver
-import com.example.tagplayer.core.presentation.HandleDeath
-import com.example.tagplayer.core.domain.ClearViewModel
-import com.example.tagplayer.core.domain.HandleUiStateUpdates
-import com.example.tagplayer.filter.domain.FilterInteractor
 import com.example.tagplayer.core.presentation.viewmodel.ComebackViewModel
 import com.example.tagplayer.core.presentation.viewmodel.RunAsync
+import com.example.tagplayer.filter.domain.FilterInteractor
 import com.example.tagplayer.filter.domain.FilterResponse
 import com.example.tagplayer.main.presentation.navigation.Navigation
 import com.example.tagplayer.main.presentation.navigation.Screen
 
 class FilterViewModel(
-    clear: ClearViewModel,
     private val runAsync: RunAsync,
     private val observable: CustomObservable.AllHandleState<FilterState>,
     private val interactor: FilterInteractor,
     private val mapper: FilterResponse.Mapper,
     private val navigation: Navigation.Navigate,
     private val handleDeath: HandleDeath,
-) : ComebackViewModel(clear), HandleUiStateUpdates.All<FilterState> {
+) : ComebackViewModel(), HandleUiStateUpdates.All<FilterState> {
     private val uiBlock: (FilterResponse) -> Unit = { it.map(mapper, viewModelScope) }
 
     fun init() {

@@ -8,15 +8,13 @@ import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.example.tagplayer.R
-import com.example.tagplayer.core.domain.ProvideViewModel
 import com.example.tagplayer.core.presentation.fragments.BindingFragment
 import com.example.tagplayer.core.presentation.generic_adapter.item_interfaces.MenuAction
 import com.example.tagplayer.databinding.FragmentHomeBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BindingFragment<FragmentHomeBinding>() {
-    private val viewModel by lazy {
-        (activity as ProvideViewModel).provide(HomeViewModel::class.java)
-    }
+    private val viewModel: HomeViewModel by viewModel()
     private lateinit var recentlyAdapter: HomeAdapter
 
     private val requestPermissionsLauncher = registerForActivityResult(

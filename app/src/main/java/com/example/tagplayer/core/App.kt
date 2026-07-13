@@ -1,56 +1,40 @@
 package com.example.tagplayer.core
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
-import androidx.media3.common.util.UnstableApi
 import com.bumptech.glide.Glide
-import com.example.tagplayer.core.data.database.dao.LastPlayedDao
-import com.example.tagplayer.core.data.database.dao.SongsDao
-import com.example.tagplayer.core.domain.ManageResources
-import com.example.tagplayer.core.domain.ProvideLastPlayedDao
-import com.example.tagplayer.core.domain.ProvideMediaObserver
-import com.example.tagplayer.core.domain.ProvideMediaStoreHandler
-import com.example.tagplayer.core.domain.ProvidePlayerService
-import com.example.tagplayer.core.domain.ProvideSongsDao
-import com.example.tagplayer.core.domain.ProvideViewModel
-import com.example.tagplayer.core.media_service.MediaObserver
-import com.example.tagplayer.core.media_service.MediaService
+import com.example.tagplayer.core.di.coreModule
+import com.example.tagplayer.filter.filterModule
+import com.example.tagplayer.home.homeModule
+import com.example.tagplayer.playback.playbackModule
+import com.example.tagplayer.recently.recentlyModule
+import com.example.tagplayer.search.searchModule
+import com.example.tagplayer.tag_details.presentation.radio_grid.radioGridModule
+import com.example.tagplayer.tag_details.tagDetailsModule
+import com.example.tagplayer.tag_settings.tagSettingsModule
+import com.example.tagplayer.tags_attach.attachTagsModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.workmanager.koin.workManagerFactory
+import org.koin.core.context.startKoin
 
-@UnstableApi
-class App : Application(),
-    ProvideViewModel,
-    ProvideMediaStoreHandler,
-    ProvidePlayerService,
-    ManageResources.Provide,
-    ProvideSongsDao,
-    ProvideLastPlayedDao,
-    ProvideMediaObserver
-{
-    private lateinit var core: Core
-    private lateinit var factory: ProvideViewModel.Factory
-
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        core = Core.Base(this, contentResolver)
-        factory = ProvideViewModel.Factory(core)
+        startKoin {
+            androidContext(this@App)
+            workManagerFactory()
+            modules(
+                coreModule,
+                homeModule,
+                filterModule,
+                attachTagsModule,
+                searchModule,
+                recentlyModule,
+                playbackModule,
+                tagSettingsModule,
+                tagDetailsModule,
+                radioGridModule
+            )
+        }
         Glide.get(this)
     }
-
-    override fun start(id: Long) {
-        ContextCompat.startForegroundService(
-            this,
-            MediaService.startIntent(this, id)
-        )
-    }
-
-    override fun <T : ViewModel> provide(clazz: Class<out T>) = factory.create(clazz)
-    override fun mediaStoreHandler() = core.mediaStoreHandler()
-    override fun manageRecourses() = core.manageRecourses()
-    override fun songsDao(): SongsDao = core.songsDao()
-    override fun lastPlayedDao(): LastPlayedDao = core.lastPlayedDao()
-    override fun mediaObserver(): MediaObserver =
-        MediaObserver(Handler(Looper.getMainLooper()), core.foregroundWrapper())
 }

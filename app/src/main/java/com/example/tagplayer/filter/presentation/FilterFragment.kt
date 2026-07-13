@@ -3,8 +3,8 @@ package com.example.tagplayer.filter.presentation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import com.example.tagplayer.databinding.FragmentTagsFilterBinding
 import com.example.tagplayer.core.presentation.fragments.ComebackFragment
+import com.example.tagplayer.databinding.FragmentTagsFilterBinding
 
 class FilterFragment : ComebackFragment<FragmentTagsFilterBinding, FilterViewModel>() {
     private lateinit var adapter: FilterAdapter

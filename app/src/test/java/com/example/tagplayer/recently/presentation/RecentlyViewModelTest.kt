@@ -1,15 +1,14 @@
 package com.example.tagplayer.recently.presentation
 
 import com.example.tagplayer.FakeAllObservable
-import com.example.tagplayer.FakeClearViewModel
 import com.example.tagplayer.FakeHandleDeath
 import com.example.tagplayer.FakeNavigation
 import com.example.tagplayer.FakeRunAsync
-import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 import com.example.tagplayer.core.presentation.observable.CustomObserver
 import com.example.tagplayer.main.presentation.navigation.Screen
 import com.example.tagplayer.recently.domain.RecentlyInteractor
 import com.example.tagplayer.recently.domain.RecentlyResponse
+import com.example.tagplayer.tags_attach.presentation.AttachTagsScreen
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -22,7 +21,6 @@ class RecentlyViewModelTest {
     private lateinit var mapper: FakeRecentlyMapper
     private lateinit var navigation: FakeNavigation
     private lateinit var handleDeath: FakeHandleDeath
-    private lateinit var clearViewModel: FakeClearViewModel
 
     private lateinit var viewModel: RecentlyViewModel
 
@@ -34,10 +32,9 @@ class RecentlyViewModelTest {
         mapper = FakeRecentlyMapper.Base(observable)
         navigation = FakeNavigation.Base()
         handleDeath = FakeHandleDeath.Base()
-        clearViewModel = FakeClearViewModel.Base()
 
         viewModel = RecentlyViewModel(
-            runAsync, interactor, observable, mapper, navigation, handleDeath, clearViewModel
+            runAsync, interactor, observable, mapper, navigation, handleDeath
         )
     }
 
@@ -181,4 +178,3 @@ class RecentlyViewModelTest {
             FakeAllObservable.Base<RecentlyState>(RecentlyState.Empty, RecentlyObserver.Empty)
     }
 }
-
