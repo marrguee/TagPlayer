@@ -13,36 +13,67 @@ import com.example.tagplayer.search.data.SearchCacheDatasource
 import com.example.tagplayer.search.data.SearchRepositoryImpl
 import com.example.tagplayer.search.domain.SearchDomain
 import com.example.tagplayer.search.domain.SearchInteractor
+import com.example.tagplayer.search.domain.SearchRepository
 import com.example.tagplayer.search.domain.SearchResponse
 import com.example.tagplayer.search.domain.errors.SearchHandleDomainError
 import com.example.tagplayer.search.presentation.SearchObservable
 import com.example.tagplayer.search.presentation.SearchViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.annotation.KoinViewModelScopeApi
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import org.koin.viewmodel.scope.viewModelScope
 
+@OptIn(KoinExperimentalAPI::class)
 val searchModule = module {
-    viewModel {
-        val observable = SearchObservable()
-        val repository = SearchRepositoryImpl(
-            get<ForegroundWrapper>(),
-            HandleTry.Base(SearchHandleDomainError.Base),
-            SearchCacheDatasource.Base(get<SongsDao>()),
-            Song.Mapper.ToDomainSearch
-        )
-        val interactor = SearchInteractor.Base(
-            repository,
-            HandleResponse.WithoutEmpty(
-                get<HandleError<DomainError, String>>()
-            ) { error, mapper -> SearchResponse.Error(mapper.handle(error)) },
-            SearchDomain.Mapper.ToUi
-        )
+    @OptIn(KoinViewModelScopeApi::class)
+    viewModelScope {
+        scoped<SearchObservable> { SearchObservable() }
 
-        SearchViewModel(
-            get<RunAsync>(),
-            interactor,
-            observable,
-            SearchResponse.Mapper.Base(observable),
-            get<Navigation.Navigate>()
-        )
+        scoped<SearchCacheDatasource> {
+            SearchCacheDatasource.Base(
+                songsDao = get<SongsDao>()
+            )
+        }
+
+        scoped<SearchRepository<SearchDomain>> {
+            SearchRepositoryImpl(
+                foregroundWrapper = get<ForegroundWrapper>(),
+                handleTry = HandleTry.Base(
+                    handleError = SearchHandleDomainError.Base
+                ),
+                cacheDatasource = get<SearchCacheDatasource>(),
+                mapper = Song.Mapper.ToDomainSearch
+            )
+        }
+
+        scoped<SearchInteractor> {
+            SearchInteractor.Base(
+                repository = get<SearchRepository<SearchDomain>>(),
+                handleResponse = HandleResponse.WithoutEmpty(
+                    handleError = get<HandleError<DomainError, String>>(),
+                    errorResponse = { error, mapper ->
+                        SearchResponse.Error(cause = mapper.handle(error))
+                    }
+                ),
+                mapper = SearchDomain.Mapper.ToUi
+            )
+        }
+
+        scoped<SearchResponse.Mapper> {
+            SearchResponse.Mapper.Base(
+                observable = get<SearchObservable>()
+            )
+        }
+
+        viewModel {
+            SearchViewModel(
+                runAsync = get<RunAsync>(),
+                interactor = get<SearchInteractor>(),
+                observable = get<SearchObservable>(),
+                mapper = get<SearchResponse.Mapper>(),
+                navigation = get<Navigation.Navigate>()
+            )
+        }
     }
 }

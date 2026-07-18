@@ -5,6 +5,7 @@ import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.room.Room
 import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import com.example.tagplayer.R
 import com.example.tagplayer.core.data.FetchSongWorker
 import com.example.tagplayer.core.data.ForegroundWrapper
@@ -31,9 +32,13 @@ import com.example.tagplayer.main.presentation.navigation.Navigation
 import com.example.tagplayer.main.presentation.navigation.Screen
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.worker
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.annotation.KoinViewModelScopeApi
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import org.koin.viewmodel.scope.viewModelScope
 
+@OptIn(KoinExperimentalAPI::class)
 val coreModule = module {
     single {
         Room.databaseBuilder(
@@ -47,54 +52,71 @@ val coreModule = module {
     single<LastPlayedDao> { get<MediaDatabase>().lastPlayed }
 
     single<ForegroundWrapper> {
-        ForegroundWrapper.Base(WorkManager.getInstance(androidContext()))
+        ForegroundWrapper.Base(
+            workManager = WorkManager.getInstance(androidContext())
+        )
     }
-    single<ManageResources.All> { ManageResources.Base(androidContext()) }
+    single<ManageResources.All> {
+        ManageResources.Base(context = androidContext())
+    }
     single<ManageResources.Strings> { get<ManageResources.All>() }
     single<ManageResources.SongIdError> { get<ManageResources.All>() }
-    single<HandleError<DomainError, String>> { HandleError.Presentation(androidContext()) }
-    single<ShareRequest> { ShareRequest.Base(androidContext()) }
+    single<HandleError<DomainError, String>> {
+        HandleError.Presentation(context = androidContext())
+    }
+    single<ShareRequest> {
+        ShareRequest.Base(context = androidContext())
+    }
     single<HandleMediaStore> {
         val songsDao = get<SongsDao>()
         HandleMediaStore.Base(
-            ExtractMedia.Base(androidContext().contentResolver),
-            ExtractMediaResult.Mapper.Base(songsDao),
-            songsDao
+            extractMedia = ExtractMedia.Base(
+                contentResolver = androidContext().contentResolver
+            ),
+            extractMapper = ExtractMediaResult.Mapper.Base(songsDao = songsDao),
+            songsDao = songsDao
         )
     }
     single {
         MediaObserver(
-            Handler(Looper.getMainLooper()),
-            get()
+            handler = Handler(Looper.getMainLooper()),
+            foregroundWrapper = get<ForegroundWrapper>()
         )
     }
 
     single<Navigation.Mutable> { Navigation.Base }
     single<Navigation.Navigate> { get<Navigation.Mutable>() }
     single<CustomObservable.All<Screen>> { Navigation.Base }
-    factory<RunAsync> { RunAsync.Base(DispatcherList.Base) }
+    factory<RunAsync> { RunAsync.Base(dispatcherList = DispatcherList.Base) }
     factory<HandleDeath> { HandleDeath.Base() }
 
-    viewModel { MainViewModel(get()) }
+    @OptIn(KoinViewModelScopeApi::class)
+    viewModelScope {
+        viewModel {
+            MainViewModel(
+                observable = get<CustomObservable.All<Screen>>()
+            )
+        }
+    }
 
     worker { params ->
         MediaWorker(
-            androidContext(),
-            params.get(),
-            get()
+            context = androidContext(),
+            workerParameters = params.get<WorkerParameters>(),
+            mediaStoreHandler = get<HandleMediaStore>()
         )
     }
     worker { params ->
         PlaySongWorker(
-            androidContext(),
-            params.get()
+            context = androidContext(),
+            workerParameters = params.get<WorkerParameters>()
         )
     }
     worker { params ->
         FetchSongWorker(
-            androidContext(),
-            params.get(),
-            get()
+            context = androidContext(),
+            workerParameters = params.get<WorkerParameters>(),
+            mediaStoreHandler = get<HandleMediaStore>()
         )
     }
 }

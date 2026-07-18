@@ -14,12 +14,16 @@ import com.example.tagplayer.tag_settings.tagSettingsModule
 import com.example.tagplayer.tags_attach.attachTagsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.koin.workManagerFactory
+import org.koin.core.annotation.KoinViewModelScopeApi
 import org.koin.core.context.startKoin
+import org.koin.core.option.viewModelScopeFactory
 
+@OptIn(KoinViewModelScopeApi::class)
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
+            options(viewModelScopeFactory())
             androidContext(this@App)
             workManagerFactory()
             modules(

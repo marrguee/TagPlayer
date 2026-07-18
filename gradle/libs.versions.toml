@@ -1,5 +1,5 @@
 [versions]
-agp = "9.2.1"
+agp = "9.3.0"
 ksp = "2.3.10"
 kotlin = "2.4.0"
 room = "2.8.4"
@@ -21,7 +21,7 @@ espresso = "3.7.0"
 mockitoKotlin = "6.3.0"
 mockito = "5.23.0"
 material3 = "1.4.0"
-koin = "4.2.1"
+koin = "4.2.2"
 
 nav3Core = "1.1.4"
 lifecycleViewmodelNav3 = "2.11.0"
@@ -63,6 +63,7 @@ kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-workmanager = { module = "io.insert-koin:koin-androidx-workmanager", version.ref = "koin" }
 androidx-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

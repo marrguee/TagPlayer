@@ -14,37 +14,69 @@ import com.example.tagplayer.tag_settings.data.TagSettingsCacheDatasource
 import com.example.tagplayer.tag_settings.data.TagSettingsRepositoryImpl
 import com.example.tagplayer.tag_settings.domain.TagSettingsDomain
 import com.example.tagplayer.tag_settings.domain.TagSettingsInteractor
+import com.example.tagplayer.tag_settings.domain.TagSettingsRepository
 import com.example.tagplayer.tag_settings.domain.errors.TagSettingsHandleDomainError
 import com.example.tagplayer.tag_settings.presentation.TagSettingsObservable
 import com.example.tagplayer.tag_settings.presentation.TagSettingsResponse
 import com.example.tagplayer.tag_settings.presentation.TagSettingsViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.annotation.KoinViewModelScopeApi
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import org.koin.viewmodel.scope.viewModelScope
 
+@OptIn(KoinExperimentalAPI::class)
 val tagSettingsModule = module {
-    viewModel {
-        val observable = TagSettingsObservable()
-        val repository = TagSettingsRepositoryImpl(
-            get<ForegroundWrapper>(),
-            HandleTry.Base(TagSettingsHandleDomainError.Base),
-            TagSettingsCacheDatasource.Base(get<TagsDao>()),
-            SongTag.Mapper.ToDomain
-        )
-        val interactor = TagSettingsInteractor.Base(
-            repository,
-            TagSettingsDomain.Mapper.ToUi,
-            HandleResponse.WithEmpty(
-                TagSettingsResponse.Empty,
-                get<HandleError<DomainError, String>>()
-            ) { error, mapper -> TagSettingsResponse.Error(mapper.handle(error)) }
-        )
+    @OptIn(KoinViewModelScopeApi::class)
+    viewModelScope {
+        scoped<TagSettingsObservable> { TagSettingsObservable() }
 
-        TagSettingsViewModel(
-            get<RunAsync>(),
-            interactor,
-            observable,
-            TagSettingsResponse.Mapper.Base(observable, DispatcherList.Base),
-            get<Navigation.Navigate>()
-        )
+        scoped<TagSettingsCacheDatasource> {
+            TagSettingsCacheDatasource.Base(
+                tagsDao = get<TagsDao>()
+            )
+        }
+
+        scoped<TagSettingsRepository<TagSettingsDomain>> {
+            TagSettingsRepositoryImpl(
+                foregroundWrapper = get<ForegroundWrapper>(),
+                handleTry = HandleTry.Base(
+                    handleError = TagSettingsHandleDomainError.Base
+                ),
+                cacheDatasource = get<TagSettingsCacheDatasource>(),
+                mapper = SongTag.Mapper.ToDomain
+            )
+        }
+
+        scoped<TagSettingsInteractor> {
+            TagSettingsInteractor.Base(
+                repository = get<TagSettingsRepository<TagSettingsDomain>>(),
+                mapper = TagSettingsDomain.Mapper.ToUi,
+                handleResponse = HandleResponse.WithEmpty(
+                    empty = TagSettingsResponse.Empty,
+                    handleError = get<HandleError<DomainError, String>>(),
+                    errorResponse = { error, mapper ->
+                        TagSettingsResponse.Error(message = mapper.handle(error))
+                    }
+                )
+            )
+        }
+
+        scoped<TagSettingsResponse.Mapper> {
+            TagSettingsResponse.Mapper.Base(
+                observable = get<TagSettingsObservable>(),
+                dispatcherList = DispatcherList.Base
+            )
+        }
+
+        viewModel {
+            TagSettingsViewModel(
+                runAsync = get<RunAsync>(),
+                interactor = get<TagSettingsInteractor>(),
+                observable = get<TagSettingsObservable>(),
+                mapper = get<TagSettingsResponse.Mapper>(),
+                navigation = get<Navigation.Navigate>()
+            )
+        }
     }
 }

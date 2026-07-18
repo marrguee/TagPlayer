@@ -88,6 +88,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.workmanager)
+    implementation(libs.koin.compose.viewmodel)
 
     //tests
     testImplementation(libs.junit)

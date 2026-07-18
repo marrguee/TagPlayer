@@ -13,37 +13,70 @@ import com.example.tagplayer.main.presentation.navigation.Navigation
 import com.example.tagplayer.tags_attach.data.AttachTagsCacheDatasource
 import com.example.tagplayer.tags_attach.data.AttachTagsRepositoryImpl
 import com.example.tagplayer.tags_attach.domain.AttachTagsInteractor
+import com.example.tagplayer.tags_attach.domain.AttachTagsRepository
 import com.example.tagplayer.tags_attach.domain.TagDomain
 import com.example.tagplayer.tags_attach.domain.TagsResponse
 import com.example.tagplayer.tags_attach.domain.errors.AttachHandleDomainError
 import com.example.tagplayer.tags_attach.presentation.AttachTagsObservable
 import com.example.tagplayer.tags_attach.presentation.AttachTagsViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.annotation.KoinViewModelScopeApi
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import org.koin.viewmodel.scope.viewModelScope
 
+@OptIn(KoinExperimentalAPI::class)
 val attachTagsModule = module {
-    viewModel {
-        val observable = AttachTagsObservable()
-        val repository = AttachTagsRepositoryImpl(
-            AttachTagsCacheDatasource.Base(get<TagsDao>(), get<SongsDao>()),
-            HandleTry.Base(AttachHandleDomainError.Base)
-        )
-        val interactor = AttachTagsInteractor.Base(
-            repository,
-            TagDomain.Mapper.Ui,
-            HandleResponse.WithEmpty(
-                TagsResponse.Empty,
-                get<HandleError<DomainError, String>>()
-            ) { error, mapper -> TagsResponse.Error(mapper.handle(error)) }
-        )
+    @OptIn(KoinViewModelScopeApi::class)
+    viewModelScope {
+        scoped<AttachTagsObservable> { AttachTagsObservable() }
 
-        AttachTagsViewModel(
-            get<RunAsync>(),
-            interactor,
-            get<Navigation.Navigate>(),
-            observable,
-            TagsResponse.Mapper.Base(observable, DispatcherList.Base),
-            get<HandleDeath>()
-        )
+        scoped<AttachTagsCacheDatasource> {
+            AttachTagsCacheDatasource.Base(
+                tagsDao = get<TagsDao>(),
+                songsDao = get<SongsDao>()
+            )
+        }
+
+        scoped<AttachTagsRepository<TagDomain>> {
+            AttachTagsRepositoryImpl(
+                cacheDatasource = get<AttachTagsCacheDatasource>(),
+                handleTry = HandleTry.Base(
+                    handleError = AttachHandleDomainError.Base
+                )
+            )
+        }
+
+        scoped<AttachTagsInteractor> {
+            AttachTagsInteractor.Base(
+                repository = get<AttachTagsRepository<TagDomain>>(),
+                mapper = TagDomain.Mapper.Ui,
+                handleResponse = HandleResponse.WithEmpty(
+                    empty = TagsResponse.Empty,
+                    handleError = get<HandleError<DomainError, String>>(),
+                    errorResponse = { error, mapper ->
+                        TagsResponse.Error(error = mapper.handle(error))
+                    }
+                )
+            )
+        }
+
+        scoped<TagsResponse.Mapper> {
+            TagsResponse.Mapper.Base(
+                observable = get<AttachTagsObservable>(),
+                dispatcherList = DispatcherList.Base
+            )
+        }
+
+        viewModel {
+            AttachTagsViewModel(
+                runAsync = get<RunAsync>(),
+                interactor = get<AttachTagsInteractor>(),
+                navigation = get<Navigation.Navigate>(),
+                observable = get<AttachTagsObservable>(),
+                mapper = get<TagsResponse.Mapper>(),
+                handleDeath = get<HandleDeath>()
+            )
+        }
     }
 }
